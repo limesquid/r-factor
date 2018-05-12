@@ -1,27 +1,27 @@
-const acorn = require('acorn');
-const walk = require('acorn/dist/walk');
-const injectAcornJsx = require('acorn-jsx/inject');
-const injectAcornObjectRestSpread = require('acorn-object-rest-spread/inject');
+const babylon = require('babylon');
+const traverse = require('@babel/traverse').default;
 
-injectAcornJsx(acorn);
-injectAcornObjectRestSpread(acorn);
+const babylonOptions = {
+  allowImportExportEverywhere: true,
+  sourceType: 'module',
+  plugins: [
+    'jsx',
+    'objectRestSpread',
+    'classProperties',
+    'functionBind',
+    'dynamicImport'
+  ]
+};
 
 //TODO: reverse code generation https://github.com/estools/escodegen
 
-const acornOptions = {
-  sourceType: 'module',
-  plugins: {
-    jsx: true,
-    objectRestSpread: true
-  }
-};
-
 const canRefactor = (code) => {
-  const ast = acorn.parse(code, acornOptions);
+  const ast = babylon.parse(code, babylonOptions);
   let hasReactImport = false;
 
-  walk.simple(ast, {
-    ImportDeclaration(node) {
+  traverse(ast, {
+    ImportDeclaration(path) {
+      const { node } = path;
       if (isReactImport(node)) {
         console.log(node);
         hasReactImport = true;
@@ -33,7 +33,7 @@ const canRefactor = (code) => {
 };
 
 const refactor = (code) => {
-  const ast = acorn.parse(code, acornOptions);
+  const ast = babylon.parse(code, babylonOptions);
   return [
     refactorReactImport
   ].reduce((nextCode, refactoring) => refactoring(nextCode, ast), code);
@@ -42,8 +42,9 @@ const refactor = (code) => {
 const refactorReactImport = (code, ast) => {
   const importPositions = [];
   const subimports = [ 'Component' ];
-  walk.simple(ast, {
-    ImportDeclaration(node) {
+  traverse(ast, {
+    ImportDeclaration(path) {
+      const { node } = path;
       if (isReactImport(node)) {
         importPositions.push(node.start, node.end);
         if (node.specifiers.length > 1) {

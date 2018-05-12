@@ -2,9 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const { canRefactor, refactor } = require('..');
 
-const buttonCode = fs.readFileSync(path.resolve(__dirname, './input/button.jsx'), 'utf-8');
-const expectedButtonCode = fs.readFileSync(path.resolve(__dirname, './output/button.jsx'), 'utf-8');
-
 describe('Solver', () => {
   it('knows if should refactor Button', () => {
     // expect(canRefactor(buttonCode)).toBe(true);
@@ -29,7 +26,9 @@ describe('Solver', () => {
   });
 
   it('applies Button refactoring correctly', () => {
-    //expect(refactor(buttonCode)).toBe(expectedButtonCode);
+    const buttonCode = fs.readFileSync(path.resolve(__dirname, './input/button.jsx'), 'utf-8');
+    const expectedButtonCode = fs.readFileSync(path.resolve(__dirname, './output/button.jsx'), 'utf-8');
+    expect(refactor(buttonCode)).toBe(expectedButtonCode);
   });
 });
 
