@@ -42,7 +42,6 @@ const refactor = (code) => {
 const refactorReactImport = (code, ast) => {
   const importPositions = [];
   const subimports = [ 'Component' ];
-  // console.log(JSON.stringify(ast, null, 2));
   walk.simple(ast, {
     ImportDeclaration(node) {
       if (isReactImport(node)) {

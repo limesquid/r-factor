@@ -11,9 +11,21 @@ describe('Solver', () => {
   });
 
   it('replaces React import', () => {
-    expect(refactor(`import React from 'react';`)).toBe(`import React, { Component } from 'react';`);
-    expect(refactor(`import React, { Children } from 'react';`)).toBe(`import React, { Children, Component } from 'react';`);
-    expect(refactor(`import React, { Children as X } from 'react';`)).toBe(`import React, { Children as X, Component } from 'react';`);
+    const tests = [
+      {
+        input: `import React from 'react';`,
+        output: `import React, { Component } from 'react';`,
+      },
+      {
+        input: `import React, { Children } from 'react';`,
+        output: `import React, { Children, Component } from 'react';`,
+      },
+      {
+        input: `import React, { Children as X } from 'react';`,
+        output: `import React, { Children as X, Component } from 'react';`,
+      }
+    ];
+    tests.forEach(({ input, output }) => expect(refactor(input)).toBe(output));
   });
 
   it('applies Button refactoring correctly', () => {
