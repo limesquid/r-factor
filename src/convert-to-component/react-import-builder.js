@@ -1,4 +1,4 @@
-const AbstractBuilder = require('../model/abstract-builder');;
+const { AbstractBuilder } = require('../model');
 
 class ReactImportBuilder extends AbstractBuilder {
   constructor(code) {

@@ -6,7 +6,7 @@ const {
   isReactImport
 } = require('../node-utils');
 const { babylonOptions } = require('../options');
-const AbstractRefactoring = require('../model/abstract-refactoring');
+const { AbstractRefactoring } = require('../model');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 

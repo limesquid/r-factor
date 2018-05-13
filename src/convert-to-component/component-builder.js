@@ -1,5 +1,5 @@
 const generate = require('@babel/generator').default;
-const AbstractBuilder = require('../model/abstract-builder');;
+const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
 const { squeezeCode, indentCode } = require('../utils');
 
