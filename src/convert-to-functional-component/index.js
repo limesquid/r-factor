@@ -14,7 +14,7 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
   constructor() {
     super();
     this.transformations = [
-      this.refactorComponent,
+      // this.refactorComponent,
       this.refactorReactImport
     ];
   }

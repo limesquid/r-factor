@@ -19,16 +19,18 @@ class ReactImportBuilder extends AbstractBuilder {
   }
 
   buildImport() {
-    const subImports = [ 'Component' ];
-    if (this.node.specifiers.length > 1) {
-      subImports.push(...this.node.specifiers.slice(1).map((specifier) => {
-        if (specifier.local.name !== specifier.imported.name) {
-          return `${specifier.imported.name} as ${specifier.local.name}`;
-        }
-        return specifier.local.name || specifier.imported.name;
-      }));
+    const subImports = [];
+    subImports.push(...this.node.specifiers.slice(1).map((specifier) => {
+      if (specifier.local.name !== specifier.imported.name) {
+        return `${specifier.imported.name} as ${specifier.local.name}`;
+      }
+      return specifier.local.name || specifier.imported.name;
+    }));
+    const sortedSubImports = Array.from(new Set(subImports)).sort()
+      .filter((subImport) => subImport !== 'Component');
+    if (sortedSubImports.length === 0) {
+      return `import React from 'react';`
     }
-    const sortedSubImports = Array.from(new Set(subImports)).sort();
     return `import React, { ${sortedSubImports.join(', ')} } from 'react';`
   }
 }
