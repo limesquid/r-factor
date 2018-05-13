@@ -3,15 +3,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import styles from './styles.scss';
 
-const Button = ({ className, children, ...props }) => {
-  const a = 2;
-
-  return (
-    <div className={classNames(styles.button, className)} {...props}>
-      {children}
-    </div>
-  );
-};
+const Button = ({ className, children, ...props }) => (
+  <div className={classNames(styles.button, className)} {...props}>
+    {children}
+  </div>
+);
 
 Button.propTypes = {
   children: PropTypes.node,
