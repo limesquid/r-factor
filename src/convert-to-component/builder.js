@@ -4,6 +4,13 @@ const { babelGeneratorOptions } = require('../options');
 const generateIndent = (length) => Array.from({ length }).map(() => ' ').join('');
 const indentLines = (lines, size) => lines.map((line) => `${generateIndent(size)}${line}`);
 const indentCode = (code, size) => code && indentLines(code.split('\n'), size).join('\n');
+const squeezeCode = (code, size, squeeze) => {
+  const [ first, ...rest ] = code.split('\n');
+  return [
+    ...indentLines([ first ], size),
+    ...indentLines(rest, size - squeeze)
+  ].join('\n');
+};
 
 class AbstractBuilder {
   constructor(code) {
@@ -75,7 +82,7 @@ class Builder extends AbstractBuilder {
     const functionBody = this.node.declarations[0].init.body;
     const jsxNode = this.isSingleReturnStatement()
       ? functionBody
-      : functionBody.body[functionBody.body.length - 1].argument;
+      : [ ...functionBody.body ].reverse().find((node) => node.type === 'ReturnStatement').argument;
     return this.code.substring(jsxNode.start, jsxNode.end);
   }
 
@@ -124,7 +131,12 @@ class Builder extends AbstractBuilder {
     code += ((props && !body) ? '\n' : '');
     code += indentCode(`return (`, 4);
     code += '\n';
-    code += `      ${jsx.split('\n')[0]}${jsx.split('\n').slice(1).map((x) => `\n${this.isSingleReturnStatement() ? '  ' : ''}  ${x}`).join('')}\n`
+    if (this.isSingleReturnStatement()) {
+      code += squeezeCode(jsx, 6, 2);
+    } else {
+      code += squeezeCode(jsx, 6, 4);
+    }
+    code += '\n';
     code += indentCode(`);`, 4);
     code += '\n';
     code += indentCode(`}`, 2);
