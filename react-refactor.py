@@ -29,16 +29,18 @@ class CommandRunner:
       print("Error exit code: {}".format(code))
     return stdout
 
-class ConvertToFunctionalComponentCommand(sublime_plugin.TextCommand):
+class ConvertToComponentCommand(sublime_plugin.TextCommand):
   def __init__(self, arg):
-    super(ConvertToFunctionalComponentCommand, self).__init__(arg)
+    super(ConvertToComponentCommand, self).__init__(arg)
     self.commandRunner = CommandRunner("node d:\\Projekty\\refactor-react\\index.js")
 
   def run(self, edit):
     selection = self.view.sel()
     region = selection[0]
     selectedText = self.view.substr(region)
-    if len(selectedText) == 0: return
+    if len(selectedText) == 0:
+      region = sublime.Region(0, self.view.size())
+      selectedText = self.view.substr(region)
     stdout = self.commandRunner.run([ selectedText.encode() ])
     self.view.replace(edit, region, stdout)
 
