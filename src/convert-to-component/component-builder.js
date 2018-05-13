@@ -3,7 +3,7 @@ const AbstractBuilder = require('../model/abstract-builder');;
 const { babelGeneratorOptions } = require('../options');
 const { squeezeCode, indentCode } = require('../utils');
 
-class Builder extends AbstractBuilder {
+class ComponentBuilder extends AbstractBuilder {
   constructor(code) {
     super(code);
     this.propTypesNode = null;
@@ -128,4 +128,4 @@ class Builder extends AbstractBuilder {
   }
 }
 
-module.exports = Builder;
+module.exports = ComponentBuilder;

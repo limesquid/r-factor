@@ -1,11 +1,4 @@
-const isReactImport = (node) => {
-  return node.type === 'ImportDeclaration'
-    && node.specifiers[0].type === 'ImportDefaultSpecifier'
-    && node.specifiers[0].local.type === 'Identifier'
-    && node.specifiers[0].local.name === 'React';
-};
-
-const isFunctionalComponent = (node) => {
+const isFunctionalComponentDeclaration = (node) => {
   return node.type === 'VariableDeclaration'
     && node.declarations.length === 1
     && node.declarations[0].init.type === 'ArrowFunctionExpression'
@@ -34,8 +27,15 @@ const isPropTypesDeclaration = (node) => {
     && node.expression.left.property.name === 'propTypes';
 };
 
+const isReactImport = (node) => {
+  return node.type === 'ImportDeclaration'
+    && node.specifiers[0].type === 'ImportDefaultSpecifier'
+    && node.specifiers[0].local.type === 'Identifier'
+    && node.specifiers[0].local.name === 'React';
+};
+
 module.exports = {
-  isReactImport,
-  isFunctionalComponent,
-  isPropTypesDeclaration
+  isFunctionalComponentDeclaration,
+  isPropTypesDeclaration,
+  isReactImport
 };

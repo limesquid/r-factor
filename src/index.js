@@ -1,3 +1,8 @@
-const { canRefactor, refactor } = require('./convert-to-component');
+const ConvertToComponent = require('./convert-to-component');
 
-module.exports = { canRefactor, refactor };
+const convertToComponent = new ConvertToComponent();
+
+module.exports = {
+  canRefactor: (code) => convertToComponent.canApply(code),
+  refactor: (code) => convertToComponent.refactor(code)
+};
