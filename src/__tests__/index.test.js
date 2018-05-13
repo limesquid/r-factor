@@ -2,6 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const { canRefactor, refactor } = require('..');
 
+const refactoredButton = `class Button extends Component {
+  render() {
+    return (
+      <div>Button</div>
+    );
+  }
+}`;
+
 describe('Solver', () => {
   it('knows if should refactor Button', () => {
     // expect(canRefactor(buttonCode)).toBe(true);
@@ -26,9 +34,21 @@ describe('Solver', () => {
   });
 
   it('applies Button refactoring correctly', () => {
-    const buttonCode = fs.readFileSync(path.resolve(__dirname, './input/button.jsx'), 'utf-8');
-    const expectedButtonCode = fs.readFileSync(path.resolve(__dirname, './output/button.jsx'), 'utf-8');
-    expect(refactor(buttonCode)).toBe(expectedButtonCode);
+    const tests = [
+      {
+        input: `const Button = () => (<div>Button</div>);`,
+        output: refactoredButton
+      },
+      {
+        input: fs.readFileSync(path.resolve(__dirname, './input/button.jsx'), 'utf-8'),
+        output: fs.readFileSync(path.resolve(__dirname, './output/button.jsx'), 'utf-8')
+      },
+      {
+        input: fs.readFileSync(path.resolve(__dirname, './input/button2.jsx'), 'utf-8'),
+        output: fs.readFileSync(path.resolve(__dirname, './output/button2.jsx'), 'utf-8')
+      }
+    ];
+    tests.forEach(({ input, output }) => expect(refactor(input)).toBe(output));
   });
 });
 
