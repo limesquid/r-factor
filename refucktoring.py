@@ -3,7 +3,7 @@ import sublime_plugin
 from subprocess import Popen, PIPE
 import errno
 
-nodeScriptPath = "node d:\\Projekty\\refactor-react\\index.js"
+nodeScriptPath = "node d:\\Projekty\\r-factor\\index.js"
 
 class CommandRunner:
   def __init__(self, command):

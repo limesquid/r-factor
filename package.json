@@ -1,5 +1,5 @@
 {
-  "name": "refactor-react",
+  "name": "r-factor",
   "version": "0.0.1",
   "description": "React refactoring tools for Sublime 3",
   "main": "index.js",
@@ -22,7 +22,8 @@
     ],
     "moduleDirectories": [
       "node_modules"
-    ]
+    ],
+    "testMatch":  [ "**/?(*.)(spec|test).js?(x)" ]
   },
   "dependencies": {
     "@babel/generator": "^7.0.0-beta.46",
