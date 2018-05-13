@@ -17,7 +17,7 @@ describe('convert-to-functional-component', () => {
   //     {
   //       input: readFile('functional/button3.jsx'),
   //       output: true
-  //     },
+  //     }
   //   ];
   //   tests.forEach(({ input, output }) => expect(refactoring.canApply(input)).toBe(output));
   // });
@@ -40,21 +40,21 @@ describe('convert-to-functional-component', () => {
     tests.forEach(({ input, output }) => expect(refactoring.refactor(input)).toBe(output));
   });
 
-  // it('applies Button refactoring correctly', () => {
-  //   const tests = [
-  //     {
-  //       input: readFile('non-functional/button1.jsx'),
-  //       output: readFile('functional/button1.jsx')
-  //     },
-  //     {
-  //       input: readFile('non-functional/button2.jsx'),
-  //       output: readFile('functional/button2.jsx')
-  //     },
-  //     {
-  //       input: readFile('non-functional/button3.jsx'),
-  //       output: readFile('functional/button3.jsx')
-  //     },
-  //   ];
-  //   tests.forEach(({ input, output }) => expect(refactoring.refactor(input)).toBe(output));
-  // });
+  it('applies Button refactoring correctly', () => {
+    const tests = [
+      {
+        input: readFile('non-functional/button1.jsx'),
+        output: readFile('functional/button1.jsx')
+      },
+      // {
+      //   input: readFile('non-functional/button2.jsx'),
+      //   output: readFile('functional/button2.jsx')
+      // },
+      // {
+      //   input: readFile('non-functional/button3.jsx'),
+      //   output: readFile('functional/button3.jsx')
+      // }
+    ];
+    tests.forEach(({ input, output }) => expect(refactoring.refactor(input)).toBe(output));
+  });
 });

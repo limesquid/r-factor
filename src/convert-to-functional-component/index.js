@@ -1,7 +1,7 @@
 const babylon = require('babylon');
 const traverse = require('@babel/traverse').default;
 const {
-  isFunctionalComponentDeclaration,
+  isComponentDeclaration,
   isPropTypesDeclaration,
   isReactImport
 } = require('../node-utils');
@@ -14,8 +14,8 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
   constructor() {
     super();
     this.transformations = [
-      // this.refactorComponent,
-      this.refactorReactImport
+      this.refactorReactImport,
+      this.refactorComponent
     ];
   }
 
@@ -23,7 +23,7 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
     const ast = babylon.parse(code, babylonOptions);
     let hasPropTypes = false;
     let hasReactImport = false;
-    let isFunctionalComponent = false;
+    let isComponent = false;
 
     traverse(ast, {
       ExpressionStatement({ node }) {
@@ -36,22 +36,22 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
           hasReactImport = true;
         }
       },
-      VariableDeclaration({ node }) {
-        if (isFunctionalComponentDeclaration(node)) {
-          isFunctionalComponent = true;
+      ClassDeclaration({ node }) {
+        if (isComponentDeclaration(node)) {
+          isComponent = true;
         }
       }
     });
 
-    return hasPropTypes && hasReactImport && isFunctionalComponent;
+    return hasPropTypes && hasReactImport && isComponent;
   }
 
   refactorComponent(code, ast) {
     const builder = new ComponentBuilder(code);
 
     traverse(ast, {
-      VariableDeclaration({ node }) {
-        if (isFunctionalComponentDeclaration(node)) {
+      ClassDeclaration({ node }) {
+        if (isComponentDeclaration(node)) {
           builder.setNode(node);
         }
       },
