@@ -1,5 +1,12 @@
 const readline = require('readline');
-const { canRefactor, refactor } = require('./src');
+const argv = require('./cli');
+
+const refactorings = {
+  'convert-to-component': require('./src/convert-to-component'),
+  'convert-to-functional-component': require('./src/convert-to-functional-component')
+};
+
+const refactoring = new refactorings[argv.refactoring]();
 
 const readInput = () => new Promise((resolve) => {
   const readlineInterface = readline.createInterface({
@@ -20,10 +27,9 @@ const readInput = () => new Promise((resolve) => {
   });
 });
 
-const writeOutput = (output) => console.log(output);
-
 const run = () => readInput()
-  .then((input) => canRefactor(input) ? refactor(input) :input)
-  .then(writeOutput);
+  // .then((input) => refactoring.canApply(input) ? refactoring.refactor(input) : input)
+  .then((input) => refactoring.refactor(input))
+  .then((output) => console.log(output));
 
 run();

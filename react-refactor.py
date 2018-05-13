@@ -3,13 +3,15 @@ import sublime_plugin
 from subprocess import Popen, PIPE
 import errno
 
+nodeScriptPath = "node d:\\Projekty\\refactor-react\\index.js"
+
 class CommandRunner:
   def __init__(self, command):
     self.command = command
 
   def run(self, lines):
     process = Popen(self.command, stdin=PIPE, stdout=PIPE)
-    stdout = ''
+    stdout = ""
     for line in lines:
       try:
         process.stdin.write(line)
@@ -29,10 +31,12 @@ class CommandRunner:
       print("Error exit code: {}".format(code))
     return stdout
 
-class ConvertToComponentCommand(sublime_plugin.TextCommand):
+def createCommandRunner(refactoring):
+  return CommandRunner("{} -r {}".format(nodeScriptPath, refactoring))
+
+class BaseCommand(sublime_plugin.TextCommand):
   def __init__(self, arg):
-    super(ConvertToComponentCommand, self).__init__(arg)
-    self.commandRunner = CommandRunner("node d:\\Projekty\\refactor-react\\index.js")
+    super(BaseCommand, self).__init__(arg)
 
   def run(self, edit):
     selection = self.view.sel()
@@ -44,5 +48,16 @@ class ConvertToComponentCommand(sublime_plugin.TextCommand):
     stdout = self.commandRunner.run([ selectedText.encode() ])
     self.view.replace(edit, region, stdout)
 
-#view.run_command('convert_to_functional_component')
+class ConvertToComponentCommand(BaseCommand):
+  def __init__(self, arg):
+    super(ConvertToComponentCommand, self).__init__(arg)
+    self.commandRunner = createCommandRunner("convert-to-component")
+
+class ConvertToFunctionalComponentCommand(BaseCommand):
+  def __init__(self, arg):
+    super(ConvertToFunctionalComponentCommand, self).__init__(arg)
+    self.commandRunner = createCommandRunner("convert-to-functional-component")
+
+#view.run_command("convert_to_component")
+#view.run_command("convert_to_functional_component")
 #https://github.com/yuriyyakym/sublime-es6-jsx-stack/blob/master/index.py

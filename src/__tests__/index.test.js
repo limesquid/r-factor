@@ -1,10 +1,26 @@
 const fs = require('fs');
 const path = require('path');
-const { canRefactor, refactor } = require('..');
+const ConvertToComponent = require('../convert-to-component');
 
-describe('Solver', () => {
+describe('convert-to-component', () => {
+  const convertToComponent = new ConvertToComponent();
+
   it('knows if should refactor Button', () => {
-    // expect(canRefactor(buttonCode)).toBe(true);
+    const tests = [
+      {
+        input: fs.readFileSync(path.resolve(__dirname, './input/button1.jsx'), 'utf-8'),
+        output: false
+      },
+      {
+        input: fs.readFileSync(path.resolve(__dirname, './input/button2.jsx'), 'utf-8'),
+        output: true
+      },
+      {
+        input: fs.readFileSync(path.resolve(__dirname, './input/button3.jsx'), 'utf-8'),
+        output: true
+      },
+    ];
+    tests.forEach(({ input, output }) => expect(convertToComponent.canApply(input)).toBe(output));
   });
 
   it('replaces React import', () => {
@@ -22,7 +38,7 @@ describe('Solver', () => {
         output: `import React, { Children as X, Component } from 'react';`,
       }
     ];
-    tests.forEach(({ input, output }) => expect(refactor(input)).toBe(output));
+    tests.forEach(({ input, output }) => expect(convertToComponent.refactor(input)).toBe(output));
   });
 
   it('applies Button refactoring correctly', () => {
@@ -40,6 +56,6 @@ describe('Solver', () => {
         output: fs.readFileSync(path.resolve(__dirname, './output/button3.jsx'), 'utf-8')
       },
     ];
-    tests.forEach(({ input, output }) => expect(refactor(input)).toBe(output));
+    tests.forEach(({ input, output }) => expect(convertToComponent.refactor(input)).toBe(output));
   });
 });
