@@ -12,7 +12,11 @@ const ReactImportBuilder = require('./react-import-builder');
 
 class ConvertToComponent extends AbstractRefactoring {
   constructor() {
-    super(getTransformations());
+    super();
+    this.transformations = [
+      this.refactorComponent,
+      this.refactorReactImport
+    ];
   }
 
   canApply(code) {
@@ -41,41 +45,39 @@ class ConvertToComponent extends AbstractRefactoring {
 
     return hasPropTypes && hasReactImport && isFunctionalComponent;
   }
+
+  refactorComponent(code, ast) {
+    const builder = new ComponentBuilder(code);
+
+    traverse(ast, {
+      VariableDeclaration({ node }) {
+        if (isFunctionalComponentDeclaration(node)) {
+          builder.setNode(node);
+        }
+      },
+      ExpressionStatement({ node }) {
+        if (isPropTypesDeclaration(node)) {
+          builder.setPropTypesNode(node);
+        }
+      }
+    });
+
+    return builder.build();
+  }
+
+  refactorReactImport(code, ast) {
+    const builder = new ReactImportBuilder(code);
+
+    traverse(ast, {
+      ImportDeclaration({ node }) {
+        if (isReactImport(node)) {
+          builder.setNode(node);
+        }
+      }
+    });
+
+    return builder.build();
+  }
 }
-
-const refactorComponent = (code, ast) => {
-  const builder = new ComponentBuilder(code);
-
-  traverse(ast, {
-    VariableDeclaration({ node }) {
-      if (isFunctionalComponentDeclaration(node)) {
-        builder.setNode(node);
-      }
-    },
-    ExpressionStatement({ node }) {
-      if (isPropTypesDeclaration(node)) {
-        builder.setPropTypesNode(node);
-      }
-    }
-  });
-
-  return builder.build();
-};
-
-const refactorReactImport = (code, ast) => {
-  const builder = new ReactImportBuilder(code);
-
-  traverse(ast, {
-    ImportDeclaration({ node }) {
-      if (isReactImport(node)) {
-        builder.setNode(node);
-      }
-    }
-  });
-
-  return builder.build();
-};
-
-const getTransformations = () => [ refactorReactImport, refactorComponent ];
 
 module.exports = ConvertToComponent;
