@@ -1,23 +1,12 @@
 const babylon = require('babylon');
 const traverse = require('@babel/traverse').default;
 const generate = require('@babel/generator').default;
-
-const generateOptions = {
-  concise: true,
-  retainFunctionParens: true
-};
-
-const babylonOptions = {
-  allowImportExportEverywhere: true,
-  sourceType: 'module',
-  plugins: [
-    'jsx',
-    'objectRestSpread',
-    'classProperties',
-    'functionBind',
-    'dynamicImport'
-  ]
-};
+const {
+  isReactImport,
+  isFunctionalComponent,
+  isPropTypesDeclaration
+} = require('./node-utils');
+const { babelGeneratorOptions, babylonOptions } = require('./options');
 
 const canRefactor = (code) => {
   const ast = babylon.parse(code, babylonOptions);
@@ -69,7 +58,7 @@ const refactorComponent = (code, ast) => {
         const params = node.declarations[0].init.params;
         if (params.length === 1) {
           if (params[0].type === 'ObjectPattern') {
-            props = `const ${generate(params[0], generateOptions).code} = this.props;`
+            props = `const ${generate(params[0], babelGeneratorOptions).code} = this.props;`
           } else if (params[0].type === 'Identifier') {
             props = `const ${params[0].name} = this.props;`
           }
@@ -89,7 +78,7 @@ const refactorComponent = (code, ast) => {
       const { node } = path;
       propTypesPositions.push(node.start, node.end);
       if (isPropTypesDeclaration(node)) {
-        propTypes = `static propTypes = ${generate(node.expression.right, { ...generateOptions, concise: false }).code};`
+        propTypes = `static propTypes = ${generate(node.expression.right, { ...babelGeneratorOptions, concise: false }).code};`
       }
     }
   });
@@ -146,39 +135,3 @@ const refactorReactImport = (code, ast) => {
 };
 
 module.exports = { canRefactor, refactor };
-
-const isReactImport = (node) => {
-  return node.type === 'ImportDeclaration'
-    && node.specifiers[0].type === 'ImportDefaultSpecifier'
-    && node.specifiers[0].local.type === 'Identifier'
-    && node.specifiers[0].local.name === 'React';
-};
-
-const isFunctionalComponent = (node) => {
-  return node.type === 'VariableDeclaration'
-    && node.declarations.length === 1
-    && node.declarations[0].init.type === 'ArrowFunctionExpression'
-    && node.declarations[0].init.generator === false
-    && (
-      (
-        node.declarations[0].init.expression === true
-        && node.declarations[0].init.body.type === 'JSXElement'
-      )
-      ||
-      (
-        node.declarations[0].init.expression === false
-        && node.declarations[0].init.body.type === 'BlockStatement'
-        && node.declarations[0].init.body.body[node.declarations[0].init.body.body.length - 1].type === 'ReturnStatement'
-        && node.declarations[0].init.body.body[node.declarations[0].init.body.body.length - 1].argument.type === 'JSXElement'
-      )
-    );
-};
-
-const isPropTypesDeclaration = (node) => {
-  return node.type === 'ExpressionStatement'
-    && node.expression
-    && node.expression.type === 'AssignmentExpression'
-    && node.expression.left.type === 'MemberExpression'
-    && node.expression.left.property.type === 'Identifier'
-    && node.expression.left.property.name === 'propTypes';
-};
