@@ -40,6 +40,7 @@ class BaseCommand(sublime_plugin.TextCommand):
       settings = sublime.load_settings('R-factor.sublime-settings')
     return settings.get(key)
 
+
 class ConvertToComponentCommand(BaseCommand):
   def __init__(self, arg):
     super(ConvertToComponentCommand, self).__init__(arg)
@@ -50,3 +51,27 @@ class ConvertToFunctionalComponentCommand(BaseCommand):
   def __init__(self, arg):
     super(ConvertToFunctionalComponentCommand, self).__init__(arg)
     self.refactoring_name = 'convert-to-functional-component'
+
+
+class MoveDefaultPropsOutOfClass(BaseCommand):
+  def __init__(self, arg):
+    super(MoveDefaultPropsOutOfClass, self).__init__(arg)
+    self.refactoring_name = 'move-default-props-out-of-class'
+
+
+class MoveDefaultPropsToClass(BaseCommand):
+  def __init__(self, arg):
+    super(MoveDefaultPropsToClass, self).__init__(arg)
+    self.refactoring_name = 'move-default-props-to-class'
+
+
+class MovePropTypesOutOfClass(BaseCommand):
+  def __init__(self, arg):
+    super(MovePropTypesOutOfClass, self).__init__(arg)
+    self.refactoring_name = 'move-prop-types-out-of-class'
+
+
+class MovePropTypesToClass(BaseCommand):
+  def __init__(self, arg):
+    super(MovePropTypesToClass, self).__init__(arg)
+    self.refactoring_name = 'move-prop-types-to-class'

@@ -6,5 +6,21 @@
   {
     "caption": "R-factor: Convert to functional component",
     "command": "convert_to_functional_component"
+  },
+  {
+    "caption": "R-factor: Move defaultProps out of class",
+    "command": "move_default_props_out_of_class"
+  },
+  {
+    "caption": "R-factor: Move propTypes out of class",
+    "command": "move_prop_types_out_of_class"
+  },
+  {
+    "caption": "R-factor: Move defaultProps to class",
+    "command": "move_default_props_to_class"
+  },
+  {
+    "caption": "R-factor: Move propTypes to class",
+    "command": "move_prop_types_to_class"
   }
 ]
