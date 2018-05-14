@@ -4,23 +4,23 @@ const ConvertToFunctionalComponent = require('../convert-to-functional-component
 describe('convert-to-functional-component', () => {
   const refactoring = new ConvertToFunctionalComponent();
 
-  // it('knows if should refactor Button', () => {
-  //   const tests = [
-  //     {
-  //       input: readFile('functional/button1.js'),
-  //       output: false
-  //     },
-  //     {
-  //       input: readFile('functional/button2.js'),
-  //       output: true
-  //     },
-  //     {
-  //       input: readFile('functional/button3.js'),
-  //       output: true
-  //     }
-  //   ];
-  //   tests.forEach(({ input, output }) => expect(refactoring.canApply(input)).toBe(output));
-  // });
+  it('knows if should refactor Button', () => {
+    const tests = [
+      {
+        input: readFile('non-functional/button1.js'),
+        output: false
+      },
+      {
+        input: readFile('non-functional/button2.js'),
+        output: true
+      },
+      {
+        input: readFile('non-functional/button3.js'),
+        output: true
+      }
+    ];
+    tests.forEach(({ input, output }) => expect(refactoring.canApply(input)).toBe(output));
+  });
 
   it('replaces React import', () => {
     const tests = [
@@ -50,10 +50,10 @@ describe('convert-to-functional-component', () => {
         input: readFile('non-functional/button2.js'),
         output: readFile('functional/button2.js')
       },
-      // {
-      //   input: readFile('non-functional/button3.js'),
-      //   output: readFile('functional/button3.js')
-      // }
+      {
+        input: readFile('non-functional/button3.js'),
+        output: readFile('functional/button3.js')
+      }
     ];
     tests.forEach(({ input, output }) => expect(refactoring.refactor(input)).toBe(output));
   });
