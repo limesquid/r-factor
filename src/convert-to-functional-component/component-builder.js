@@ -2,7 +2,7 @@ const generate = require('@babel/generator').default;
 const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
 const { squeezeCode, indentCode } = require('../utils');
-const { getClassMethod, getReturnStatement } = require('../node-utils');
+const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../node-utils');
 
 class ComponentBuilder extends AbstractBuilder {
   constructor(code) {
@@ -31,18 +31,30 @@ class ComponentBuilder extends AbstractBuilder {
     code += this.buildSuffix();
     // code = code.replace(this.getOldPropTypes(), '');
     code = code.replace(/\n\n\n/g, '\n');
+
     return code;
   }
 
   buildBody() {
     if (this.isSingleReturnStatement()) {
-      return this.buildJsx();
+      return indentCode(this.buildJsx(), -4);
     }
 
-    const bodyNodes = this.node.declarations[0].init.body.body;
+    const hasPropsDeclaration = this.hasPropsDeclaration();
+
+    const render = getClassMethod(this.node, 'render');
+    const bodyNodes = render.body.body;
     const firstNode = bodyNodes[0];
     const lastNonReturnNode = [ ...bodyNodes ].reverse().find((node) => node.type !== 'ReturnStatement');
-    return this.code.substring(firstNode.start, lastNonReturnNode.end);
+    let code = this.code.substring(firstNode.start, lastNonReturnNode.end);
+    code = indentCode(code, -6);
+    if (hasPropsDeclaration) {
+      const propsNode = this.getPropsNode();
+      const oldDeclaration = this.code.substring(propsNode.start, propsNode.end);
+      console.log(oldDeclaration);
+      code = code.replace(oldDeclaration, '');
+    }
+    return code;
   }
 
   buildDeclaration() {
@@ -62,7 +74,15 @@ class ComponentBuilder extends AbstractBuilder {
   }
 
   buildProps() {
-    const render = getClassMethod(this.node, 'render');
+    if (this.hasPropsDeclaration()) {
+      const declaration = this.getPropsDeclaration();
+      return generate(declaration.id, babelGeneratorOptions).code;
+    }
+
+    if (this.hasThisPropsUsages()) {
+      return 'props';
+    }
+
     return '';
   }
 
@@ -83,9 +103,32 @@ class ComponentBuilder extends AbstractBuilder {
     return this.code.substring(this.propTypesNode.start, this.propTypesNode.end);
   }
 
+  getPropsNode() {
+    const render = getClassMethod(this.node, 'render');
+    const bodyNodes = render.body.body;
+    return bodyNodes.find(
+      ({ type, declarations }) => type === 'VariableDeclaration' && declarations.find(isPropsDeclaration)
+    );
+  }
+
+  getPropsDeclaration() {
+    const propsNode = this.getPropsNode();
+    return propsNode.declarations.find(isPropsDeclaration);
+  }
+
+  hasThisPropsUsages() {
+    // TODO
+    return false;
+  }
+
+  hasPropsDeclaration() {
+    return Boolean(this.getPropsNode() && this.getPropsDeclaration());
+  }
+
   isSingleReturnStatement() {
     const render = getClassMethod(this.node, 'render');
-    return render.body.body.length === 1;
+    const body = render.body.body;
+    return body.length === 1 || (body.length === 2 && this.hasPropsDeclaration());
   }
 
   setPropTypesNode(node) {
@@ -94,3 +137,7 @@ class ComponentBuilder extends AbstractBuilder {
 }
 
 module.exports = ComponentBuilder;
+
+/*TODO:
+- this.props => props
+*/

@@ -1,3 +1,7 @@
+const isComponentDeclaration = (node) => isClass(node)
+  && classExtends(node, 'Component')
+  && classHasMethod(node, 'render');
+
 const isFunctionalComponentDeclaration = (node) => node.type === 'VariableDeclaration'
   && node.declarations.length === 1
   && node.declarations[0].init.type === 'ArrowFunctionExpression'
@@ -16,9 +20,11 @@ const isFunctionalComponentDeclaration = (node) => node.type === 'VariableDeclar
     )
   );
 
-const isComponentDeclaration = (node) => isClass(node)
-  && classExtends(node, 'Component')
-  && classHasMethod(node, 'render');
+const isPropsDeclaration = (declaration) => declaration.type === 'VariableDeclarator'
+  && declaration.init.type === 'MemberExpression'
+  && declaration.init.object.type === 'ThisExpression'
+  && declaration.init.property.type === 'Identifier'
+  && declaration.init.property.name === 'props';;
 
 const isPropTypesDeclaration = (node) => node.type === 'ExpressionStatement'
   && node.expression
@@ -49,6 +55,7 @@ const getReturnStatement = (node) => node.body.body.find(({ type }) => type === 
 module.exports = {
   isComponentDeclaration,
   isFunctionalComponentDeclaration,
+  isPropsDeclaration,
   isPropTypesDeclaration,
   isReactImport,
   isClass,
