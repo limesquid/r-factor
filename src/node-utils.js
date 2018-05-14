@@ -1,3 +1,17 @@
+const classExtends = (node, name) => node.superClass
+  && node.superClass.type === 'Identifier'
+  && node.superClass.name === name;
+
+const classHasMethod = (...args) => Boolean(getClassMethod(...args));
+
+const getClassMethod = (node, name) => node.body
+  && node.body.body
+  && node.body.body.find(({ type, key }) => type === 'ClassMethod' && key.name === name);
+
+const getReturnStatement = (node) => node.body.body.find(({ type }) => type === 'ReturnStatement');
+
+const isClass = (node) => node.type === 'ClassDeclaration';
+
 const isComponentDeclaration = (node) => isClass(node)
   && classExtends(node, 'Component')
   && classHasMethod(node, 'render');
@@ -38,29 +52,21 @@ const isReactImport = (node) => node.type === 'ImportDeclaration'
   && node.specifiers[0].local.type === 'Identifier'
   && node.specifiers[0].local.name === 'React';
 
-const isClass = (node) => node.type === 'ClassDeclaration';
-
-const classExtends = (node, name) => node.superClass
-  && node.superClass.type === 'Identifier'
-  && node.superClass.name === name;
-
-const getClassMethod = (node, name) => node.body
-  && node.body.body
-  && node.body.body.find(({ type, key }) => type === 'ClassMethod' && key.name === name);
-
-const classHasMethod = (...args) => Boolean(getClassMethod(...args));
-
-const getReturnStatement = (node) => node.body.body.find(({ type }) => type === 'ReturnStatement');
+const isStaticPropTypesDeclaration = (node) => node.type === 'ClassProperty'
+  && node.static
+  && node.key.type === 'Identifier'
+  && node.key.name === 'propTypes';
 
 module.exports = {
+  classExtends,
+  classHasMethod,
+  getClassMethod,
+  getReturnStatement,
+  isClass,
   isComponentDeclaration,
   isFunctionalComponentDeclaration,
   isPropsDeclaration,
   isPropTypesDeclaration,
   isReactImport,
-  isClass,
-  classExtends,
-  getClassMethod,
-  classHasMethod,
-  getReturnStatement
+  isStaticPropTypesDeclaration
 };

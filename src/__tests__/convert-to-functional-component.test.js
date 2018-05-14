@@ -1,4 +1,4 @@
-const { readFile } = require('./utils');
+const { readFile } = require('./test-utils');
 const ConvertToFunctionalComponent = require('../convert-to-functional-component');
 
 describe('convert-to-functional-component', () => {

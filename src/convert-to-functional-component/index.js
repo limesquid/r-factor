@@ -2,7 +2,7 @@ const babylon = require('babylon');
 const traverse = require('@babel/traverse').default;
 const {
   isComponentDeclaration,
-  isPropTypesDeclaration,
+  isStaticPropTypesDeclaration,
   isReactImport
 } = require('../node-utils');
 const { babylonOptions } = require('../options');
@@ -26,8 +26,8 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
     let isComponent = false;
 
     traverse(ast, {
-      ExpressionStatement({ node }) {
-        if (isPropTypesDeclaration(node)) {
+      ClassProperty({ node }) {
+        if (isStaticPropTypesDeclaration(node)) {
           hasPropTypes = true;
         }
       },
@@ -55,8 +55,8 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
           builder.setNode(node);
         }
       },
-      ExpressionStatement({ node }) {
-        if (isPropTypesDeclaration(node)) {
+      ClassProperty({ node }) {
+        if (isStaticPropTypesDeclaration(node)) {
           builder.setPropTypesNode(node);
         }
       }

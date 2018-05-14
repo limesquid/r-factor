@@ -18,18 +18,18 @@ class ComponentBuilder extends AbstractBuilder {
     let code = '';
     code += this.buildPrefix();
     code += this.buildDeclaration();
-    // if (this.propTypesNode) {
-    //   code += '\n';
-    //   code += indentCode(this.buildPropTypes(), 2);
-    //   code += '\n';
-    // }
     code += '\n';
     code += squeezeCode(this.buildBody(), 2);
     code += '\n';
     code += this.isSingleReturnStatement() ? ')' : '}';
     code += ';';
+    if (this.propTypesNode) {
+      code += '\n\n';
+      code += this.buildPropTypes();
+      code += '\n\n';
+    }
     code += this.buildSuffix();
-    // code = code.replace(this.getOldPropTypes(), '');
+    code = code.replace(this.getOldPropTypes(), '');
     code = code.replace(/\n\n\n/g, '\n');
 
     return code;
@@ -91,8 +91,8 @@ class ComponentBuilder extends AbstractBuilder {
       return '';
     }
 
-    const propTypes = generate(this.propTypesNode.expression.right, { ...babelGeneratorOptions, concise: false });
-    return `static propTypes = ${propTypes.code};`
+    const propTypes = generate(this.propTypesNode.value, { ...babelGeneratorOptions, concise: false });
+    return `${this.buildName()}.propTypes = ${propTypes.code};`
   }
 
   getOldPropTypes() {
