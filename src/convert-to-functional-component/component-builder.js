@@ -25,14 +25,10 @@ class ComponentBuilder extends AbstractBuilder {
     code += this.isSingleReturnStatement() ? ')' : '}';
     code += ';';
     if (this.propTypesNode) {
-      code += '\n\n';
       code += this.buildPropTypes();
-      code += '\n\n';
     }
     if (this.defaultPropsNode) {
-      code += '\n\n';
       code += this.buildDefaultProps();
-      code += '\n\n';
     }
     code += this.buildSuffix();
     code = code.replace(this.getOldDefaultProps(), '');
@@ -60,14 +56,14 @@ class ComponentBuilder extends AbstractBuilder {
     if (hasPropsDeclaration) {
       const propsNode = this.getPropsNode();
       const oldDeclaration = this.code.substring(propsNode.start, propsNode.end);
-      code = code.replace(oldDeclaration + '\n', '');
+      code = code.replace(`${oldDeclaration}\n`, '');
     }
     code += '\n\n';
-    code += indentCode(`return (`, 2);
+    code += indentCode('return (', 2);
     code += '\n';
     code += squeezeCode(this.buildJsx(), 4, 6);
     code += '\n';
-    code += indentCode(`);`, 2);
+    code += indentCode(');', 2);
     return code;
   }
 
@@ -93,7 +89,7 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     const defaultProps = generate(this.defaultPropsNode.value, { ...babelGeneratorOptions, concise: false });
-    return `${this.buildName()}.defaultProps = ${defaultProps.code};`
+    return `\n\n${this.buildName()}.defaultProps = ${defaultProps.code};\n\n`;
   }
 
   buildProps() {
@@ -115,7 +111,7 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     const propTypes = generate(this.propTypesNode.value, { ...babelGeneratorOptions, concise: false });
-    return `${this.buildName()}.propTypes = ${propTypes.code};`
+    return `\n\n${this.buildName()}.propTypes = ${propTypes.code};\n\n`;
   }
 
   getOldDefaultProps() {
@@ -173,6 +169,7 @@ class ComponentBuilder extends AbstractBuilder {
 
 module.exports = ComponentBuilder;
 
-/*TODO:
-- this.props => props
+/*
+TODO:
+  - this.props => props
 */

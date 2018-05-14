@@ -27,7 +27,7 @@ class ReactImportBuilder extends AbstractBuilder {
       return specifier.local.name || specifier.imported.name;
     }));
     const sortedSubImports = Array.from(new Set(subImports)).sort();
-    return `import React, { ${sortedSubImports.join(', ')} } from 'react';`
+    return `import React, { ${sortedSubImports.join(', ')} } from 'react';`;
   }
 }
 

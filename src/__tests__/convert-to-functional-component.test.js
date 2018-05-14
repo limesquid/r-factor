@@ -29,16 +29,16 @@ describe('convert-to-functional-component', () => {
   it('replaces React import', () => {
     const tests = [
       {
-        input: `import React, { Component } from 'react';`,
-        output: `import React from 'react';`
+        input: 'import React, { Component } from \'react\';',
+        output: 'import React from \'react\';'
       },
       {
-        input: `import React, { Children, Component } from 'react';`,
-        output: `import React, { Children } from 'react';`
+        input: 'import React, { Children, Component } from \'react\';',
+        output: 'import React, { Children } from \'react\';'
       },
       {
-        input: `import React, { Children as X, Component } from 'react';`,
-        output: `import React, { Children as X } from 'react';`
+        input: 'import React, { Children as X, Component } from \'react\';',
+        output: 'import React, { Children as X } from \'react\';'
       }
     ];
     tests.forEach(({ input, output }) => expect(refactoring.refactor(input)).toBe(output));

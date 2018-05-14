@@ -10,11 +10,10 @@
   },
   "license": "CC BY-NC-ND 4.0",
   "scripts": {
+    "lint": "eslint config . --ext .js",
+    "lint:fix": "eslint config . --ext .js --fix",
     "test": "jest --no-cache",
     "test:watch": "jest --no-cache --watch"
-  },
-  "devDependencies": {
-    "jest": "^22.4.3"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -33,5 +32,11 @@
     "babylon": "^7.0.0-beta.30",
     "get-stdin": "^6.0.0",
     "yargs": "^11.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1",
+    "eslint-plugin-react": "^7.8.2",
+    "jest": "^22.4.3"
   }
 }

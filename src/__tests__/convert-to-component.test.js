@@ -29,16 +29,16 @@ describe('convert-to-component', () => {
   it('replaces React import', () => {
     const tests = [
       {
-        input: `import React from 'react';`,
-        output: `import React, { Component } from 'react';`,
+        input: 'import React from \'react\';',
+        output: 'import React, { Component } from \'react\';'
       },
       {
-        input: `import React, { Children } from 'react';`,
-        output: `import React, { Children, Component } from 'react';`,
+        input: 'import React, { Children } from \'react\';',
+        output: 'import React, { Children, Component } from \'react\';'
       },
       {
-        input: `import React, { Children as X } from 'react';`,
-        output: `import React, { Children as X, Component } from 'react';`,
+        input: 'import React, { Children as X } from \'react\';',
+        output: 'import React, { Children as X, Component } from \'react\';'
       }
     ];
     tests.forEach(({ input, output }) => expect(refactoring.refactor(input)).toBe(output));

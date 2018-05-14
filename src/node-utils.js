@@ -10,6 +10,11 @@ const getClassMethod = (node, name) => node.body
 
 const getReturnStatement = (node) => node.body.body.find(({ type }) => type === 'ReturnStatement');
 
+const isArrowFunctionDeclaration = (node) => node.type === 'VariableDeclaration'
+  && node.declarations.length === 1
+  && node.declarations[0].init.type === 'ArrowFunctionExpression'
+  && node.declarations[0].init.generator === false;
+
 const isClass = (node) => node.type === 'ClassDeclaration';
 
 const isComponentDeclaration = (node) => isClass(node)
@@ -23,29 +28,32 @@ const isDefaultPropsDeclaration = (node) => node.type === 'ExpressionStatement'
   && node.expression.left.property.type === 'Identifier'
   && node.expression.left.property.name === 'defaultProps';
 
-const isFunctionalComponentDeclaration = (node) => node.type === 'VariableDeclaration'
-  && node.declarations.length === 1
-  && node.declarations[0].init.type === 'ArrowFunctionExpression'
-  && node.declarations[0].init.generator === false
-  && (
+const isFunctionalComponentDeclaration = (node) => {
+  if (!isArrowFunctionDeclaration(node)) {
+    return false;
+  }
+
+  const declaration = node.declarations[0].init;
+  return Boolean(
     (
-      node.declarations[0].init.expression === true
-      && node.declarations[0].init.body.type === 'JSXElement'
+      declaration.expression === true
+      && declaration.body.type === 'JSXElement'
     )
     ||
     (
-      node.declarations[0].init.expression === false
-      && node.declarations[0].init.body.type === 'BlockStatement'
-      && node.declarations[0].init.body.body[node.declarations[0].init.body.body.length - 1].type === 'ReturnStatement'
-      && node.declarations[0].init.body.body[node.declarations[0].init.body.body.length - 1].argument.type === 'JSXElement'
+      declaration.expression === false
+      && declaration.body.type === 'BlockStatement'
+      && declaration.body.body[declaration.body.body.length - 1].type === 'ReturnStatement'
+      && declaration.body.body[declaration.body.body.length - 1].argument.type === 'JSXElement'
     )
   );
+};
 
 const isPropsDeclaration = (declaration) => declaration.type === 'VariableDeclarator'
   && declaration.init.type === 'MemberExpression'
   && declaration.init.object.type === 'ThisExpression'
   && declaration.init.property.type === 'Identifier'
-  && declaration.init.property.name === 'props';;
+  && declaration.init.property.name === 'props';
 
 const isPropTypesDeclaration = (node) => node.type === 'ExpressionStatement'
   && node.expression
