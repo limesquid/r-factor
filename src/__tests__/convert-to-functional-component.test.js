@@ -8,7 +8,7 @@ describe('convert-to-functional-component', () => {
     const tests = [
       {
         input: readFile('non-functional/button1.js'),
-        output: false
+        output: true
       },
       {
         input: readFile('non-functional/button2.js'),
@@ -16,6 +16,10 @@ describe('convert-to-functional-component', () => {
       },
       {
         input: readFile('non-functional/button3.js'),
+        output: true
+      },
+      {
+        input: readFile('non-functional/button4.js'),
         output: true
       }
     ];
@@ -53,6 +57,10 @@ describe('convert-to-functional-component', () => {
       {
         input: readFile('non-functional/button3.js'),
         output: readFile('functional/button3.js')
+      },
+      {
+        input: readFile('non-functional/button4.js'),
+        output: readFile('functional/button4.js')
       }
     ];
     tests.forEach(({ input, output }) => expect(refactoring.refactor(input)).toBe(output));

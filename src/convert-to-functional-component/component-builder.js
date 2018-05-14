@@ -1,12 +1,13 @@
 const generate = require('@babel/generator').default;
 const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
-const { indentCode, removeTrailingWhitespace, squeezeCode } = require('../utils');
+const { indentCode, removeDoubleNewlines, removeTrailingWhitespace, squeezeCode } = require('../utils');
 const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../node-utils');
 
 class ComponentBuilder extends AbstractBuilder {
   constructor(code) {
     super(code);
+    this.defaultPropsNode = null;
     this.propTypesNode = null;
   }
 
@@ -28,9 +29,15 @@ class ComponentBuilder extends AbstractBuilder {
       code += this.buildPropTypes();
       code += '\n\n';
     }
+    if (this.defaultPropsNode) {
+      code += '\n\n';
+      code += this.buildDefaultProps();
+      code += '\n\n';
+    }
     code += this.buildSuffix();
+    code = code.replace(this.getOldDefaultProps(), '');
     code = code.replace(this.getOldPropTypes(), '');
-    code = code.replace(/\n\n\n/g, '\n');
+    code = removeDoubleNewlines(code);
     code = removeTrailingWhitespace(code);
     return code;
   }
@@ -80,6 +87,15 @@ class ComponentBuilder extends AbstractBuilder {
     return this.node.id.name;
   }
 
+  buildDefaultProps() {
+    if (!this.defaultPropsNode) {
+      return '';
+    }
+
+    const defaultProps = generate(this.defaultPropsNode.value, { ...babelGeneratorOptions, concise: false });
+    return `${this.buildName()}.defaultProps = ${defaultProps.code};`
+  }
+
   buildProps() {
     if (this.hasPropsDeclaration()) {
       const declaration = this.getPropsDeclaration();
@@ -100,6 +116,14 @@ class ComponentBuilder extends AbstractBuilder {
 
     const propTypes = generate(this.propTypesNode.value, { ...babelGeneratorOptions, concise: false });
     return `${this.buildName()}.propTypes = ${propTypes.code};`
+  }
+
+  getOldDefaultProps() {
+    if (!this.defaultPropsNode) {
+      return '';
+    }
+
+    return this.code.substring(this.defaultPropsNode.start, this.defaultPropsNode.end);
   }
 
   getOldPropTypes() {
@@ -136,6 +160,10 @@ class ComponentBuilder extends AbstractBuilder {
     const render = getClassMethod(this.node, 'render');
     const body = render.body.body;
     return body.length === 1 || (body.length === 2 && this.hasPropsDeclaration());
+  }
+
+  setDefaultPropsNode(node) {
+    this.defaultPropsNode = node;
   }
 
   setPropTypesNode(node) {

@@ -1,11 +1,12 @@
 const generate = require('@babel/generator').default;
 const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
-const { indentCode, removeTrailingWhitespace, squeezeCode } = require('../utils');
+const { indentCode, removeDoubleNewlines, removeTrailingWhitespace, squeezeCode } = require('../utils');
 
 class ComponentBuilder extends AbstractBuilder {
   constructor(code) {
     super(code);
+    this.defaultPropsNode = null;
     this.propTypesNode = null;
   }
 
@@ -22,12 +23,18 @@ class ComponentBuilder extends AbstractBuilder {
       code += indentCode(this.buildPropTypes(), 2);
       code += '\n';
     }
+    if (this.defaultPropsNode) {
+      code += '\n';
+      code += indentCode(this.buildDefaultProps(), 2);
+      code += '\n';
+    }
     code += this.buildRender();
     code += '\n';
     code += `}`;
     code += this.buildSuffix();
+    code = code.replace(this.getOldDefaultProps(), '');
     code = code.replace(this.getOldPropTypes(), '');
-    code = code.replace(/\n\n\n/g, '\n');
+    code = removeDoubleNewlines(code);
     code = removeTrailingWhitespace(code);
     return code;
   }
@@ -45,6 +52,18 @@ class ComponentBuilder extends AbstractBuilder {
 
   buildDeclaration() {
     return `class ${this.buildName()} extends Component {`;
+  }
+
+  buildDefaultProps() {
+    if (!this.defaultPropsNode) {
+      return '';
+    }
+
+    const defaultProps = generate(this.defaultPropsNode.expression.right, {
+      ...babelGeneratorOptions,
+      concise: false
+    });
+    return `static defaultProps = ${defaultProps.code};`
   }
 
   buildJsx() {
@@ -81,7 +100,10 @@ class ComponentBuilder extends AbstractBuilder {
       return '';
     }
 
-    const propTypes = generate(this.propTypesNode.expression.right, { ...babelGeneratorOptions, concise: false });
+    const propTypes = generate(this.propTypesNode.expression.right, {
+      ...babelGeneratorOptions,
+      concise: false
+    });
     return `static propTypes = ${propTypes.code};`
   }
 
@@ -112,6 +134,14 @@ class ComponentBuilder extends AbstractBuilder {
     return code;
   }
 
+  getOldDefaultProps() {
+    if (!this.defaultPropsNode) {
+      return '';
+    }
+
+    return this.code.substring(this.defaultPropsNode.start, this.defaultPropsNode.end);
+  }
+
   getOldPropTypes() {
     if (!this.propTypesNode) {
       return '';
@@ -122,6 +152,10 @@ class ComponentBuilder extends AbstractBuilder {
 
   isSingleReturnStatement() {
     return this.node.declarations[0].init.body.type === 'JSXElement';
+  }
+
+  setDefaultPropsNode(node) {
+    this.defaultPropsNode = node;
   }
 
   setPropTypesNode(node) {

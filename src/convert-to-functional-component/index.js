@@ -2,6 +2,7 @@ const babylon = require('babylon');
 const traverse = require('@babel/traverse').default;
 const {
   isComponentDeclaration,
+  isStaticDefaultPropsDeclaration,
   isStaticPropTypesDeclaration,
   isReactImport
 } = require('../node-utils');
@@ -21,29 +22,33 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
 
   canApply(code) {
     const ast = babylon.parse(code, babylonOptions);
+    let hasDefaultProps = false;
     let hasPropTypes = false;
     let hasReactImport = false;
     let isComponent = false;
 
     traverse(ast, {
+      ClassDeclaration({ node }) {
+        if (isComponentDeclaration(node)) {
+          isComponent = true;
+        }
+      },
       ClassProperty({ node }) {
         if (isStaticPropTypesDeclaration(node)) {
           hasPropTypes = true;
+        }
+        if (isStaticDefaultPropsDeclaration(node)) {
+          hasDefaultProps = true;
         }
       },
       ImportDeclaration({ node }) {
         if (isReactImport(node)) {
           hasReactImport = true;
         }
-      },
-      ClassDeclaration({ node }) {
-        if (isComponentDeclaration(node)) {
-          isComponent = true;
-        }
       }
     });
 
-    return hasPropTypes && hasReactImport && isComponent;
+    return hasDefaultProps || hasPropTypes || hasReactImport || isComponent;
   }
 
   refactorComponent(code, ast) {
@@ -58,6 +63,9 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
       ClassProperty({ node }) {
         if (isStaticPropTypesDeclaration(node)) {
           builder.setPropTypesNode(node);
+        }
+        if (isStaticDefaultPropsDeclaration(node)) {
+          builder.setDefaultPropsNode(node);
         }
       }
     });

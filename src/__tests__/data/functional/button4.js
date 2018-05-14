@@ -13,11 +13,6 @@ const Button = ({ className, children, ...props }) => {
   );
 };
 
-Button.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string
-};
-
 Button.defaultProps = {
   children: 'a',
   className: 'b'

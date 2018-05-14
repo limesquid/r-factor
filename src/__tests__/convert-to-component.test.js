@@ -8,7 +8,7 @@ describe('convert-to-component', () => {
     const tests = [
       {
         input: readFile('functional/button1.js'),
-        output: false
+        output: true
       },
       {
         input: readFile('functional/button2.js'),
@@ -18,6 +18,10 @@ describe('convert-to-component', () => {
         input: readFile('functional/button3.js'),
         output: true
       },
+      {
+        input: readFile('functional/button4.js'),
+        output: true
+      }
     ];
     tests.forEach(({ input, output }) => expect(refactoring.canApply(input)).toBe(output));
   });
@@ -54,6 +58,10 @@ describe('convert-to-component', () => {
         input: readFile('functional/button3.js'),
         output: readFile('non-functional/button3.js')
       },
+      {
+        input: readFile('functional/button4.js'),
+        output: readFile('non-functional/button4.js')
+      }
     ];
     tests.forEach(({ input, output }) => expect(refactoring.refactor(input)).toBe(output));
   });

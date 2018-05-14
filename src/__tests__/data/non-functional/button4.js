@@ -4,11 +4,6 @@ import classNames from 'classnames';
 import styles from './styles.scss';
 
 class Button extends Component {
-  static propTypes = {
-    children: PropTypes.node,
-    className: PropTypes.string
-  };
-
   static defaultProps = {
     children: 'a',
     className: 'b'

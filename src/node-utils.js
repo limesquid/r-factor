@@ -16,6 +16,13 @@ const isComponentDeclaration = (node) => isClass(node)
   && classExtends(node, 'Component')
   && classHasMethod(node, 'render');
 
+const isDefaultPropsDeclaration = (node) => node.type === 'ExpressionStatement'
+  && node.expression
+  && node.expression.type === 'AssignmentExpression'
+  && node.expression.left.type === 'MemberExpression'
+  && node.expression.left.property.type === 'Identifier'
+  && node.expression.left.property.name === 'defaultProps';
+
 const isFunctionalComponentDeclaration = (node) => node.type === 'VariableDeclaration'
   && node.declarations.length === 1
   && node.declarations[0].init.type === 'ArrowFunctionExpression'
@@ -52,10 +59,14 @@ const isReactImport = (node) => node.type === 'ImportDeclaration'
   && node.specifiers[0].local.type === 'Identifier'
   && node.specifiers[0].local.name === 'React';
 
-const isStaticPropTypesDeclaration = (node) => node.type === 'ClassProperty'
+const isStaticDefaultPropsDeclaration = (node) => isStaticPropertyDeclaration(node, 'defaultProps');
+
+const isStaticPropTypesDeclaration = (node) => isStaticPropertyDeclaration(node, 'propTypes');
+
+const isStaticPropertyDeclaration = (node, name) => node.type === 'ClassProperty'
   && node.static
   && node.key.type === 'Identifier'
-  && node.key.name === 'propTypes';
+  && node.key.name === name;
 
 module.exports = {
   classExtends,
@@ -64,9 +75,12 @@ module.exports = {
   getReturnStatement,
   isClass,
   isComponentDeclaration,
+  isDefaultPropsDeclaration,
   isFunctionalComponentDeclaration,
   isPropsDeclaration,
   isPropTypesDeclaration,
   isReactImport,
-  isStaticPropTypesDeclaration
+  isStaticDefaultPropsDeclaration,
+  isStaticPropTypesDeclaration,
+  isStaticPropertyDeclaration
 };
