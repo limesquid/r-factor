@@ -1,0 +1,4 @@
+[
+  { "keys": ["ctrl+shift+alt+c"], "command": "convert_to_component" },
+  { "keys": ["ctrl+shift+alt+f"], "command": "convert_to_functional_component" }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "caption": "R-factor: Convert to component",
+    "command": "convert_to_component"
+  },
+  {
+    "caption": "R-factor: Convert to functional component",
+    "command": "convert_to_functional_component"
+  }
+]
