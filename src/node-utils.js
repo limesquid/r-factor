@@ -21,12 +21,7 @@ const isComponentDeclaration = (node) => isClassDeclaration(node)
   && classExtends(node, 'Component')
   && classHasMethod(node, 'render');
 
-const isDefaultPropsDeclaration = (node) => node.type === 'ExpressionStatement'
-  && node.expression
-  && node.expression.type === 'AssignmentExpression'
-  && node.expression.left.type === 'MemberExpression'
-  && node.expression.left.property.type === 'Identifier'
-  && node.expression.left.property.name === 'defaultProps';
+const isDefaultPropsDeclaration = (node) => isMemberDeclaration(node, 'defaultProps');
 
 const isFunctionalComponentDeclaration = (node) => {
   if (!isArrowFunctionDeclaration(node)) {
@@ -49,18 +44,24 @@ const isFunctionalComponentDeclaration = (node) => {
   );
 };
 
+const isMemberOfDeclaration = (node, objectName, name) => isMemberDeclaration(node, name)
+  && node.expression.left.object.type === 'Identifier'
+  && node.expression.left.object.name === objectName;
+
+const isMemberDeclaration = (node, name) => node.type === 'ExpressionStatement'
+  && node.expression
+  && node.expression.type === 'AssignmentExpression'
+  && node.expression.left.type === 'MemberExpression'
+  && node.expression.left.property.type === 'Identifier'
+  && node.expression.left.property.name === name;
+
 const isPropsDeclaration = (declaration) => declaration.type === 'VariableDeclarator'
   && declaration.init.type === 'MemberExpression'
   && declaration.init.object.type === 'ThisExpression'
   && declaration.init.property.type === 'Identifier'
   && declaration.init.property.name === 'props';
 
-const isPropTypesDeclaration = (node) => node.type === 'ExpressionStatement'
-  && node.expression
-  && node.expression.type === 'AssignmentExpression'
-  && node.expression.left.type === 'MemberExpression'
-  && node.expression.left.property.type === 'Identifier'
-  && node.expression.left.property.name === 'propTypes';
+const isPropTypesDeclaration = (node) => isMemberDeclaration(node, 'propTypes');
 
 const isReactImport = (node) => node.type === 'ImportDeclaration'
   && node.specifiers[0].type === 'ImportDefaultSpecifier'
@@ -85,6 +86,8 @@ module.exports = {
   isComponentDeclaration,
   isDefaultPropsDeclaration,
   isFunctionalComponentDeclaration,
+  isMemberDeclaration,
+  isMemberOfDeclaration,
   isPropsDeclaration,
   isPropTypesDeclaration,
   isReactImport,

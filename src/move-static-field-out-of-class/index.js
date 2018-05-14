@@ -34,7 +34,7 @@ class MoveStaticFieldOutOfClass extends AbstractRefactoring {
       }
     });
 
-    return hasStaticField || isComponent;
+    return hasStaticField && isComponent;
   }
 
   refactorClass(code, ast) {
