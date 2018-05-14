@@ -29,7 +29,7 @@ class ReactImportBuilder extends AbstractBuilder {
     const sortedSubImports = Array.from(new Set(subImports)).sort()
       .filter((subImport) => subImport !== 'Component');
     if (sortedSubImports.length === 0) {
-      return 'import React from \'react\'';
+      return 'import React from \'react\';';
     }
     return `import React, { ${sortedSubImports.join(', ')} } from 'react';`;
   }
