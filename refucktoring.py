@@ -1,63 +1,49 @@
+import os
 import sublime
 import sublime_plugin
-from subprocess import Popen, PIPE
-import errno
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '.'))
+from r-factor_utils import node_bridge
 
-nodeScriptPath = "node d:\\Projekty\\r-factor\\index.js"
-
-class CommandRunner:
-  def __init__(self, command):
-    self.command = command
-
-  def run(self, lines):
-    process = Popen(self.command, stdin=PIPE, stdout=PIPE)
-    stdout = ""
-    for line in lines:
-      try:
-        process.stdin.write(line)
-      except IOError as error:
-        if error.errno == errno.EPIPE or error.errno == errno.EINVAL:
-          # Stop loop on "Invalid pipe" or "Invalid argument".
-          # No sense in continuing with broken pipe.
-          break
-        else:
-          # Raise any other error.
-          raise
-    process.stdin.close()
-    for line in process.stdout:
-      stdout += line.decode()
-    code = process.wait()
-    if code != 0:
-      print("Error exit code: {}".format(code))
-    return stdout
-
-def createCommandRunner(refactoring):
-  return CommandRunner("{} -r {}".format(nodeScriptPath, refactoring))
+BIN_PATH = os.path.join(
+  sublime.packages_path(),
+  os.path.dirname(os.path.realpath(__file__)),
+  'index.js'
+)
 
 class BaseCommand(sublime_plugin.TextCommand):
-  def __init__(self, arg):
-    super(BaseCommand, self).__init__(arg)
-
   def run(self, edit):
     selection = self.view.sel()
     region = selection[0]
-    selectedText = self.view.substr(region)
-    if len(selectedText) == 0:
+    selected_text = self.view.substr(region)
+    if len(selected_text) == 0:
       region = sublime.Region(0, self.view.size())
-      selectedText = self.view.substr(region)
-    stdout = self.commandRunner.run([ selectedText.encode() ])
+      selected_text = self.view.substr(region)
+    stdout = self.execute(selected_text, self.refactoring_name)
     self.view.replace(edit, region, stdout)
+
+  def execute(self, data, refactoring_name):
+    try:
+      return node_bridge(data, BIN_PATH, [
+        '-r', refactoring_name,
+        '-i', self.get_setting('indent') # example: option from configuration file
+      ])
+    except Exception as e:
+      return str(e)
+
+  def get_setting(self, key):
+    settings = self.view.settings().get('r-factor')
+    if settings is None:
+      settings = sublime.load_settings('r-factor.sublime-settings')
+    return settings.get(key)
 
 class ConvertToComponentCommand(BaseCommand):
   def __init__(self, arg):
     super(ConvertToComponentCommand, self).__init__(arg)
-    self.commandRunner = createCommandRunner("convert-to-component")
+    self.refactoring_name = 'convert-to-component'
+
 
 class ConvertToFunctionalComponentCommand(BaseCommand):
   def __init__(self, arg):
     super(ConvertToFunctionalComponentCommand, self).__init__(arg)
-    self.commandRunner = createCommandRunner("convert-to-functional-component")
-
-#view.run_command("convert_to_component")
-#view.run_command("convert_to_functional_component")
-#https://github.com/yuriyyakym/sublime-es6-jsx-stack/blob/master/index.py
+    self.refactoring_name = 'convert-to-functional-component'

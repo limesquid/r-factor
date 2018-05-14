@@ -1,4 +1,4 @@
-const readline = require('readline');
+const getStdin = require('get-stdin');
 const argv = require('./cli');
 
 const refactorings = {
@@ -8,28 +8,11 @@ const refactorings = {
 
 const refactoring = new refactorings[argv.refactoring]();
 
-const readInput = () => new Promise((resolve) => {
-  const readlineInterface = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    terminal: false
-  });
-
-  const input = [];
-
-  readlineInterface.on('pause', () => {
-    const lines = input.join('\n');
-    resolve(lines);
-  });
-
-  readlineInterface.on('line', (line) => {
-    input.push(line);
-  });
+getStdin().then((data) => {
+  try {
+    const code = refactoring.refactor(data);
+    process.stdout.write(code);
+  } catch (error) {
+    process.stderr.write(error);
+  }
 });
-
-const run = () => readInput()
-  // .then((input) => refactoring.canApply(input) ? refactoring.refactor(input) : input)
-  .then((input) => refactoring.refactor(input))
-  .then((output) => console.log(output));
-
-run();
