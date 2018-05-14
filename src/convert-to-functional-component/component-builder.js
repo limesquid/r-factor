@@ -1,7 +1,7 @@
 const generate = require('@babel/generator').default;
 const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
-const { squeezeCode, indentCode } = require('../utils');
+const { indentCode, removeTrailingWhitespace, squeezeCode } = require('../utils');
 const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../node-utils');
 
 class ComponentBuilder extends AbstractBuilder {
@@ -31,7 +31,7 @@ class ComponentBuilder extends AbstractBuilder {
     code += this.buildSuffix();
     code = code.replace(this.getOldPropTypes(), '');
     code = code.replace(/\n\n\n/g, '\n');
-
+    code = removeTrailingWhitespace(code);
     return code;
   }
 

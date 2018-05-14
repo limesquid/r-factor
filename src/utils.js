@@ -7,6 +7,7 @@ const indentLines = (lines, size) => {
   return lines.map((line) => line.replace(new RegExp(`^${indent}`, 'i'), ''));
 };
 const indentCode = (code, size) => code && indentLines(code.split('\n'), size).join('\n');
+const removeTrailingWhitespace = (code) => code.split('\n').map((line) => line.replace(/[ ]+$/, '')).join('\n');
 const squeezeCode = (code, size, squeeze) => {
   const [ first, ...rest ] = code.split('\n');
   return [
@@ -19,5 +20,6 @@ module.exports = {
   generateIndent,
   indentCode,
   indentLines,
+  removeTrailingWhitespace,
   squeezeCode
 };
