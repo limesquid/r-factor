@@ -15,9 +15,9 @@ const isArrowFunctionDeclaration = (node) => node.type === 'VariableDeclaration'
   && node.declarations[0].init.type === 'ArrowFunctionExpression'
   && node.declarations[0].init.generator === false;
 
-const isClass = (node) => node.type === 'ClassDeclaration';
+const isClassDeclaration = (node) => node.type === 'ClassDeclaration';
 
-const isComponentDeclaration = (node) => isClass(node)
+const isComponentDeclaration = (node) => isClassDeclaration(node)
   && classExtends(node, 'Component')
   && classHasMethod(node, 'render');
 
@@ -81,7 +81,7 @@ module.exports = {
   classHasMethod,
   getClassMethod,
   getReturnStatement,
-  isClass,
+  isClassDeclaration,
   isComponentDeclaration,
   isDefaultPropsDeclaration,
   isFunctionalComponentDeclaration,

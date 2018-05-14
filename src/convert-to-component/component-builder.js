@@ -30,8 +30,8 @@ class ComponentBuilder extends AbstractBuilder {
     code += this.buildSuffix();
     code = code.replace(this.getOldDefaultProps(), '');
     code = code.replace(this.getOldPropTypes(), '');
-    code = removeDoubleNewlines(code);
     code = removeTrailingWhitespace(code);
+    code = removeDoubleNewlines(code);
     return code;
   }
 

@@ -15,8 +15,8 @@ class ConvertToComponent extends AbstractRefactoring {
   constructor() {
     super();
     this.transformations = [
-      this.refactorComponent,
-      this.refactorReactImport
+      (code, ast) => this.refactorComponent(code, ast),
+      (code, ast) => this.refactorReactImport(code, ast)
     ];
   }
 
