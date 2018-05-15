@@ -20,7 +20,8 @@ class BaseCommand(sublime_plugin.TextCommand):
       region = sublime.Region(0, self.view.size())
       selected_text = self.view.substr(region)
     stdout = self.execute(selected_text, self.refactoring_name)
-    self.view.replace(edit, region, stdout)
+    if stdout != selected_text:
+      self.view.replace(edit, region, stdout)
 
   def is_enabled(self):
     return True

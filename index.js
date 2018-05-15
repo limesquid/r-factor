@@ -14,8 +14,12 @@ const refactoring = new refactorings[argv.refactoring]();
 
 getStdin().then((data) => {
   try {
-    const code = refactoring.refactor(data);
-    process.stdout.write(code);
+    if (refactoring.canApply(data)) {
+      const code = refactoring.refactor(data);
+      process.stdout.write(code);
+    } else {
+      process.stdout.write(data);
+    }
   } catch (error) {
     process.stderr.write(error);
   }
