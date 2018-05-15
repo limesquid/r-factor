@@ -26,13 +26,13 @@ class ComponentBuilder extends AbstractBuilder {
     code += ';';
     if (this.propTypesNode) {
       code += this.buildPropTypes();
+      code = code.replace(this.getOldPropTypes(), '');
     }
     if (this.defaultPropsNode) {
       code += this.buildDefaultProps();
+      code = code.replace(this.getOldDefaultProps(), '');
     }
     code += this.buildSuffix();
-    code = code.replace(this.getOldDefaultProps(), '');
-    code = code.replace(this.getOldPropTypes(), '');
     code = removeTrailingWhitespace(code);
     code = removeDoubleNewlines(code);
     return code;
@@ -84,10 +84,6 @@ class ComponentBuilder extends AbstractBuilder {
   }
 
   buildDefaultProps() {
-    if (!this.defaultPropsNode) {
-      return '';
-    }
-
     const defaultProps = generate(this.defaultPropsNode.value, { ...babelGeneratorOptions, concise: false });
     return `\n\n${this.buildName()}.defaultProps = ${defaultProps.code};\n\n`;
   }
@@ -106,27 +102,15 @@ class ComponentBuilder extends AbstractBuilder {
   }
 
   buildPropTypes() {
-    if (!this.propTypesNode) {
-      return '';
-    }
-
     const propTypes = generate(this.propTypesNode.value, { ...babelGeneratorOptions, concise: false });
     return `\n\n${this.buildName()}.propTypes = ${propTypes.code};\n\n`;
   }
 
   getOldDefaultProps() {
-    if (!this.defaultPropsNode) {
-      return '';
-    }
-
     return this.code.substring(this.defaultPropsNode.start, this.defaultPropsNode.end);
   }
 
   getOldPropTypes() {
-    if (!this.propTypesNode) {
-      return '';
-    }
-
     return this.code.substring(this.propTypesNode.start, this.propTypesNode.end);
   }
 

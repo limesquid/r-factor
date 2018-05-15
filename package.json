@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "eslint config . --ext .js",
     "lint:fix": "eslint config . --ext .js --fix",
-    "test": "jest --no-cache",
+    "test": "jest --no-cache --coverage",
     "test:watch": "jest --no-cache --watch"
   },
   "jest": {

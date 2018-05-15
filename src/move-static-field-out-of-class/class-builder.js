@@ -20,19 +20,19 @@ class ClassBuilder extends AbstractBuilder {
     code += this.code.substring(this.node.start, this.node.end);
     if (this.staticFieldNode) {
       code += this.buildStaticField();
+      if (this.node.body.body.length === 1) {
+        code = code.replace(this.getOldBody(), '{\n}');
+      } else {
+        code = code.replace(this.getOldStaticField(), '');
+      }
     }
     code += this.buildSuffix();
-    code = code.replace(this.getOldStaticField(), '');
     code = removeTrailingWhitespace(code);
     code = removeDoubleNewlines(code);
     return code;
   }
 
   buildStaticField() {
-    if (!this.staticFieldNode) {
-      return '';
-    }
-
     const staticField = generate(this.staticFieldNode.value, {
       ...babelGeneratorOptions,
       concise: false
@@ -44,11 +44,11 @@ class ClassBuilder extends AbstractBuilder {
     return this.node.id.name;
   }
 
-  getOldStaticField() {
-    if (!this.staticFieldNode) {
-      return '';
-    }
+  getOldBody() {
+    return this.code.substring(this.node.body.start, this.node.body.end);
+  }
 
+  getOldStaticField() {
     return this.code.substring(this.staticFieldNode.start, this.staticFieldNode.end);
   }
 

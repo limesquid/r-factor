@@ -18,8 +18,8 @@ const isArrowFunctionDeclaration = (node) => node.type === 'VariableDeclaration'
 const isClassDeclaration = (node) => node.type === 'ClassDeclaration';
 
 const isComponentDeclaration = (node) => isClassDeclaration(node)
-  && classExtends(node, 'Component')
-  && classHasMethod(node, 'render');
+  && classExtends(node, 'Component');
+  // && classHasMethod(node, 'render'); TODO
 
 const isDefaultPropsDeclaration = (node) => isMemberDeclaration(node, 'defaultProps');
 
