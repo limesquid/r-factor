@@ -38,7 +38,7 @@ class BaseCommand(sublime_plugin.TextCommand):
   def get_setting(self, key):
     settings = self.view.settings().get('r-factor')
     if settings is None:
-      settings = sublime.load_settings('R-factor.sublime-settings')
+      settings = sublime.load_settings('r-factor.sublime-settings')
     return settings.get(key)
 
 
