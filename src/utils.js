@@ -1,3 +1,4 @@
+const cleanUpCode = (code) => removeDoubleNewlines(removeTrailingWhitespace(code));
 const generateIndent = (length) => Array.from({ length }).map(() => ' ').join('');
 const indentLines = (lines, size) => {
   const indent = generateIndent(Math.abs(size));
@@ -18,6 +19,7 @@ const squeezeCode = (code, size, squeeze) => {
 };
 
 module.exports = {
+  cleanUpCode,
   generateIndent,
   indentCode,
   removeDoubleNewlines,

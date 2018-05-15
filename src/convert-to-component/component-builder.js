@@ -1,7 +1,7 @@
 const generate = require('@babel/generator').default;
 const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
-const { indentCode, removeDoubleNewlines, removeTrailingWhitespace, squeezeCode } = require('../utils');
+const { cleanUpCode, indentCode, squeezeCode } = require('../utils');
 
 class ComponentBuilder extends AbstractBuilder {
   build() {
@@ -16,8 +16,7 @@ class ComponentBuilder extends AbstractBuilder {
     code += '\n';
     code += '}';
     code += this.buildSuffix();
-    code = removeTrailingWhitespace(code);
-    code = removeDoubleNewlines(code);
+    code = cleanUpCode(code);
     return code;
   }
 
@@ -42,7 +41,11 @@ class ComponentBuilder extends AbstractBuilder {
     const jsxNode = this.isSingleReturnStatement()
       ? functionBody
       : [ ...functionBody.body ].reverse().find((node) => node.type === 'ReturnStatement').argument;
-    return this.code.substring(jsxNode.start, jsxNode.end);
+    const jsx = this.code.substring(jsxNode.start, jsxNode.end);
+    if (this.isSingleReturnStatement()) {
+      return squeezeCode(jsx, 6, 2);
+    }
+    return squeezeCode(jsx, 6, 4);
   }
 
   buildName() {
@@ -68,7 +71,6 @@ class ComponentBuilder extends AbstractBuilder {
 
   buildRender() {
     const body = this.buildBody();
-    const jsx = this.buildJsx();
     const props = this.buildProps();
     let code = '';
     code += '\n';
@@ -79,17 +81,19 @@ class ComponentBuilder extends AbstractBuilder {
     code += indentCode(body, 4);
     code += body ? '\n\n' : '';
     code += ((props && !body) ? '\n' : '');
-    code += indentCode('return (', 4);
-    code += '\n';
-    if (this.isSingleReturnStatement()) {
-      code += squeezeCode(jsx, 6, 2);
-    } else {
-      code += squeezeCode(jsx, 6, 4);
-    }
-    code += '\n';
-    code += indentCode(');', 4);
+    code += this.buildReturnStatement();
     code += '\n';
     code += indentCode('}', 2);
+    return code;
+  }
+
+  buildReturnStatement() {
+    let code = '';
+    code += indentCode('return (', 4);
+    code += '\n';
+    code += this.buildJsx();
+    code += '\n';
+    code += indentCode(');', 4);
     return code;
   }
 

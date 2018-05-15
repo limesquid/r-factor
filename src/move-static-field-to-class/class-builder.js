@@ -1,7 +1,7 @@
 const generate = require('@babel/generator').default;
 const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
-const { indentCode, removeDoubleNewlines, removeTrailingWhitespace, squeezeCode } = require('../utils');
+const { cleanUpCode, indentCode, squeezeCode } = require('../utils');
 
 class ClassBuilder extends AbstractBuilder {
   constructor(code, staticFieldName) {
@@ -16,24 +16,27 @@ class ClassBuilder extends AbstractBuilder {
     }
 
     let code = '';
-    let body = '';
     code += this.buildPrefix();
     code += this.code.substring(this.node.start, this.node.end);
     if (this.staticFieldNode) {
-      if (this.node.body.body.length === 0) {
-        body += '{\n';
-        body += squeezeCode(`${this.buildClassBody()}\n`, 2);
-        body += indentCode('}', -2);
-      } else {
-        body += this.buildClassBody();
-      }
-      code = code.replace(this.getOldBody(), body);
+      code = code.replace(this.getOldBody(), this.buildBody());
     }
     code += this.buildSuffix();
     code = code.replace(this.getOldStaticField(), '');
-    code = removeTrailingWhitespace(code);
-    code = removeDoubleNewlines(code);
+    code = cleanUpCode(code);
     return code;
+  }
+
+  buildBody() {
+    let body = '';
+    if (this.node.body.body.length === 0) {
+      body += '{\n';
+      body += squeezeCode(`${this.buildClassBody()}\n`, 2);
+      body += indentCode('}', -2);
+    } else {
+      body += this.buildClassBody();
+    }
+    return body;
   }
 
   buildClassBody() {

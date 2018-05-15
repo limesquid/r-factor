@@ -1,7 +1,7 @@
 const generate = require('@babel/generator').default;
 const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
-const { indentCode, removeDoubleNewlines, removeTrailingWhitespace, squeezeCode } = require('../utils');
+const { cleanUpCode, indentCode, squeezeCode } = require('../utils');
 const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../node-utils');
 
 class ComponentBuilder extends AbstractBuilder {
@@ -19,8 +19,10 @@ class ComponentBuilder extends AbstractBuilder {
     code += this.isSingleReturnStatement() ? ')' : '}';
     code += ';';
     code += this.buildSuffix();
-    code = removeTrailingWhitespace(code);
-    code = removeDoubleNewlines(code);
+    if (this.hasPropsDeclaration()) {
+      code = code.replace(`${this.getOldPropsDeclaration()}\n`, '');
+    }
+    code = cleanUpCode(code);
     return code;
   }
 
@@ -32,18 +34,7 @@ class ComponentBuilder extends AbstractBuilder {
       return indentCode(this.buildJsx(), 2);
     }
 
-    const hasPropsDeclaration = this.hasPropsDeclaration();
-    const render = getClassMethod(this.node, 'render');
-    const bodyNodes = render.body.body;
-    const firstNode = bodyNodes[0];
-    const lastNonReturnNode = [ ...bodyNodes ].reverse().find((node) => node.type !== 'ReturnStatement');
-    let code = this.code.substring(firstNode.start, lastNonReturnNode.end);
-    code = indentCode(code, -2);
-    if (hasPropsDeclaration) {
-      const propsNode = this.getPropsNode();
-      const oldDeclaration = this.code.substring(propsNode.start, propsNode.end);
-      code = code.replace(`${oldDeclaration}\n`, '');
-    }
+    let code = this.buildBodyNonReturnStatements();
     code += '\n\n';
     code += indentCode('return (', 2);
     code += '\n';
@@ -56,6 +47,16 @@ class ComponentBuilder extends AbstractBuilder {
   buildDeclaration() {
     const openParen = this.isSingleReturnStatement() ? '(' : '{';
     return `const ${this.buildName()} = (${this.buildProps()}) => ${openParen}`;
+  }
+
+  buildBodyNonReturnStatements() {
+    const render = getClassMethod(this.node, 'render');
+    const bodyNodes = render.body.body;
+    const firstNode = bodyNodes[0];
+    const lastNonReturnNode = [ ...bodyNodes ].reverse().find((node) => node.type !== 'ReturnStatement');
+    let code = this.code.substring(firstNode.start, lastNonReturnNode.end);
+    code = indentCode(code, -2);
+    return code;
   }
 
   buildJsx() {
@@ -90,18 +91,23 @@ class ComponentBuilder extends AbstractBuilder {
     );
   }
 
+  getOldPropsDeclaration() {
+    const propsNode = this.getPropsNode();
+    return this.code.substring(propsNode.start, propsNode.end);
+  }
+
   getPropsDeclaration() {
     const propsNode = this.getPropsNode();
     return propsNode.declarations.find(isPropsDeclaration);
   }
 
+  hasPropsDeclaration() {
+    return Boolean(this.getPropsNode() && this.getPropsDeclaration());
+  }
+
   hasThisPropsUsages() {
     // TODO
     return false;
-  }
-
-  hasPropsDeclaration() {
-    return Boolean(this.getPropsNode() && this.getPropsDeclaration());
   }
 
   isSingleReturnStatement() {

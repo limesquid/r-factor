@@ -1,7 +1,7 @@
 const generate = require('@babel/generator').default;
 const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
-const { removeDoubleNewlines, removeTrailingWhitespace } = require('../utils');
+const { cleanUpCode } = require('../utils');
 
 class ClassBuilder extends AbstractBuilder {
   constructor(code, staticFieldName) {
@@ -27,8 +27,7 @@ class ClassBuilder extends AbstractBuilder {
       }
     }
     code += this.buildSuffix();
-    code = removeTrailingWhitespace(code);
-    code = removeDoubleNewlines(code);
+    code = cleanUpCode(code);
     return code;
   }
 
