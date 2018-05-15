@@ -4,12 +4,6 @@ const { babelGeneratorOptions } = require('../options');
 const { indentCode, removeDoubleNewlines, removeTrailingWhitespace, squeezeCode } = require('../utils');
 
 class ComponentBuilder extends AbstractBuilder {
-  constructor(code) {
-    super(code);
-    this.defaultPropsNode = null;
-    this.propTypesNode = null;
-  }
-
   build() {
     if (!this.node) {
       return this.code;
@@ -18,18 +12,10 @@ class ComponentBuilder extends AbstractBuilder {
     let code = '';
     code += this.buildPrefix();
     code += this.buildDeclaration();
-    if (this.propTypesNode) {
-      code += indentCode(this.buildPropTypes(), 2);
-    }
-    if (this.defaultPropsNode) {
-      code += indentCode(this.buildDefaultProps(), 2);
-    }
     code += this.buildRender();
     code += '\n';
     code += '}';
     code += this.buildSuffix();
-    code = code.replace(this.getOldDefaultProps(), '');
-    code = code.replace(this.getOldPropTypes(), '');
     code = removeTrailingWhitespace(code);
     code = removeDoubleNewlines(code);
     return code;
@@ -50,17 +36,6 @@ class ComponentBuilder extends AbstractBuilder {
     return `class ${this.buildName()} extends Component {`;
   }
 
-  buildDefaultProps() {
-    if (!this.defaultPropsNode) {
-      return '';
-    }
-
-    const defaultProps = generate(this.defaultPropsNode.expression.right, {
-      ...babelGeneratorOptions,
-      concise: false
-    });
-    return `\nstatic defaultProps = ${defaultProps.code};\n`;
-  }
 
   buildJsx() {
     const functionBody = this.node.declarations[0].init.body;
@@ -91,18 +66,6 @@ class ComponentBuilder extends AbstractBuilder {
     return '';
   }
 
-  buildPropTypes() {
-    if (!this.propTypesNode) {
-      return '';
-    }
-
-    const propTypes = generate(this.propTypesNode.expression.right, {
-      ...babelGeneratorOptions,
-      concise: false
-    });
-    return `\nstatic propTypes = ${propTypes.code};\n`;
-  }
-
   buildRender() {
     const body = this.buildBody();
     const jsx = this.buildJsx();
@@ -130,32 +93,8 @@ class ComponentBuilder extends AbstractBuilder {
     return code;
   }
 
-  getOldDefaultProps() {
-    if (!this.defaultPropsNode) {
-      return '';
-    }
-
-    return this.code.substring(this.defaultPropsNode.start, this.defaultPropsNode.end);
-  }
-
-  getOldPropTypes() {
-    if (!this.propTypesNode) {
-      return '';
-    }
-
-    return this.code.substring(this.propTypesNode.start, this.propTypesNode.end);
-  }
-
   isSingleReturnStatement() {
     return this.node.declarations[0].init.body.type === 'JSXElement';
-  }
-
-  setDefaultPropsNode(node) {
-    this.defaultPropsNode = node;
-  }
-
-  setPropTypesNode(node) {
-    this.propTypesNode = node;
   }
 }
 

@@ -5,12 +5,6 @@ const { indentCode, removeDoubleNewlines, removeTrailingWhitespace, squeezeCode 
 const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../node-utils');
 
 class ComponentBuilder extends AbstractBuilder {
-  constructor(code) {
-    super(code);
-    this.defaultPropsNode = null;
-    this.propTypesNode = null;
-  }
-
   build() {
     if (!this.node) {
       return this.code;
@@ -24,14 +18,6 @@ class ComponentBuilder extends AbstractBuilder {
     code += '\n';
     code += this.isSingleReturnStatement() ? ')' : '}';
     code += ';';
-    if (this.propTypesNode) {
-      code += this.buildPropTypes();
-      code = code.replace(this.getOldPropTypes(), '');
-    }
-    if (this.defaultPropsNode) {
-      code += this.buildDefaultProps();
-      code = code.replace(this.getOldDefaultProps(), '');
-    }
     code += this.buildSuffix();
     code = removeTrailingWhitespace(code);
     code = removeDoubleNewlines(code);
@@ -83,11 +69,6 @@ class ComponentBuilder extends AbstractBuilder {
     return this.node.id.name;
   }
 
-  buildDefaultProps() {
-    const defaultProps = generate(this.defaultPropsNode.value, { ...babelGeneratorOptions, concise: false });
-    return `\n\n${this.buildName()}.defaultProps = ${defaultProps.code};\n\n`;
-  }
-
   buildProps() {
     if (this.hasPropsDeclaration()) {
       const declaration = this.getPropsDeclaration();
@@ -99,19 +80,6 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     return '';
-  }
-
-  buildPropTypes() {
-    const propTypes = generate(this.propTypesNode.value, { ...babelGeneratorOptions, concise: false });
-    return `\n\n${this.buildName()}.propTypes = ${propTypes.code};\n\n`;
-  }
-
-  getOldDefaultProps() {
-    return this.code.substring(this.defaultPropsNode.start, this.defaultPropsNode.end);
-  }
-
-  getOldPropTypes() {
-    return this.code.substring(this.propTypesNode.start, this.propTypesNode.end);
   }
 
   getPropsNode() {
@@ -140,14 +108,6 @@ class ComponentBuilder extends AbstractBuilder {
     const render = getClassMethod(this.node, 'render');
     const body = render.body.body;
     return body.length === 1 || (body.length === 2 && this.hasPropsDeclaration());
-  }
-
-  setDefaultPropsNode(node) {
-    this.defaultPropsNode = node;
-  }
-
-  setPropTypesNode(node) {
-    this.propTypesNode = node;
   }
 }
 

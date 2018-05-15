@@ -1,20 +1,21 @@
 const babylon = require('babylon');
 const traverse = require('@babel/traverse').default;
-const {
-  isComponentDeclaration,
-  isStaticDefaultPropsDeclaration,
-  isStaticPropTypesDeclaration,
-  isReactImport
-} = require('../node-utils');
+const { isComponentDeclaration, isReactImport } = require('../node-utils');
 const { babylonOptions } = require('../options');
 const { AbstractRefactoring } = require('../model');
+const MoveDefaultPropsOutOfClass = require('../move-default-props-out-of-class');
+const MovePropTypesOutOfClass = require('../move-prop-types-out-of-class');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 
 class ConvertToFunctionalComponent extends AbstractRefactoring {
   constructor() {
     super();
+    this.moveDefaultPropsOutOfClass = new MoveDefaultPropsOutOfClass();
+    this.movePropTypesOutOfClass = new MovePropTypesOutOfClass();
     this.transformations = [
+      (code) => this.moveDefaultPropsOutOfClass.refactor(code),
+      (code) => this.movePropTypesOutOfClass.refactor(code),
       (code, ast) => this.refactorReactImport(code, ast),
       (code, ast) => this.refactorComponent(code, ast)
     ];
@@ -22,8 +23,6 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
 
   canApply(code) {
     const ast = babylon.parse(code, babylonOptions);
-    let hasDefaultProps = false;
-    let hasPropTypes = false;
     let hasReactImport = false;
     let isComponent = false;
 
@@ -33,14 +32,6 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
           isComponent = true;
         }
       },
-      ClassProperty({ node }) {
-        if (isStaticPropTypesDeclaration(node)) {
-          hasPropTypes = true;
-        }
-        if (isStaticDefaultPropsDeclaration(node)) {
-          hasDefaultProps = true;
-        }
-      },
       ImportDeclaration({ node }) {
         if (isReactImport(node)) {
           hasReactImport = true;
@@ -48,7 +39,10 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
       }
     });
 
-    return hasDefaultProps || hasPropTypes || hasReactImport || isComponent;
+    return hasReactImport
+      || isComponent
+      || this.moveDefaultPropsToClass.canApply(code)
+      || this.movePropTypesToClass.canApply(code);
   }
 
   refactorComponent(code, ast) {
@@ -58,14 +52,6 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
       ClassDeclaration({ node }) {
         if (isComponentDeclaration(node)) {
           builder.setNode(node);
-        }
-      },
-      ClassProperty({ node }) {
-        if (isStaticPropTypesDeclaration(node)) {
-          builder.setPropTypesNode(node);
-        }
-        if (isStaticDefaultPropsDeclaration(node)) {
-          builder.setDefaultPropsNode(node);
         }
       }
     });
