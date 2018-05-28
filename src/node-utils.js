@@ -1,3 +1,12 @@
+const {
+  isIdentifier,
+  isMemberExpression,
+  isObjectProperty,
+  isObjectPattern,
+  isThisExpression,
+  isVariableDeclarator
+} = require('@babel/types');
+
 const classExtends = (node, name) => node.superClass
   && node.superClass.type === 'Identifier'
   && node.superClass.name === name;
@@ -77,21 +86,85 @@ const isStaticPropertyDeclaration = (node, name) => node.type === 'ClassProperty
   && node.key.type === 'Identifier'
   && node.key.name === name;
 
+const getObjectExpressionKeys = (node) => node.properties
+  .map((property) => property.key.name);
+
+const getNodeIndent = (node) => node.loc.start.column;
+
+const getNodeStartPosition = (node) => node.start;
+
+const getNodeEndPosition = (node) => node.end;
+
+const getFunctionalComponentName = (node) => node.declarations[0].id.name;
+
+const getClassComponentName = (node) => node.id.name;
+
+const isThisPropsMemberExpression = (node) => isMemberExpression(node)
+  && isThisExpression(node.object)
+  && isIdentifier(node.property, { name: 'props' });
+
+const isThisPropsDestructuring = (node) => isVariableDeclarator(node)
+  && isThisPropsMemberExpression(node.init);
+
+const isPropertyDestructuring = (node, propertyName) => isVariableDeclarator(node)
+  && isIdentifier(node.init, { name: propertyName });
+
+const getPropertyNames = (properties) => properties
+  .filter(isObjectProperty)
+  .map((property) => property.key.name);
+
+const getVariableDestructuringPropertyNames = (node) =>
+  getPropertyNames(node.id.properties);
+
+const isThisPropsKeyAccessing = (node) => isMemberExpression(node)
+  && isThisPropsMemberExpression(node.object);
+
+const arePropsDestructuredInFunctionalComponentArguments = (componentNode) =>
+  isObjectPattern(componentNode.params[0]);
+
+const getFirstArgumentDestructuredAttributes = (node) =>
+  getPropertyNames(node.params[0].properties);
+
+const getFunctionalComponentPropVariableName = (componentNode) => componentNode.params.length > 0
+  && componentNode.params[0].name;
+
+const getFunctionalComponentDefinition = (node) => node.declarations[0].init;
+
+const isObjectKeyAccessing = (node, propsVariableName) => isMemberExpression(node)
+  && isIdentifier(node.object, { name: propsVariableName });
+
 module.exports = {
+  arePropsDestructuredInFunctionalComponentArguments,
   classExtends,
   classHasMethod,
+  getClassComponentName,
   getClassMethod,
+  getFunctionalComponentName,
+  getNodeEndPosition,
+  getNodeIndent,
+  getNodeStartPosition,
+  getObjectExpressionKeys,
+  getPropertyNames,
   getReturnStatement,
+  getVariableDestructuringPropertyNames,
+  getFirstArgumentDestructuredAttributes,
+  getFunctionalComponentPropVariableName,
+  getFunctionalComponentDefinition,
   isClassDeclaration,
   isComponentDeclaration,
   isDefaultPropsDeclaration,
   isFunctionalComponentDeclaration,
   isMemberDeclaration,
   isMemberOfDeclaration,
+  isObjectKeyAccessing,
+  isPropertyDestructuring,
   isPropsDeclaration,
   isPropTypesDeclaration,
   isReactImport,
   isStaticDefaultPropsDeclaration,
   isStaticPropTypesDeclaration,
-  isStaticPropertyDeclaration
+  isStaticPropertyDeclaration,
+  isThisPropsDestructuring,
+  isThisPropsKeyAccessing,
+  isThisPropsMemberExpression
 };

@@ -1,5 +1,9 @@
-const cleanUpCode = (code) => removeDoubleNewlines(removeTrailingWhitespace(code));
-const generateIndent = (length) => Array.from({ length }).map(() => ' ').join('');
+const stable = require('stable');
+
+const composeReversed = (firstFunction, ...restFunctions) => (...args) => restFunctions
+  .reduce((result, fn) => fn(result), firstFunction(...args));
+const compose = (...functions) => composeReversed(...functions.reverse());
+const generateIndent = (length) => Array.from({ length }, () => ' ').join('');
 const indentLines = (lines, size) => {
   const indent = generateIndent(Math.abs(size));
   if (size >= 0) {
@@ -9,7 +13,6 @@ const indentLines = (lines, size) => {
 };
 const indentCode = (code, size) => code && indentLines(code.split('\n'), size).join('\n');
 const removeDoubleNewlines = (code) => code.replace(/\n\n\n/g, '\n');
-const removeTrailingWhitespace = (code) => code.split('\n').map((line) => line.replace(/[ ]+$/, '')).join('\n');
 const squeezeCode = (code, size, squeeze) => {
   const [ first, ...rest ] = code.split('\n');
   return [
@@ -17,6 +20,12 @@ const squeezeCode = (code, size, squeeze) => {
     ...indentLines(rest, size - squeeze)
   ].join('\n');
 };
+const removeTrailingWhitespace = (code) => code.replace(/[ ]+\n/g, '\n');
+const cleanUpCode = compose(removeDoubleNewlines, removeTrailingWhitespace);
+const sortPropTypes = (propTypesLines) => stable(
+  stable(propTypesLines),
+  (prop1, prop2) => prop1.startsWith('on') && !prop2.startsWith('on') ? 1 : 0
+);
 
 module.exports = {
   cleanUpCode,
@@ -25,5 +34,6 @@ module.exports = {
   removeDoubleNewlines,
   indentLines,
   removeTrailingWhitespace,
+  sortPropTypes,
   squeezeCode
 };

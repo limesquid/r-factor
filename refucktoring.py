@@ -54,6 +54,12 @@ class ConvertToFunctionalComponentCommand(BaseCommand):
     self.refactoring_name = 'convert-to-functional-component'
 
 
+class GeneratePropTypesCommand(BaseCommand):
+  def __init__(self, arg):
+    super(GeneratePropTypesCommand, self).__init__(arg)
+    self.refactoring_name = 'generate-prop-types'
+
+
 class MoveDefaultPropsOutOfClass(BaseCommand):
   def __init__(self, arg):
     super(MoveDefaultPropsOutOfClass, self).__init__(arg)

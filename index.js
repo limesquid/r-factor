@@ -4,6 +4,7 @@ const argv = require('./cli');
 const refactorings = {
   'convert-to-component': require('./src/convert-to-component'),
   'convert-to-functional-component': require('./src/convert-to-functional-component'),
+  'generate-prop-types': require('./src/generate-prop-types'),
   'move-default-props-out-of-class': require('./src/move-default-props-out-of-class'),
   'move-default-props-to-class': require('./src/move-default-props-to-class'),
   'move-prop-types-out-of-class': require('./src/move-prop-types-out-of-class'),

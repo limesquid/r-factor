@@ -8,6 +8,10 @@
     "command": "convert_to_functional_component"
   },
   {
+    "caption": "R-factor: Generate component PropTypes",
+    "command": "generate_prop_types"
+  },
+  {
     "caption": "R-factor: Move defaultProps out of class",
     "command": "move_default_props_out_of_class"
   },
