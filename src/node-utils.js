@@ -7,9 +7,10 @@ const {
   isVariableDeclarator
 } = require('@babel/types');
 
-const classExtends = (node, name) => node.superClass
-  && node.superClass.type === 'Identifier'
+const classExtends = (node, name) => classExtendsSomething(node)
   && node.superClass.name === name;
+
+const classExtendsSomething = (node) => Boolean(node.superClass);
 
 const classHasMethod = (...args) => Boolean(getClassMethod(...args));
 
@@ -27,7 +28,7 @@ const isArrowFunctionDeclaration = (node) => node.type === 'VariableDeclaration'
 const isClassDeclaration = (node) => node.type === 'ClassDeclaration';
 
 const isComponentDeclaration = (node) => isClassDeclaration(node)
-  && classExtends(node, 'Component');
+  && classExtendsSomething(node);
   // && classHasMethod(node, 'render'); TODO
 
 const isDefaultPropsDeclaration = (node) => isMemberDeclaration(node, 'defaultProps');

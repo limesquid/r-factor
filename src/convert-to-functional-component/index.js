@@ -45,6 +45,20 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
       || this.movePropTypesToClass.canApply(code);
   }
 
+  getSuperClass(code, ast) {
+    let superClass = 'Component';
+
+    traverse(ast, {
+      ClassDeclaration({ node }) {
+        if (isComponentDeclaration(node)) {
+          superClass = node.superClass.name;
+        }
+      }
+    });
+
+    return superClass;
+  }
+
   refactorComponent(code, ast) {
     const builder = new ComponentBuilder(code);
 
@@ -70,7 +84,7 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
       }
     });
 
-    return builder.build();
+    return builder.build(this.getSuperClass(code, ast));
   }
 }
 

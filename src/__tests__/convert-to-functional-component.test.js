@@ -29,6 +29,14 @@ describe('convert-to-functional-component', () => {
       {
         input: readFile('non-functional/button6.js'),
         output: true
+      },
+      {
+        input: readFile('non-functional/button7.js'),
+        output: true
+      },
+      {
+        input: readFile('non-functional/button8.js'),
+        output: true
       }
     ];
     tests.forEach(({ input, output }) => expect(refactoring.canApply(input)).toBe(output));
@@ -77,6 +85,14 @@ describe('convert-to-functional-component', () => {
       {
         input: readFile('non-functional/button6.js'),
         output: readFile('functional/button6.js')
+      },
+      {
+        input: readFile('non-functional/button7.js'),
+        output: readFile('functional/button7.js')
+      },
+      {
+        input: readFile('non-functional/button8.js'),
+        output: readFile('functional/button8.js')
       }
     ];
     tests.forEach(({ input, output }) => expect(refactoring.refactor(input)).toBe(output));

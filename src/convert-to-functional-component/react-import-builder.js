@@ -6,19 +6,19 @@ class ReactImportBuilder extends AbstractBuilder {
     this.propTypesNode = null;
   }
 
-  build() {
+  build(superClass) {
     if (!this.node) {
       return this.code;
     }
 
     let code = '';
     code += this.buildPrefix();
-    code += this.buildImport();
+    code += this.buildImport(superClass);
     code += this.buildSuffix();
     return code;
   }
 
-  buildImport() {
+  buildImport(superClass) {
     const subImports = [];
     subImports.push(...this.node.specifiers.slice(1).map((specifier) => {
       if (specifier.local.name !== specifier.imported.name) {
@@ -27,7 +27,7 @@ class ReactImportBuilder extends AbstractBuilder {
       return specifier.local.name || specifier.imported.name;
     }));
     const sortedSubImports = Array.from(new Set(subImports)).sort()
-      .filter((subImport) => subImport !== 'Component');
+      .filter((subImport) => subImport !== superClass);
     if (sortedSubImports.length === 0) {
       return 'import React from \'react\';';
     }
