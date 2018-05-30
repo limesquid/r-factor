@@ -15,11 +15,12 @@ class ClassBuilder extends AbstractBuilder {
       return this.code;
     }
 
+    const indent = this.getIndent();
     let code = '';
     code += this.buildPrefix();
     code += this.code.substring(this.node.start, this.node.end);
     if (this.staticFieldNode) {
-      code = code.replace(this.getOldBody(), this.buildBody());
+      code = code.replace(this.getOldBody(), indentCode(this.buildBody(), indent));
     }
     code += this.buildSuffix();
     code = code.replace(this.getOldStaticField(), '');
@@ -31,8 +32,8 @@ class ClassBuilder extends AbstractBuilder {
     let body = '';
     if (this.node.body.body.length === 0) {
       body += '{\n';
-      body += squeezeCode(`${this.buildClassBody()}\n`, 2);
-      body += indentCode('}', -2);
+      body += squeezeCode(this.buildClassBody(), 2);
+      body += '\n}';
     } else {
       body += this.buildClassBody();
     }

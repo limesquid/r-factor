@@ -9,12 +9,13 @@ class ComponentBuilder extends AbstractBuilder {
       return this.code;
     }
 
+    const indent = this.getIndent();
     let code = '';
     code += this.buildPrefix();
     code += this.buildDeclaration();
     code += this.buildRender();
     code += '\n';
-    code += '}';
+    code += indentCode('}', indent);
     code += this.buildSuffix();
     code = cleanUpCode(code);
     return code;

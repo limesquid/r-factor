@@ -10,13 +10,14 @@ class ComponentBuilder extends AbstractBuilder {
       return this.code;
     }
 
+    const indent = this.getIndent();
     let code = '';
     code += this.buildPrefix();
     code += this.buildDeclaration();
     code += '\n';
-    code += this.buildBody();
+    code += indentCode(this.buildBody(), indent);
     code += '\n';
-    code += this.isSingleReturnStatement() ? ')' : '}';
+    code += indentCode(this.isSingleReturnStatement() ? ')' : '}', indent);
     code += ';';
     code += this.buildSuffix();
     if (this.hasPropsDeclaration()) {

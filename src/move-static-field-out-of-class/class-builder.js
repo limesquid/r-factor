@@ -1,7 +1,7 @@
 const generate = require('@babel/generator').default;
 const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
-const { cleanUpCode } = require('../utils');
+const { cleanUpCode, indentCode } = require('../utils');
 
 class ClassBuilder extends AbstractBuilder {
   constructor(code, staticFieldName) {
@@ -15,11 +15,12 @@ class ClassBuilder extends AbstractBuilder {
       return this.code;
     }
 
+    const indent = this.getIndent();
     let code = '';
     code += this.buildPrefix();
     code += this.code.substring(this.node.start, this.node.end);
     if (this.staticFieldNode) {
-      code += this.buildStaticField();
+      code += indentCode(this.buildStaticField(), indent);
       if (this.node.body.body.length === 1) {
         code = code.replace(this.getOldBody(), '{\n}');
       } else {

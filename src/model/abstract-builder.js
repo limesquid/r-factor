@@ -1,3 +1,5 @@
+const { getIndent } = require('../utils');
+
 class AbstractBuilder {
   constructor(code) {
     this.code = code;
@@ -14,6 +16,10 @@ class AbstractBuilder {
 
   buildSuffix() {
     return this.code.substring(this.node.end);
+  }
+
+  getIndent() {
+    return getIndent(this.code, this.node.start);
   }
 
   setNode(node) {
