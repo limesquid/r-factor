@@ -33,26 +33,27 @@ const isComponentDeclaration = (node) => isClassDeclaration(node)
 
 const isDefaultPropsDeclaration = (node) => isMemberDeclaration(node, 'defaultProps');
 
+const isExportDefaultFunctionalComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
+  && node.declaration.type === 'ArrowFunctionExpression'
+  && isFunctionalComponentBody(node.declaration);
+
 const isFunctionalComponentDeclaration = (node) => {
   if (!isArrowFunctionDeclaration(node)) {
     return false;
   }
 
-  const declaration = node.declarations[0].init;
-  return Boolean(
-    (
-      declaration.expression === true
-      && declaration.body.type === 'JSXElement'
-    )
-    ||
-    (
-      declaration.expression === false
-      && declaration.body.type === 'BlockStatement'
-      && declaration.body.body[declaration.body.body.length - 1].type === 'ReturnStatement'
-      && declaration.body.body[declaration.body.body.length - 1].argument.type === 'JSXElement'
-    )
-  );
+  return isFunctionalComponentBody(node.declarations[0].init);
 };
+
+const isFunctionalComponentBody = (node) => Boolean(
+  node.body.type === 'JSXElement'
+  ||
+  (
+    node.body.type === 'BlockStatement'
+    && node.body.body[node.body.body.length - 1].type === 'ReturnStatement'
+    && node.body.body[node.body.body.length - 1].argument.type === 'JSXElement'
+  )
+);
 
 const isMemberOfDeclaration = (node, objectName, name) => isMemberDeclaration(node, name)
   && node.expression.left.object.type === 'Identifier'
@@ -154,6 +155,7 @@ module.exports = {
   isClassDeclaration,
   isComponentDeclaration,
   isDefaultPropsDeclaration,
+  isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration,
   isMemberDeclaration,
   isMemberOfDeclaration,

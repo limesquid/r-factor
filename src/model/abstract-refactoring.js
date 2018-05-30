@@ -1,4 +1,4 @@
-const babylon = require('babylon');
+const babylon = require('@babel/parser');
 const { babylonOptions } = require('../options');
 
 class AbstractRefactoring {

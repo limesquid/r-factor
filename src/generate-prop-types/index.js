@@ -1,4 +1,4 @@
-const babylon = require('babylon');
+const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const { babylonOptions } = require('../options');
 const {

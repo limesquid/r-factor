@@ -1,6 +1,10 @@
-const babylon = require('babylon');
+const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const { isFunctionalComponentDeclaration, isReactImport } = require('../node-utils');
+const {
+  isExportDefaultFunctionalComponentDeclaration,
+  isFunctionalComponentDeclaration,
+  isReactImport
+} = require('../node-utils');
 const { babylonOptions } = require('../options');
 const { AbstractRefactoring } = require('../model');
 const MoveDefaultPropsToClass = require('../move-default-props-to-class');
@@ -27,6 +31,11 @@ class ConvertToComponent extends AbstractRefactoring {
     let isFunctionalComponent = false;
 
     traverse(ast, {
+      ExportDefaultDeclaration({ node }) {
+        if (isExportDefaultFunctionalComponentDeclaration(node)) {
+          isFunctionalComponent = true;
+        }
+      },
       ImportDeclaration({ node }) {
         if (isReactImport(node)) {
           hasReactImport = true;
@@ -49,6 +58,11 @@ class ConvertToComponent extends AbstractRefactoring {
     const builder = new ComponentBuilder(code);
 
     traverse(ast, {
+      ExportDefaultDeclaration({ node }) {
+        if (isExportDefaultFunctionalComponentDeclaration(node)) {
+          builder.setNode(node);
+        }
+      },
       VariableDeclaration({ node }) {
         if (isFunctionalComponentDeclaration(node)) {
           builder.setNode(node);

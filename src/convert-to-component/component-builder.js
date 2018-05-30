@@ -1,6 +1,7 @@
 const generate = require('@babel/generator').default;
 const { AbstractBuilder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
+const { isExportDefaultFunctionalComponentDeclaration } = require('../node-utils');
 const { cleanUpCode, indentCode, squeezeCode } = require('../utils');
 
 class ComponentBuilder extends AbstractBuilder {
@@ -26,19 +27,26 @@ class ComponentBuilder extends AbstractBuilder {
       return '';
     }
 
-    const bodyNodes = this.node.declarations[0].init.body.body;
+    const bodyNodes = this.getDeclarationInit().body.body;
     const firstNode = bodyNodes[0];
     const lastNonReturnNode = [ ...bodyNodes ].reverse().find((node) => node.type !== 'ReturnStatement');
     return this.code.substring(firstNode.start, lastNonReturnNode.end);
   }
 
   buildDeclaration() {
-    return `class ${this.buildName()} extends Component {`;
+    const name = this.buildName();
+    let declaration = 'class extends Component {';
+    if (name) {
+      declaration = `class ${name} extends Component {`;
+    }
+    if (isExportDefaultFunctionalComponentDeclaration(this.node)) {
+      return `export default ${declaration}`;
+    }
+    return declaration;
   }
 
-
   buildJsx() {
-    const functionBody = this.node.declarations[0].init.body;
+    const functionBody = this.getDeclarationInit().body;
     const jsxNode = this.isSingleReturnStatement()
       ? functionBody
       : [ ...functionBody.body ].reverse().find((node) => node.type === 'ReturnStatement').argument;
@@ -50,11 +58,14 @@ class ComponentBuilder extends AbstractBuilder {
   }
 
   buildName() {
-    return this.node.declarations[0].id.name;
+    if (this.getDeclaration()) {
+      return this.getDeclaration().id.name;
+    }
+    return '';
   }
 
   buildProps() {
-    const params = this.node.declarations[0].init.params;
+    const params = this.getDeclarationInit().params;
     const propsNode = params[0];
 
     if (params.length === 0) {
@@ -98,8 +109,23 @@ class ComponentBuilder extends AbstractBuilder {
     return code;
   }
 
+  getDeclaration() {
+    if (this.node.declarations) {
+      return this.node.declarations[0];
+    }
+    return null;
+  }
+
+  getDeclarationInit() {
+    const declaration = this.getDeclaration();
+    if (declaration && declaration.init) {
+      return declaration.init;
+    }
+    return this.node.declaration;
+  }
+
   isSingleReturnStatement() {
-    return this.node.declarations[0].init.body.type === 'JSXElement';
+    return this.getDeclarationInit().body.type === 'JSXElement';
   }
 }
 

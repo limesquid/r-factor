@@ -23,6 +23,7 @@ class ComponentBuilder extends AbstractBuilder {
     if (this.hasPropsDeclaration()) {
       code = code.replace(`${this.getOldPropsDeclaration()}\n`, '');
     }
+    code = this.ensureProperExport(code);
     code = cleanUpCode(code);
     return code;
   }
@@ -47,7 +48,12 @@ class ComponentBuilder extends AbstractBuilder {
 
   buildDeclaration() {
     const openParen = this.isSingleReturnStatement() ? '(' : '{';
-    return `const ${this.buildName()} = (${this.buildProps()}) => ${openParen}`;
+    const name = this.buildName();
+    const value = `(${this.buildProps()}) => ${openParen}`;
+    if (name) {
+      return `const ${name} = ${value}`;
+    }
+    return value;
   }
 
   buildBodyNonReturnStatements() {
@@ -68,7 +74,8 @@ class ComponentBuilder extends AbstractBuilder {
   }
 
   buildName() {
-    return this.node.id.name;
+    const { id } = this.node;
+    return id && id.name;
   }
 
   buildProps() {
@@ -82,6 +89,19 @@ class ComponentBuilder extends AbstractBuilder {
     }
 
     return '';
+  }
+
+  ensureProperExport(code) {
+    const declarationCode = `const ${this.buildName()}`;
+    const defaultExportCode = `export default ${declarationCode}`;
+    let newCode = code;
+    if (newCode.includes(defaultExportCode)) {
+      newCode = newCode.replace(defaultExportCode, declarationCode);
+      newCode += '\n';
+      newCode += `export default ${this.buildName()};`;
+      newCode += '\n';
+    }
+    return newCode;
   }
 
   getPropsNode() {

@@ -1,4 +1,4 @@
-const babylon = require('babylon');
+const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const { isClass, isMemberOfDeclaration } = require('../node-utils');
 const { babylonOptions } = require('../options');
@@ -48,7 +48,7 @@ class MoveStaticFieldToClass extends AbstractRefactoring {
       ClassDeclaration({ node }) {
         if (isClassDeclaration(node)) {
           builder.setNode(node);
-          className = node.id.name;
+          className = node.id && node.id.name;
         }
       },
       ExpressionStatement({ node }) {
