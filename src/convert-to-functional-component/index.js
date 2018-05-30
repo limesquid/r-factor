@@ -41,8 +41,8 @@ class ConvertToFunctionalComponent extends AbstractRefactoring {
 
     return hasReactImport
       || isComponent
-      || this.moveDefaultPropsToClass.canApply(code)
-      || this.movePropTypesToClass.canApply(code);
+      || this.moveDefaultPropsOutOfClass.canApply(code)
+      || this.movePropTypesOutOfClass.canApply(code);
   }
 
   getSuperClass(code, ast) {

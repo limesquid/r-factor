@@ -10,6 +10,11 @@ describe('convert-to-functional-component:canApply', () => {
     input: readFile(`non-functional/${file}.js`),
     output: true
   }));
+  tests.push({
+    name: 'non component class',
+    input: 'class X {}',
+    output: false
+  });
   tests.forEach(({ name, input, output }) => {
     it(`canApply "${name}"`, () => {
       expect(refactoring.canApply(input)).toBe(output);
