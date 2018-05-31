@@ -1,42 +1,37 @@
 const { readFile } = require('./test-utils');
 const MovePropTypesToClass = require('../move-prop-types-to-class');
 
-describe('move-prop-types-to-class', () => {
+const files = [ 1, 2, 3, 4 ].map((n) => `button${n}`);
+
+describe('move-prop-types-to-class:canApply', () => {
   const refactoring = new MovePropTypesToClass();
-
-  it('knows if should refactor Button', () => {
-    const tests = [
-      {
-        input: readFile('prop-types/outside/button1.js'),
-        output: true
-      },
-      {
-        input: readFile('prop-types/outside/button2.js'),
-        output: true
-      },
-      {
-        input: readFile('prop-types/outside/button3.js'),
-        output: true
-      }
-    ];
-    tests.forEach(({ input, output }) => expect(refactoring.canApply(input)).toBe(output));
+  const tests = files.map((file) => ({
+    name: `prop-types/outside/${file}.js`,
+    input: readFile(`prop-types/outside/${file}.js`),
+    output: true
+  }));
+  tests.push({
+    name: 'class',
+    input: 'class X {}',
+    output: false
   });
+  tests.forEach(({ name, input, output }) => {
+    it(`canApply "${name}"`, () => {
+      expect(refactoring.canApply(input)).toBe(output);
+    });
+  });
+});
 
-  it('applies Button refactoring correctly', () => {
-    const tests = [
-      {
-        input: readFile('prop-types/outside/button1.js'),
-        output: readFile('prop-types/inside/button1.js')
-      },
-      {
-        input: readFile('prop-types/outside/button2.js'),
-        output: readFile('prop-types/inside/button2.js')
-      },
-      {
-        input: readFile('prop-types/outside/button3.js'),
-        output: readFile('prop-types/inside/button3.js')
-      }
-    ];
-    tests.forEach(({ input, output }) => expect(refactoring.refactor(input)).toBe(output));
+describe('move-prop-types-to-class:refactor', () => {
+  const refactoring = new MovePropTypesToClass();
+  const tests = files.map((file) => ({
+    name: `prop-types/outside/${file}.js -> prop-types/inside/${file}.js`,
+    input: readFile(`prop-types/outside/${file}.js`),
+    output: readFile(`prop-types/inside/${file}.js`)
+  }));
+  tests.forEach(({ name, input, output }) => {
+    it(`refactor "${name}"`, () => {
+      expect(refactoring.refactor(input)).toBe(output)
+    });
   });
 });

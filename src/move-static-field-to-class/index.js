@@ -1,22 +1,22 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const { isClass, isMemberOfDeclaration } = require('../node-utils');
+const { isMemberOfDeclaration } = require('../node-utils');
 const { babylonOptions } = require('../options');
 const { AbstractRefactoring } = require('../model');
 const ClassBuilder = require('./class-builder');
 
 class MoveStaticFieldToClass extends AbstractRefactoring {
-  constructor(staticFieldName, isClassDeclaration = isClass) {
+  constructor(staticFieldName, isDeclaration) {
     super();
     this.staticFieldName = staticFieldName;
-    this.isClassDeclaration = isClassDeclaration;
+    this.isDeclaration = isDeclaration;
     this.transformations = [
       (code, ast) => this.refactorClass(code, ast)
     ];
   }
 
   canApply(code) {
-    const { isClassDeclaration, staticFieldName } = this;
+    const { isDeclaration, staticFieldName } = this;
     const ast = babylon.parse(code, babylonOptions);
     let hasStaticField = false;
     let isComponent = false;
@@ -24,9 +24,9 @@ class MoveStaticFieldToClass extends AbstractRefactoring {
 
     traverse(ast, {
       ClassDeclaration({ node }) {
-        if (isClassDeclaration(node)) {
+        if (isDeclaration(node)) {
           isComponent = true;
-          className = node.id.name;
+          className = node.id && node.id.name;
         }
       },
       ExpressionStatement({ node }) {
@@ -40,13 +40,13 @@ class MoveStaticFieldToClass extends AbstractRefactoring {
   }
 
   refactorClass(code, ast) {
-    const { isClassDeclaration, staticFieldName } = this;
+    const { isDeclaration, staticFieldName } = this;
     const builder = new ClassBuilder(code, staticFieldName);
     let className = null;
 
     traverse(ast, {
       ClassDeclaration({ node }) {
-        if (isClassDeclaration(node)) {
+        if (isDeclaration(node)) {
           builder.setNode(node);
           className = node.id && node.id.name;
         }

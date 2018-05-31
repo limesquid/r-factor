@@ -24,7 +24,7 @@ class ReactImportBuilder extends AbstractBuilder {
       if (specifier.local.name !== specifier.imported.name) {
         return `${specifier.imported.name} as ${specifier.local.name}`;
       }
-      return specifier.local.name || specifier.imported.name;
+      return specifier.local.name;
     }));
     const sortedSubImports = Array.from(new Set(subImports)).sort();
     return `import React, { ${sortedSubImports.join(', ')} } from 'react';`;

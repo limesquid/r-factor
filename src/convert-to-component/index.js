@@ -48,10 +48,7 @@ class ConvertToComponent extends AbstractRefactoring {
       }
     });
 
-    return hasReactImport
-      || isFunctionalComponent
-      || this.moveDefaultPropsToClass.canApply(code)
-      || this.movePropTypesToClass.canApply(code);
+    return hasReactImport || isFunctionalComponent;
   }
 
   refactorComponent(code, ast) {

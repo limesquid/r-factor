@@ -68,14 +68,12 @@ class ComponentBuilder extends AbstractBuilder {
     const params = this.getDeclarationInit().params;
     const propsNode = params[0];
 
-    if (params.length === 0) {
-      return '';
-    }
-
-    if (propsNode.type === 'ObjectPattern') {
-      return `const ${generate(propsNode, babelGeneratorOptions).code} = this.props;`;
-    } else if (propsNode.type === 'Identifier') {
-      return `const ${propsNode.name} = this.props;`;
+    if (params.length > 0) {
+      if (propsNode.type === 'ObjectPattern') {
+        return `const ${generate(propsNode, babelGeneratorOptions).code} = this.props;`;
+      } else {
+        return `const ${propsNode.name} = this.props;`;
+      }
     }
 
     return '';

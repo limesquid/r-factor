@@ -5,3 +5,5 @@ class Button extends Component {
     );
   }
 }
+
+class X {}
