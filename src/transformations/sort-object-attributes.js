@@ -1,19 +1,14 @@
+const stable = require('stable');
 const { isSingleLine } = require('../utils/ast');
 const { generateIndent } = require('../utils');
 
 const sortObjectAttributes = (code, indentSize, node) => {
   const innerIndent = generateIndent(indentSize + 2);
   const isMultiLine = !isSingleLine(node);
+  const sortedProperties = sortProperties(code, node.properties);
+
   let newCode = '{';
   newCode += isMultiLine ? '\n' : ' ';
-
-  const sortedProperties = node.properties.map((property) => ({
-    ...property,
-    name: getName(code, property)
-  })).sort(
-    (a, b) => a.name.localeCompare(b.name)
-  );
-
   sortedProperties.forEach((property, index) => {
     if (isMultiLine) {
       newCode += innerIndent;
@@ -21,11 +16,15 @@ const sortObjectAttributes = (code, indentSize, node) => {
     if (property.computed) {
       newCode += '[';
     }
-    newCode += code.substring(property.key.start, property.key.end);
+    if (property.type === 'RestElement') {
+      newCode += code.substring(property.start, property.end);
+    } else {
+      newCode += code.substring(property.key.start, property.key.end);
+    }
     if (property.computed) {
       newCode += ']';
     }
-    if (!property.shorthand) {
+    if (property.value && !property.shorthand) {
       newCode += ': ';
       newCode += code.substring(property.value.start, property.value.end);
     }
@@ -44,7 +43,41 @@ const sortObjectAttributes = (code, indentSize, node) => {
   return newCode;
 };
 
-const getName = (code, { key }) => {
+const sortProperties = (code, properties) => {
+  const propertiesWithNames = properties.map((property) => ({
+    ...property,
+    name: getName(code, property)
+  }));
+  return stable(
+    stable(propertiesWithNames, propertyComparator),
+    resetElementComparator
+  );
+};
+
+const propertyComparator = (a, b) => {
+  if (a.name.startsWith('on') && !b.name.startsWith('on')) {
+    return 1;
+  }
+  if (!a.name.startsWith('on') && b.name.startsWith('on')) {
+    return -1;
+  }
+  return a.name.localeCompare(b.name);
+};
+
+const resetElementComparator = (a, b) => {
+  if (a.type === 'RestElement') {
+    return 1;
+  }
+  if (b.type === 'RestElement') {
+    return -1;
+  }
+  return 0;
+};
+
+const getName = (code, { key, type }) => {
+  if (type === 'RestElement') {
+    return '';
+  }
   if (key.name) {
     return key.name;
   }
