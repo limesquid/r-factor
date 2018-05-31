@@ -2,13 +2,13 @@ const getStdin = require('get-stdin');
 const argv = require('./cli');
 
 const refactorings = {
-  'convert-to-component': require('./src/convert-to-component'),
-  'convert-to-functional-component': require('./src/convert-to-functional-component'),
-  'generate-prop-types': require('./src/generate-prop-types'),
-  'move-default-props-out-of-class': require('./src/move-default-props-out-of-class'),
-  'move-default-props-to-class': require('./src/move-default-props-to-class'),
-  'move-prop-types-out-of-class': require('./src/move-prop-types-out-of-class'),
-  'move-prop-types-to-class': require('./src/move-prop-types-to-class')
+  'convert-to-component': require('./src/refactorings/convert-to-component'),
+  'convert-to-functional-component': require('./src/refactorings/convert-to-functional-component'),
+  'generate-prop-types': require('./src/refactorings/generate-prop-types'),
+  'move-default-props-out-of-class': require('./src/refactorings/move-default-props-out-of-class'),
+  'move-default-props-to-class': require('./src/refactorings/move-default-props-to-class'),
+  'move-prop-types-out-of-class': require('./src/refactorings/move-prop-types-out-of-class'),
+  'move-prop-types-to-class': require('./src/refactorings/move-prop-types-to-class')
 };
 
 const refactoring = new refactorings[argv.refactoring]();
