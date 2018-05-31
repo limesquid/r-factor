@@ -1,5 +1,5 @@
 const { readFile } = require('./test-utils');
-const ConvertToComponent = require('../convert-to-component');
+const ConvertToComponent = require('../refactorings/convert-to-component');
 
 const files = [ 1, 2, 3, 4, 5, 6, 10 ].map((n) => `button${n}`);
 

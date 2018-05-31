@@ -1,7 +1,7 @@
 const generate = require('@babel/generator').default;
-const { Builder } = require('../model');
-const { babelGeneratorOptions } = require('../options');
-const { cleanUpCode, indentCode } = require('../utils');
+const { Builder } = require('../../model');
+const { babelGeneratorOptions } = require('../../options');
+const { cleanUpCode, indentCode } = require('../../utils');
 
 class ClassBuilder extends Builder {
   constructor(code, staticFieldName) {

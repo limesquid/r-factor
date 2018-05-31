@@ -1,36 +1,34 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const { isMemberOfDeclaration } = require('../utils/ast');
-const { babylonOptions } = require('../options');
-const { Refactoring } = require('../model');
+const { isStaticPropertyDeclaration } = require('../../utils/ast');
+const { babylonOptions } = require('../../options');
+const { Refactoring } = require('../../model');
 const ClassBuilder = require('./class-builder');
 
-class MoveStaticFieldToClass extends Refactoring {
-  constructor(staticFieldName, isDeclaration) {
+class MoveStaticFieldOutOfClass extends Refactoring {
+  constructor(staticFieldName, isClassDeclaration) {
     super();
     this.staticFieldName = staticFieldName;
-    this.isDeclaration = isDeclaration;
+    this.isClassDeclaration = isClassDeclaration;
     this.transformations = [
       (code, ast) => this.refactorClass(code, ast)
     ];
   }
 
   canApply(code) {
-    const { isDeclaration, staticFieldName } = this;
+    const { isClassDeclaration, staticFieldName } = this;
     const ast = babylon.parse(code, babylonOptions);
     let hasStaticField = false;
     let isComponent = false;
-    let className = null;
 
     traverse(ast, {
       ClassDeclaration({ node }) {
-        if (isDeclaration(node)) {
+        if (isClassDeclaration(node)) {
           isComponent = true;
-          className = node.id && node.id.name;
         }
       },
-      ExpressionStatement({ node }) {
-        if (isMemberOfDeclaration(node, className, staticFieldName)) {
+      ClassProperty({ node }) {
+        if (isStaticPropertyDeclaration(node, staticFieldName)) {
           hasStaticField = true;
         }
       }
@@ -40,19 +38,17 @@ class MoveStaticFieldToClass extends Refactoring {
   }
 
   refactorClass(code, ast) {
-    const { isDeclaration, staticFieldName } = this;
+    const { isClassDeclaration, staticFieldName } = this;
     const builder = new ClassBuilder(code, staticFieldName);
-    let className = null;
 
     traverse(ast, {
       ClassDeclaration({ node }) {
-        if (isDeclaration(node)) {
+        if (isClassDeclaration(node)) {
           builder.setNode(node);
-          className = node.id && node.id.name;
         }
       },
-      ExpressionStatement({ node }) {
-        if (isMemberOfDeclaration(node, className, staticFieldName)) {
+      ClassProperty({ node }) {
+        if (isStaticPropertyDeclaration(node, staticFieldName)) {
           builder.setStaticFieldNode(node);
         }
       }
@@ -62,4 +58,4 @@ class MoveStaticFieldToClass extends Refactoring {
   }
 }
 
-module.exports = MoveStaticFieldToClass;
+module.exports = MoveStaticFieldOutOfClass;

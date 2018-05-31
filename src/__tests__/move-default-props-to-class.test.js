@@ -1,5 +1,5 @@
 const { readFile } = require('./test-utils');
-const MoveDefaultPropsToClass = require('../move-default-props-to-class');
+const MoveDefaultPropsToClass = require('../refactorings/move-default-props-to-class');
 
 const files = [ 1, 2, 3 ].map((n) => `button${n}`);
 

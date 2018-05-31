@@ -4,9 +4,9 @@ const {
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration,
   isReactImport
-} = require('../utils/ast');
-const { babylonOptions } = require('../options');
-const { Refactoring } = require('../model');
+} = require('../../utils/ast');
+const { babylonOptions } = require('../../options');
+const { Refactoring } = require('../../model');
 const MoveDefaultPropsToClass = require('../move-default-props-to-class');
 const MovePropTypesToClass = require('../move-prop-types-to-class');
 const ComponentBuilder = require('./component-builder');

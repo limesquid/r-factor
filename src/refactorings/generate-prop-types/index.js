@@ -1,6 +1,6 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const { babylonOptions } = require('../options');
+const { babylonOptions } = require('../../options');
 const {
   getClassComponentName,
   getFunctionalComponentName,
@@ -8,10 +8,10 @@ const {
   isFunctionalComponentDeclaration,
   isPropTypesDeclaration,
   isStaticPropTypesDeclaration
-} = require('../utils/ast');
-const { getProps } = require('../utils/props');
-const { COMPONENT_TYPE } = require('../constants');
-const { Refactoring } = require('../model');
+} = require('../../utils/ast');
+const { getProps } = require('../../utils/props');
+const { COMPONENT_TYPE } = require('../../constants');
+const { Refactoring } = require('../../model');
 const ClassBuilder = require('./class-builder');
 
 class GeneratePropTypes extends Refactoring {

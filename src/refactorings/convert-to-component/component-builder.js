@@ -1,8 +1,8 @@
 const generate = require('@babel/generator').default;
-const { Builder } = require('../model');
-const { babelGeneratorOptions } = require('../options');
-const { isExportDefaultFunctionalComponentDeclaration } = require('../utils/ast');
-const { cleanUpCode, indentCode, squeezeCode } = require('../utils');
+const { Builder } = require('../../model');
+const { babelGeneratorOptions } = require('../../options');
+const { isExportDefaultFunctionalComponentDeclaration } = require('../../utils/ast');
+const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
 
 class ComponentBuilder extends Builder {
   build() {

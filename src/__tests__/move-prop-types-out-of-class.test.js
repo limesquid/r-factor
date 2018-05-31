@@ -1,5 +1,5 @@
 const { readFile } = require('./test-utils');
-const MovePropTypesOutOfClass = require('../move-prop-types-out-of-class');
+const MovePropTypesOutOfClass = require('../refactorings/move-prop-types-out-of-class');
 
 const files = [ 1, 2, 3, 4 ].map((n) => `button${n}`);
 

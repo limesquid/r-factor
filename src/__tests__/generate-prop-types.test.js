@@ -1,5 +1,5 @@
 const { readFile } = require('./test-utils');
-const GeneratePropTypes = require('../generate-prop-types');
+const GeneratePropTypes = require('../refactorings/generate-prop-types');
 
 describe('generate-prop-types', () => {
   const refactoring = new GeneratePropTypes();
