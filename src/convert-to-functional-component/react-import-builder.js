@@ -1,6 +1,6 @@
-const { AbstractBuilder } = require('../model');
+const { Builder } = require('../model');
 
-class ReactImportBuilder extends AbstractBuilder {
+class ReactImportBuilder extends Builder {
   constructor(code) {
     super(code);
     this.propTypesNode = null;

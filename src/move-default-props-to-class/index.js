@@ -1,4 +1,4 @@
-const { isComponentDeclaration } = require('../node-utils');
+const { isComponentDeclaration } = require('../utils/ast');
 const MoveStaticFieldToClass = require('../move-static-field-to-class');
 
 class MoveDefaultPropsToClass extends MoveStaticFieldToClass {

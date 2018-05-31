@@ -1,10 +1,10 @@
 const generate = require('@babel/generator').default;
-const { AbstractBuilder } = require('../model');
+const { Builder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
 const { cleanUpCode, indentCode, squeezeCode } = require('../utils');
-const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../node-utils');
+const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../utils/ast');
 
-class ComponentBuilder extends AbstractBuilder {
+class ComponentBuilder extends Builder {
   build() {
     if (!this.node) {
       return this.code;

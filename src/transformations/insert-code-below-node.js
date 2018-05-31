@@ -1,4 +1,4 @@
-const { getNodeIndent, getNodeEndPosition } = require('../node-utils');
+const { getNodeIndent, getNodeEndPosition } = require('../utils/ast');
 const { squeezeCode } = require('../utils');
 
 const insertCodeBelowNode = (source, node, codeToInsert) => {

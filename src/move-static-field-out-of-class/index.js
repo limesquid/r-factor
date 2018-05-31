@@ -1,11 +1,11 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const { isStaticPropertyDeclaration } = require('../node-utils');
+const { isStaticPropertyDeclaration } = require('../utils/ast');
 const { babylonOptions } = require('../options');
-const { AbstractRefactoring } = require('../model');
+const { Refactoring } = require('../model');
 const ClassBuilder = require('./class-builder');
 
-class MoveStaticFieldOutOfClass extends AbstractRefactoring {
+class MoveStaticFieldOutOfClass extends Refactoring {
   constructor(staticFieldName, isClassDeclaration) {
     super();
     this.staticFieldName = staticFieldName;

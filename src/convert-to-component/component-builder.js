@@ -1,10 +1,10 @@
 const generate = require('@babel/generator').default;
-const { AbstractBuilder } = require('../model');
+const { Builder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
-const { isExportDefaultFunctionalComponentDeclaration } = require('../node-utils');
+const { isExportDefaultFunctionalComponentDeclaration } = require('../utils/ast');
 const { cleanUpCode, indentCode, squeezeCode } = require('../utils');
 
-class ComponentBuilder extends AbstractBuilder {
+class ComponentBuilder extends Builder {
   build() {
     if (!this.node) {
       return this.code;
@@ -71,9 +71,8 @@ class ComponentBuilder extends AbstractBuilder {
     if (params.length > 0) {
       if (propsNode.type === 'ObjectPattern') {
         return `const ${generate(propsNode, babelGeneratorOptions).code} = this.props;`;
-      } else {
-        return `const ${propsNode.name} = this.props;`;
       }
+      return `const ${propsNode.name} = this.props;`;
     }
 
     return '';

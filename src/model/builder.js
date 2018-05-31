@@ -1,6 +1,6 @@
 const { getIndent } = require('../utils');
 
-class AbstractBuilder {
+class Builder {
   constructor(code) {
     this.code = code;
     this.node = null;
@@ -27,4 +27,4 @@ class AbstractBuilder {
   }
 }
 
-module.exports = AbstractBuilder;
+module.exports = Builder;

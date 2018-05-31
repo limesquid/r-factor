@@ -4,15 +4,15 @@ const {
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration,
   isReactImport
-} = require('../node-utils');
+} = require('../utils/ast');
 const { babylonOptions } = require('../options');
-const { AbstractRefactoring } = require('../model');
+const { Refactoring } = require('../model');
 const MoveDefaultPropsToClass = require('../move-default-props-to-class');
 const MovePropTypesToClass = require('../move-prop-types-to-class');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 
-class ConvertToComponent extends AbstractRefactoring {
+class ConvertToComponent extends Refactoring {
   constructor() {
     super();
     this.moveDefaultPropsToClass = new MoveDefaultPropsToClass();

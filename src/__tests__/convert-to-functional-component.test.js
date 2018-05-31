@@ -54,7 +54,7 @@ describe('convert-to-functional-component:refactor', () => {
   }));
   tests.forEach(({ name, input, output }) => {
     it(`refactor "${name}"`, () => {
-      expect(refactoring.refactor(input)).toBe(output)
+      expect(refactoring.refactor(input)).toBe(output);
     });
   });
 });

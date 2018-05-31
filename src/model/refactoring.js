@@ -1,7 +1,7 @@
 const babylon = require('@babel/parser');
 const { babylonOptions } = require('../options');
 
-class AbstractRefactoring {
+class Refactoring {
   constructor(transformations) {
     this.transformations = transformations;
   }
@@ -18,4 +18,4 @@ class AbstractRefactoring {
   }
 }
 
-module.exports = AbstractRefactoring;
+module.exports = Refactoring;

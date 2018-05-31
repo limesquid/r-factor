@@ -1,14 +1,14 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const { isComponentDeclaration, isReactImport } = require('../node-utils');
+const { isComponentDeclaration, isReactImport } = require('../utils/ast');
 const { babylonOptions } = require('../options');
-const { AbstractRefactoring } = require('../model');
+const { Refactoring } = require('../model');
 const MoveDefaultPropsOutOfClass = require('../move-default-props-out-of-class');
 const MovePropTypesOutOfClass = require('../move-prop-types-out-of-class');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 
-class ConvertToFunctionalComponent extends AbstractRefactoring {
+class ConvertToFunctionalComponent extends Refactoring {
   constructor() {
     super();
     this.moveDefaultPropsOutOfClass = new MoveDefaultPropsOutOfClass();

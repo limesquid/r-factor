@@ -1,7 +1,7 @@
-const AbstractBuilder = require('./abstract-builder');
-const AbstractRefactoring = require('./abstract-refactoring');
+const Builder = require('./builder');
+const Refactoring = require('./refactoring');
 
 module.exports = {
-  AbstractBuilder,
-  AbstractRefactoring
+  Builder,
+  Refactoring
 };

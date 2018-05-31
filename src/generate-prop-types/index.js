@@ -2,34 +2,23 @@ const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const { babylonOptions } = require('../options');
 const {
-  arePropsDestructuredInFunctionalComponentArguments,
   getClassComponentName,
-  getFirstArgumentDestructuredAttributes,
-  getFunctionalComponentDefinition,
   getFunctionalComponentName,
-  getFunctionalComponentPropVariableName,
-  getVariableDestructuringPropertyNames,
   isClassDeclaration,
   isFunctionalComponentDeclaration,
-  isObjectKeyAccessing,
-  isPropertyDestructuring,
   isPropTypesDeclaration,
-  isThisPropsDestructuring,
-  isThisPropsKeyAccessing,
   isStaticPropTypesDeclaration
-} = require('../node-utils');
+} = require('../utils/ast');
+const { getProps } = require('../utils/props');
 const { COMPONENT_TYPE } = require('../constants');
-const { AbstractRefactoring } = require('../model');
+const { Refactoring } = require('../model');
 const ClassBuilder = require('./class-builder');
 
-class GeneratePropTypes extends AbstractRefactoring {
+class GeneratePropTypes extends Refactoring {
   constructor() {
     super();
 
     this.generatePropTypes = this.generatePropTypes.bind(this);
-    this.getClassComponentProps = this.getClassComponentProps.bind(this);
-    this.getFunctionalComponentProps = this.getFunctionalComponentProps.bind(this);
-    this.getPropsFromPropsVariable = this.getPropsFromPropsVariable.bind(this);
 
     this.transformations = [
       this.generatePropTypes
@@ -58,7 +47,6 @@ class GeneratePropTypes extends AbstractRefactoring {
   generatePropTypes(code, ast) {
     let componentType = null;
     let componentName = null;
-    let componentNodePath = null;
     const builder = new ClassBuilder(code);
 
     traverse(ast, {
@@ -78,74 +66,22 @@ class GeneratePropTypes extends AbstractRefactoring {
         if (isClassDeclaration(node)) {
           builder.setComponentNode(node);
           componentName = getClassComponentName(node);
-          componentNodePath = path;
           componentType = COMPONENT_TYPE.Class;
         }
 
         if (isFunctionalComponentDeclaration(node)) {
           builder.setComponentNode(node);
           componentName = getFunctionalComponentName(node);
-          componentNodePath = path;
           componentType = COMPONENT_TYPE.Functional;
         }
       }
     });
 
-    const props = componentType === COMPONENT_TYPE.Class
-      ? this.getClassComponentProps(componentNodePath)
-      : this.getFunctionalComponentProps(componentNodePath);
-    const uniqueProps = Array.from(new Set(props));
-
-    builder.setUsedProps(uniqueProps);
+    builder.setUsedProps(getProps(code, ast));
     builder.setComponentName(componentName);
     builder.setComponentType(componentType);
 
     return builder.build();
-  }
-
-  getClassComponentProps(classDeclarationNodePath) {
-    const props = [];
-    classDeclarationNodePath.traverse({
-      enter({ node }) {
-        if (isThisPropsKeyAccessing(node)) {
-          props.push(node.property.name);
-        }
-
-        if (isThisPropsDestructuring(node)) {
-          props.push(...getVariableDestructuringPropertyNames(node));
-        }
-      }
-    });
-
-    return props;
-  }
-
-  getFunctionalComponentProps(functionalComponentNodePath) {
-    const componentNode = getFunctionalComponentDefinition(functionalComponentNodePath.node);
-    const propsVariableName = getFunctionalComponentPropVariableName(componentNode);
-
-    if (arePropsDestructuredInFunctionalComponentArguments(componentNode)) {
-      return getFirstArgumentDestructuredAttributes(componentNode);
-    }
-
-    return this.getPropsFromPropsVariable(functionalComponentNodePath, propsVariableName);
-  }
-
-  getPropsFromPropsVariable(componentNodePath, propsVariableName) {
-    const props = [];
-    componentNodePath.traverse({
-      enter({ node }) {
-        if (isObjectKeyAccessing(node, propsVariableName)) {
-          props.push(node.property.name);
-        }
-
-        if (isPropertyDestructuring(node, propsVariableName)) {
-          props.push(...getVariableDestructuringPropertyNames(node));
-        }
-      }
-    });
-
-    return props;
   }
 }
 

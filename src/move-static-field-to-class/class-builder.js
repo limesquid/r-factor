@@ -1,9 +1,9 @@
 const generate = require('@babel/generator').default;
-const { AbstractBuilder } = require('../model');
+const { Builder } = require('../model');
 const { babelGeneratorOptions } = require('../options');
 const { cleanUpCode, indentCode, squeezeCode } = require('../utils');
 
-class ClassBuilder extends AbstractBuilder {
+class ClassBuilder extends Builder {
   constructor(code, staticFieldName) {
     super(code);
     this.staticFieldName = staticFieldName;
