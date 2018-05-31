@@ -30,7 +30,7 @@ const sortPropTypes = (propTypesLines) => stable(
   stable(propTypesLines),
   (prop1, prop2) => prop1.startsWith('on') && !prop2.startsWith('on') ? 1 : 0
 );
-const getIndent = (code, start = code.length) => {
+const getIndent = (code, start) => {
   const lines = code.substring(0, start).split('\n');
   const lastLine = lines[lines.length - 1] || '';
   const matches = lastLine.match(/^(\s+)/);

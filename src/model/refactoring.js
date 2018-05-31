@@ -2,7 +2,7 @@ const babylon = require('@babel/parser');
 const { babylonOptions } = require('../options');
 
 class Refactoring {
-  constructor(transformations) {
+  constructor(transformations = []) {
     this.transformations = transformations;
   }
 

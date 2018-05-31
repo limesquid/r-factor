@@ -83,10 +83,6 @@ class ComponentBuilder extends Builder {
       return generate(declaration.id, babelGeneratorOptions).code;
     }
 
-    if (this.hasThisPropsUsages()) {
-      return 'props';
-    }
-
     return '';
   }
 
@@ -125,11 +121,6 @@ class ComponentBuilder extends Builder {
     return Boolean(this.getPropsNode() && this.getPropsDeclaration());
   }
 
-  hasThisPropsUsages() {
-    // TODO
-    return false;
-  }
-
   isSingleReturnStatement() {
     const render = getClassMethod(this.node, 'render');
     const body = render.body.body;
@@ -138,8 +129,3 @@ class ComponentBuilder extends Builder {
 }
 
 module.exports = ComponentBuilder;
-
-/*
-TODO:
-  - this.props => props
-*/

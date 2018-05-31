@@ -7,12 +7,7 @@ const {
   isVariableDeclarator
 } = require('@babel/types');
 
-const classExtends = (node, name) => classExtendsSomething(node)
-  && node.superClass.name === name;
-
 const classExtendsSomething = (node) => Boolean(node.superClass);
-
-const classHasMethod = (...args) => Boolean(getClassMethod(...args));
 
 const getClassMethod = (node, name) => node.body
   && node.body.body
@@ -30,8 +25,6 @@ const isClassDeclaration = (node) => node.type === 'ClassDeclaration';
 const isComponentDeclaration = (node) => isClassDeclaration(node)
   && classExtendsSomething(node);
   // && classHasMethod(node, 'render'); TODO
-
-const isDefaultPropsDeclaration = (node) => isMemberDeclaration(node, 'defaultProps');
 
 const isExportDefaultFunctionalComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
   && node.declaration.type === 'ArrowFunctionExpression'
@@ -78,8 +71,6 @@ const isReactImport = (node) => node.type === 'ImportDeclaration'
   && node.specifiers[0].type === 'ImportDefaultSpecifier'
   && node.specifiers[0].local.type === 'Identifier'
   && node.specifiers[0].local.name === 'React';
-
-const isStaticDefaultPropsDeclaration = (node) => isStaticPropertyDeclaration(node, 'defaultProps');
 
 const isStaticPropTypesDeclaration = (node) => isStaticPropertyDeclaration(node, 'propTypes');
 
@@ -133,8 +124,6 @@ const isObjectKeyAccessing = (node, propsVariableName) => isMemberExpression(nod
 
 module.exports = {
   arePropsDestructuredInFunctionalComponentArguments,
-  classExtends,
-  classHasMethod,
   getClassComponentName,
   getClassMethod,
   getFunctionalComponentName,
@@ -148,7 +137,6 @@ module.exports = {
   getFunctionalComponentDefinition,
   isClassDeclaration,
   isComponentDeclaration,
-  isDefaultPropsDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration,
   isMemberDeclaration,
@@ -158,7 +146,6 @@ module.exports = {
   isPropsDeclaration,
   isPropTypesDeclaration,
   isReactImport,
-  isStaticDefaultPropsDeclaration,
   isStaticPropTypesDeclaration,
   isStaticPropertyDeclaration,
   isThisPropsDestructuring,
