@@ -1,7 +1,7 @@
 const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
 const { babelGeneratorOptions } = require('../../options');
-const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
+const { cleanUpCode, squeezeCode } = require('../../utils');
 
 class ClassBuilder extends Builder {
   constructor(code, staticFieldName) {
@@ -15,12 +15,13 @@ class ClassBuilder extends Builder {
       return this.code;
     }
 
-    const indent = this.getIndent();
     let code = '';
     code += this.buildPrefix();
     code += this.code.substring(this.node.start, this.node.end);
     if (this.staticFieldNode) {
-      code = code.replace(this.getOldBody(), indentCode(this.buildBody(), indent));
+      const oldBody = this.getOldBody();
+      const newBody = this.buildBody();
+      code = code.replace(oldBody, newBody);
     }
     code += this.buildSuffix();
     code = code.replace(this.getOldStaticField(), '');
@@ -30,7 +31,7 @@ class ClassBuilder extends Builder {
 
   buildBody() {
     let body = '';
-    if (this.node.body.body.length === 0) {
+    if (this.isClassBodyEmpty()) {
       body += '{\n';
       body += squeezeCode(this.buildClassBody(), 2);
       body += '\n}';
@@ -41,9 +42,10 @@ class ClassBuilder extends Builder {
   }
 
   buildClassBody() {
+    const indent = this.getIndent();
     const body = this.node.body.body;
     let newBodyCode = '';
-    newBodyCode += squeezeCode(this.buildStaticField(), 0, 2);
+    newBodyCode += squeezeCode(this.buildStaticField(), 0, 2 + indent);
     if (body.length > 0) {
       newBodyCode += this.getOldBody();
     }
@@ -75,6 +77,10 @@ class ClassBuilder extends Builder {
     }
 
     return this.code.substring(this.staticFieldNode.start, this.staticFieldNode.end);
+  }
+
+  isClassBodyEmpty() {
+    return this.node.body.body.length === 0;
   }
 
   setStaticFieldNode(node) {

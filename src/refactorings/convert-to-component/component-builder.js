@@ -46,13 +46,14 @@ class ComponentBuilder extends Builder {
   }
 
   buildJsx() {
+    const indent = this.getIndent();
     const functionBody = this.getDeclarationInit().body;
     const jsxNode = this.isSingleReturnStatement()
       ? functionBody
       : [ ...functionBody.body ].reverse().find((node) => node.type === 'ReturnStatement').argument;
     const jsx = this.code.substring(jsxNode.start, jsxNode.end);
     const squeeze = this.isSingleReturnStatement() ? 4 : 2;
-    return squeezeCode(jsx, 6, squeeze);
+    return squeezeCode(jsx, 6, squeeze - indent);
   }
 
   buildName() {
@@ -77,30 +78,34 @@ class ComponentBuilder extends Builder {
   }
 
   buildRender() {
+    const indent = this.getIndent();
     const body = this.buildBody();
     const props = this.buildProps();
     let code = '';
     code += '\n';
-    code += indentCode('render() {', 2);
+    code += indentCode('render() {', indent + 2);
     code += '\n';
-    code += indentCode(props, 4);
+    code += indentCode(props, indent + 4);
     code += props ? '\n' : '';
-    code += indentCode(body, 4);
+    if (body) {
+      code += squeezeCode(body, indent + 4, indent + 2);
+    }
     code += body ? '\n\n' : '';
     code += ((props && !body) ? '\n' : '');
     code += this.buildReturnStatement();
     code += '\n';
-    code += indentCode('}', 2);
+    code += indentCode('}', indent + 2);
     return code;
   }
 
   buildReturnStatement() {
+    const indent = this.getIndent();
     let code = '';
-    code += indentCode('return (', 4);
+    code += indentCode('return (', indent + 4);
     code += '\n';
-    code += this.buildJsx();
+    code += indentCode(this.buildJsx(), indent);
     code += '\n';
-    code += indentCode(');', 4);
+    code += indentCode(');', indent + 4);
     return code;
   }
 
