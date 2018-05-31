@@ -43,7 +43,7 @@ class ClassBuilder extends Builder {
   buildClassBody() {
     const body = this.node.body.body;
     let newBodyCode = '';
-    newBodyCode += squeezeCode(this.buildStaticField(), 0, -2);
+    newBodyCode += squeezeCode(this.buildStaticField(), 0, 2);
     if (body.length > 0) {
       newBodyCode += this.getOldBody();
     }

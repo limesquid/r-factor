@@ -31,7 +31,7 @@ class ComponentBuilder extends Builder {
   buildBody() {
     if (this.isSingleReturnStatement()) {
       if (this.hasPropsDeclaration()) {
-        return squeezeCode(this.buildJsx(), 2, 6);
+        return squeezeCode(this.buildJsx(), 2, -4);
       }
       return indentCode(this.buildJsx(), 2);
     }
@@ -40,7 +40,7 @@ class ComponentBuilder extends Builder {
     code += '\n\n';
     code += indentCode('return (', 2);
     code += '\n';
-    code += squeezeCode(this.buildJsx(), 4, 6);
+    code += squeezeCode(this.buildJsx(), 4, -2);
     code += '\n';
     code += indentCode(');', 2);
     return code;

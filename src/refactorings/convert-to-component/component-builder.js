@@ -51,10 +51,8 @@ class ComponentBuilder extends Builder {
       ? functionBody
       : [ ...functionBody.body ].reverse().find((node) => node.type === 'ReturnStatement').argument;
     const jsx = this.code.substring(jsxNode.start, jsxNode.end);
-    if (this.isSingleReturnStatement()) {
-      return squeezeCode(jsx, 6, 2);
-    }
-    return squeezeCode(jsx, 6, 4);
+    const squeeze = this.isSingleReturnStatement() ? 4 : 2;
+    return squeezeCode(jsx, 6, squeeze);
   }
 
   buildName() {

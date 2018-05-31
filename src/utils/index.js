@@ -4,23 +4,24 @@ const composeReversed = (firstFunction, ...restFunctions) => (...args) => restFu
   .reduce((result, fn) => fn(result), firstFunction(...args));
 const compose = (...functions) => composeReversed(...functions.reverse());
 const generateIndent = (length) => Array.from({ length }, () => ' ').join('');
-const indentLines = (lines, size) => {
-  if (size === 0) {
-    return lines;
+const indentLines = (lines, size) => lines.map((line) => indentLine(line, size));
+const indentLine = (line, size) => {
+  if (!size) {
+    return line;
   }
   const indent = generateIndent(Math.abs(size));
-  if (size >= 0) {
-    return lines.map((line) => `${indent}${line}`);
+  if (size > 0) {
+    return `${indent}${line}`;
   }
-  return lines.map((line) => line.replace(new RegExp(`^${indent}`, 'i'), ''));
+  return line.replace(new RegExp(`^${indent}`, 'i'), '');
 };
 const indentCode = (code, size) => code && indentLines(code.split('\n'), size).join('\n');
 const removeDoubleNewlines = (code) => code.replace(/\n\n\n/g, '\n');
-const squeezeCode = (code, size, squeeze) => {
+const squeezeCode = (code, size, restSize) => {
   const [ first, ...rest ] = code.split('\n');
   return [
-    ...indentLines([ first ], size),
-    ...indentLines(rest, size - squeeze)
+    indentLine(first, size),
+    ...indentLines(rest, restSize)
   ].join('\n');
 };
 const removeTrailingWhitespace = (code) => code.replace(/[ ]+\n/g, '\n');
