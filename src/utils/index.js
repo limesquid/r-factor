@@ -42,8 +42,8 @@ module.exports = {
   generateIndent,
   getIndent,
   indentCode,
-  removeDoubleNewlines,
   indentLines,
+  removeDoubleNewlines,
   removeTrailingWhitespace,
   sortPropTypes,
   squeezeCode

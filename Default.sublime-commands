@@ -26,5 +26,9 @@
   {
     "caption": "R-factor: Move propTypes to class",
     "command": "move_prop_types_to_class"
+  },
+  {
+    "caption": "R-factor: Sort attributes in objects",
+    "command": "sort_attributes"
   }
 ]

@@ -2,7 +2,7 @@ const difference = require('lodash.difference');
 const { Builder } = require('../../model');
 const { indentCode, sortPropTypes } = require('../../utils');
 const { getObjectExpressionKeys, getNodeIndent } = require('../../utils/ast');
-const insertCodeBelowNode = require('../../transformations/insert-code-below-node');
+const { insertCodeBelowNode } = require('../../transformations');
 
 class ClassBuilder extends Builder {
   setComponentName(name) {

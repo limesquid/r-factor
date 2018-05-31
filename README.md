@@ -14,3 +14,5 @@ Moves static propTypes property definition below class definiton.
 Moves defaultProps definition to a static class property.
 ### move-prop-types-to-class
 Moves propTypes definition to a static class property.
+### sort-attributes
+Sort attributes in objects.

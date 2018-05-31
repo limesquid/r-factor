@@ -72,6 +72,8 @@ const isReactImport = (node) => node.type === 'ImportDeclaration'
   && node.specifiers[0].local.type === 'Identifier'
   && node.specifiers[0].local.name === 'React';
 
+const isSingleLine = (node) => node.loc.end.line === node.loc.start.line;
+
 const isStaticPropTypesDeclaration = (node) => isStaticPropertyDeclaration(node, 'propTypes');
 
 const isStaticPropertyDeclaration = (node, name) => node.type === 'ClassProperty'
@@ -146,6 +148,7 @@ module.exports = {
   isPropsDeclaration,
   isPropTypesDeclaration,
   isReactImport,
+  isSingleLine,
   isStaticPropTypesDeclaration,
   isStaticPropertyDeclaration,
   isThisPropsDestructuring,

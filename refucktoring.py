@@ -82,3 +82,9 @@ class MovePropTypesToClass(BaseCommand):
   def __init__(self, arg):
     super(MovePropTypesToClass, self).__init__(arg)
     self.refactoring_name = 'move-prop-types-to-class'
+
+
+class SortAttributesCommand(BaseCommand):
+  def __init__(self, arg):
+    super(SortAttributesCommand, self).__init__(arg)
+    self.refactoring_name = 'sort-attributes'

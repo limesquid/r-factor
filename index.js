@@ -8,7 +8,8 @@ const refactorings = {
   'move-default-props-out-of-class': require('./src/refactorings/move-default-props-out-of-class'),
   'move-default-props-to-class': require('./src/refactorings/move-default-props-to-class'),
   'move-prop-types-out-of-class': require('./src/refactorings/move-prop-types-out-of-class'),
-  'move-prop-types-to-class': require('./src/refactorings/move-prop-types-to-class')
+  'move-prop-types-to-class': require('./src/refactorings/move-prop-types-to-class'),
+  'sort-attributes': require('./src/refactorings/sort-attributes')
 };
 
 const refactoring = new refactorings[argv.refactoring]();
