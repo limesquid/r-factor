@@ -29,18 +29,17 @@ class ComponentBuilder extends Builder {
   }
 
   buildBody() {
+    const indent = this.getIndent();
+
     if (this.isSingleReturnStatement()) {
-      if (this.hasPropsDeclaration()) {
-        return squeezeCode(this.buildJsx(), 2, -4);
-      }
-      return indentCode(this.buildJsx(), 2);
+      return squeezeCode(this.buildJsx(), 2, -4 - indent);
     }
 
     let code = this.buildBodyNonReturnStatements();
     code += '\n\n';
     code += indentCode('return (', 2);
     code += '\n';
-    code += squeezeCode(this.buildJsx(), 4, -2);
+    code += squeezeCode(this.buildJsx(), 4, -2 - indent);
     code += '\n';
     code += indentCode(');', 2);
     return code;

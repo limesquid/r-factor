@@ -1,7 +1,7 @@
 const { readFile } = require('./test-utils');
 const ConvertToFunctionalComponent = require('../refactorings/convert-to-functional-component');
 
-const files = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ].map((n) => `button${n}`);
+const files = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ].map((n) => `button${n}`);
 
 describe('convert-to-functional-component:canApply', () => {
   const refactoring = new ConvertToFunctionalComponent();
