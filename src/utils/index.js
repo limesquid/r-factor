@@ -5,6 +5,9 @@ const composeReversed = (firstFunction, ...restFunctions) => (...args) => restFu
 const compose = (...functions) => composeReversed(...functions.reverse());
 const generateIndent = (length) => Array.from({ length }, () => ' ').join('');
 const indentLines = (lines, size) => {
+  if (size === 0) {
+    return lines;
+  }
   const indent = generateIndent(Math.abs(size));
   if (size >= 0) {
     return lines.map((line) => `${indent}${line}`);
