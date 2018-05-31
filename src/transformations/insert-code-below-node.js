@@ -1,10 +1,10 @@
-const { getNodeIndent, getNodeEndPosition } = require('../utils/ast');
+const { getNodeIndent } = require('../utils/ast');
 const { squeezeCode } = require('../utils');
 
 const insertCodeBelowNode = (source, node, codeToInsert) => {
   const indent = getNodeIndent(node);
   const indentedCodeToInsert = squeezeCode(codeToInsert, indent);
-  const position = source.indexOf('\n', getNodeEndPosition(node)) + 1;
+  const position = source.indexOf('\n', node.end) + 1;
 
   let code = '';
   code += source.slice(0, position);

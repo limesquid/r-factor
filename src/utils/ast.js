@@ -93,10 +93,6 @@ const getObjectExpressionKeys = (node) => node.properties
 
 const getNodeIndent = (node) => node.loc.start.column;
 
-const getNodeStartPosition = (node) => node.start;
-
-const getNodeEndPosition = (node) => node.end;
-
 const getFunctionalComponentName = (node) => node.declarations[0].id.name;
 
 const getClassComponentName = (node) => node.id.name;
@@ -142,9 +138,7 @@ module.exports = {
   getClassComponentName,
   getClassMethod,
   getFunctionalComponentName,
-  getNodeEndPosition,
   getNodeIndent,
-  getNodeStartPosition,
   getObjectExpressionKeys,
   getPropertyNames,
   getReturnStatement,
