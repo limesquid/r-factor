@@ -110,17 +110,7 @@ const propertyComparator = (a, b) => {
   return a.name.localeCompare(b.name);
 };
 
-const restPropertyComparator = (a, b) => {
-  if (a.type === 'RestElement') {
-    return 1;
-  }
-
-  if (b.type === 'RestElement') {
-    return -1;
-  }
-
-  return 0;
-};
+const restPropertyComparator = (a, b) => a.type === 'RestElement' ? 1 : -1;
 
 const getName = (code, { key, type }) => {
   if ([ 'RestElement', 'SpreadElement' ].includes(type)) {
