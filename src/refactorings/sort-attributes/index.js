@@ -8,7 +8,7 @@ class SortAttributes extends Refactoring {
   constructor() {
     super();
     this.transformations = [
-      (code, ast) => this.refactorCode(code, ast)
+      (code, ast) => this.refactorRecursive(code, ast)
     ];
   }
 
@@ -26,6 +26,18 @@ class SortAttributes extends Refactoring {
     });
 
     return hasObjects;
+  }
+
+  refactorRecursive(code, ast) {
+    let refactored = code;
+    let lastCode = code;
+    refactored = this.refactorCode(code, ast);
+    while (refactored !== lastCode) {
+      lastCode = refactored;
+      const newAst = babylon.parse(refactored, babylonOptions);
+      refactored = this.refactorCode(refactored, newAst);
+    }
+    return refactored;
   }
 
   refactorCode(code, ast) {

@@ -9,14 +9,16 @@ class CodeBuilder extends Builder {
   }
 
   build() {
-    const nodes = [ ...this.nodes ].reverse();
-    return nodes.reduce(
-      (code, node) => code.replace(
-        code.substring(node.start, node.end),
+    for (const node of this.nodes) {
+      const updated = this.code.replace(
+        this.code.substring(node.start, node.end),
         sortObjectAttributes(this.code, this.getIndent(node), node)
-      ),
-      this.code
-    );
+      );
+      if (updated !== this.code) {
+        return updated;
+      }
+    }
+    return this.code;
   }
 
   getIndent(node) {

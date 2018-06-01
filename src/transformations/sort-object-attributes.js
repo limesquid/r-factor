@@ -18,23 +18,32 @@ const sortObjectAttributes = (code, indentSize, node) => {
 const buildProperties = (properties, code, buildProperty) => {
   let propertiesCode = '';
   let propertiesToSort = [];
+  let lastSpreadElementIndex = -1;
   properties.forEach((property, index) => {
     if (property.type === 'SpreadElement') {
       const sortedProperties = sortProperties(code, propertiesToSort);
+      const indexOffset = lastSpreadElementIndex + 1;
       propertiesCode += sortedProperties.map(
-        (sortedProperty) => buildProperty(sortedProperty, index, properties)
+        (sortedProperty, sortedPropertyIndex) => buildProperty(
+          sortedProperty,
+          indexOffset + sortedPropertyIndex,
+          properties
+        )
       ).join('');
       propertiesCode += buildProperty(property, index, properties);
+      lastSpreadElementIndex = index;
       propertiesToSort = [];
     } else {
       propertiesToSort.push(property);
     }
   });
-  const sortedProperties = sortProperties(code, propertiesToSort);
-  const indexOffset = properties.length - sortedProperties.length;
-  propertiesCode += sortedProperties.map(
-    (property, index) => buildProperty(property, indexOffset + index, properties)
-  ).join('');
+  if (propertiesToSort.length > 0) {
+    const sortedProperties = sortProperties(code, propertiesToSort);
+    const indexOffset = lastSpreadElementIndex + 1;
+    propertiesCode += sortedProperties.map(
+      (property, index) => buildProperty(property, indexOffset + index, properties)
+    ).join('');
+  }
   return propertiesCode;
 };
 
