@@ -2,6 +2,7 @@ const getStdin = require('get-stdin');
 const argv = require('./cli');
 
 const refactorings = {
+  'add-classname': require('./src/refactorings/add-classname'),
   'convert-to-component': require('./src/refactorings/convert-to-component'),
   'convert-to-functional-component': require('./src/refactorings/convert-to-functional-component'),
   'generate-prop-types': require('./src/refactorings/generate-prop-types'),

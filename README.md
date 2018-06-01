@@ -1,5 +1,7 @@
 # R-factor
 ## Available commands
+### add-classname
+Add className prop to a component.
 ### convert-to-component
 Converts functional component to a non-functional component.
 ### convert-to-functional-component

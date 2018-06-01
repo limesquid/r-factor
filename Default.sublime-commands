@@ -1,5 +1,9 @@
 [
   {
+    "caption": "R-factor: Add className prop",
+    "command": "add_classname"
+  },
+  {
     "caption": "R-factor: Convert to component",
     "command": "convert_to_component"
   },
