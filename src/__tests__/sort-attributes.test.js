@@ -1,7 +1,7 @@
-const { readFile } = require('./test-utils');
+const { range, readFile } = require('./test-utils');
 const SortAttributes = require('../refactorings/sort-attributes');
 
-const files = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ].map((n) => `file${n}`);
+const files = range(1, 14).map((n) => `file${n}`);
 
 describe('sort-attributes:canApply', () => {
   const refactoring = new SortAttributes();

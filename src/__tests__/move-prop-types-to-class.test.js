@@ -1,7 +1,7 @@
-const { readFile } = require('./test-utils');
+const { range, readFile } = require('./test-utils');
 const MovePropTypesToClass = require('../refactorings/move-prop-types-to-class');
 
-const files = [ 1, 2, 3, 4 ].map((n) => `button${n}`);
+const files = range(1, 4).map((n) => `button${n}`);
 
 describe('move-prop-types-to-class:canApply', () => {
   const refactoring = new MovePropTypesToClass();

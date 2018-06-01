@@ -1,7 +1,7 @@
-const { readFile } = require('./test-utils');
+const { range, readFile } = require('./test-utils');
 const ConvertToComponent = require('../refactorings/convert-to-component');
 
-const files = [ 1, 2, 3, 4, 5, 6, 10, 11, 12, 13 ].map((n) => `button${n}`);
+const files = [ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`);
 
 describe('convert-to-component:canApply', () => {
   const refactoring = new ConvertToComponent();

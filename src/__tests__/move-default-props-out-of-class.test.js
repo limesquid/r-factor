@@ -1,7 +1,7 @@
-const { readFile } = require('./test-utils');
+const { range, readFile } = require('./test-utils');
 const MoveDefaultPropsOutOfClass = require('../refactorings/move-default-props-out-of-class');
 
-const files = [ 1, 2, 3 ].map((n) => `button${n}`);
+const files = range(1, 3).map((n) => `button${n}`);
 
 describe('move-default-props-out-of-class:canApply', () => {
   const refactoring = new MoveDefaultPropsOutOfClass();

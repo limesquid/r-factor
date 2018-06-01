@@ -1,7 +1,7 @@
-const { readFile } = require('./test-utils');
+const { range, readFile } = require('./test-utils');
 const MoveDefaultPropsToClass = require('../refactorings/move-default-props-to-class');
 
-const files = [ 1, 2, 3 ].map((n) => `button${n}`);
+const files = range(1, 3).map((n) => `button${n}`);
 
 describe('move-default-props-to-class:canApply', () => {
   const refactoring = new MoveDefaultPropsToClass();

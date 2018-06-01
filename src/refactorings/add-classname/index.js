@@ -14,13 +14,12 @@ class AddClassname extends Refactoring {
 
   canApply(code) {
     const ast = babylon.parse(code, babylonOptions);
-    let hasObjects = false;
 
     traverse(ast, {
 
     });
 
-    return hasObjects;
+    return false;
   }
 
   refactorCode(code, ast) {

@@ -1,7 +1,7 @@
-const { readFile } = require('./test-utils');
+const { range, readFile } = require('./test-utils');
 const AddClassname = require('../refactorings/add-classname');
 
-const files = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 ].map((n) => `file${n}`);
+const files = range(1, 17).map((n) => `file${n}`);
 
 describe('add-classname:canApply', () => {
   const refactoring = new AddClassname();
