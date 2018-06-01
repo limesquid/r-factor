@@ -49,6 +49,7 @@ const buildProperties = (properties, code, buildProperty) => {
 
 const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index, properties) => {
   let propertyCode = '';
+try{
 
   if (isMultiLine) {
     propertyCode += innerIndent;
@@ -60,6 +61,8 @@ const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index
 
   if ([ 'RestElement', 'SpreadElement' ].includes(property.type)) {
     propertyCode += code.substring(property.start, property.end);
+  } else if (property.value && property.value.type === 'AssignmentPattern') {
+    propertyCode += code.substring(property.value.start, property.value.end);
   } else {
     propertyCode += code.substring(property.key.start, property.key.end);
   }
@@ -82,6 +85,9 @@ const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index
       propertyCode += ' ';
     }
   }
+}catch(e){
+  console.log(`----------"${properties.length}"`);
+}
 
   return propertyCode;
 };
@@ -122,6 +128,9 @@ const getName = (code, { key, type }) => {
   }
 
   if (key.value) {
+    if (key.value.type === 'AssignmentPattern') {
+      return code.substring(key.value.left.start, key.value.left.end);
+    }
     return String(key.value);
   }
 
