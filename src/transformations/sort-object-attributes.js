@@ -49,7 +49,6 @@ const buildProperties = (properties, code, buildProperty) => {
 
 const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index, properties) => {
   let propertyCode = '';
-try{
 
   if (isMultiLine) {
     propertyCode += innerIndent;
@@ -62,7 +61,7 @@ try{
   if ([ 'RestElement', 'SpreadElement' ].includes(property.type)) {
     propertyCode += code.substring(property.start, property.end);
   } else if (property.value && property.value.type === 'AssignmentPattern') {
-    propertyCode += code.substring(property.value.start, property.value.end);
+    propertyCode += code.substring(property.start, property.end);
   } else {
     propertyCode += code.substring(property.key.start, property.key.end);
   }
@@ -71,7 +70,7 @@ try{
     propertyCode += ']';
   }
 
-  if (property.value && !property.shorthand) {
+  if (property.value && !property.shorthand && property.value.type !== 'AssignmentPattern') {
     propertyCode += ': ';
     propertyCode += code.substring(property.value.start, property.value.end);
   }
@@ -85,9 +84,6 @@ try{
       propertyCode += ' ';
     }
   }
-}catch(e){
-  console.log(`----------"${properties.length}"`);
-}
 
   return propertyCode;
 };
@@ -116,22 +112,23 @@ const propertyComparator = (a, b) => {
   return a.name.localeCompare(b.name);
 };
 
-const restPropertyComparator = (a, b) => a.type === 'RestElement' ? 1 : -1;
+const restPropertyComparator = (a) => a.type === 'RestElement' ? 1 : -1;
 
-const getName = (code, { key, type }) => {
+const getName = (code, { end, key, start, type, value }) => {
   if ([ 'RestElement', 'SpreadElement' ].includes(type)) {
     return '';
   }
 
-  if (key.name) {
-    return key.name;
+  if (value.type === 'AssignmentPattern') {
+    return code.substring(start, end);
   }
 
   if (key.value) {
-    if (key.value.type === 'AssignmentPattern') {
-      return code.substring(key.value.left.start, key.value.left.end);
-    }
     return String(key.value);
+  }
+
+  if (key.name) {
+    return key.name;
   }
 
   return code.substring(key.start, key.end);
