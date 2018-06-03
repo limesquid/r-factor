@@ -18,7 +18,7 @@ const addImportDeclaration = (source, ast, options) => {
     : createImportDeclaration(source, { module, identifier, subImports });
 };
 
-const createImportDeclarationCode = (module, defaultImport, subimportsMap) => {
+const createImportDeclarationCode = (module, defaultImport, subimportsMap = {}) => {
   const subimportStrings = Object.keys(subimportsMap).map((subimportImportedName) => {
     const subimportLocalName = subimportsMap[subimportImportedName];
     return subimportImportedName === subimportLocalName
@@ -28,8 +28,11 @@ const createImportDeclarationCode = (module, defaultImport, subimportsMap) => {
 
   let code = '';
   code += 'import ';
-  code += defaultImport ? `${defaultImport}, ` : '';
-  code += `{ ${subimportStrings.join(', ')} }`;
+  code += defaultImport ? `${defaultImport}` : '';
+  code += subimportStrings.length > 0 ? ', ' : '';
+  code += subimportStrings.length > 0
+    ? `{ ${subimportStrings.join(', ')} }`
+    : '';
   code += ` from '${module}';`;
 
   return code;
