@@ -16,7 +16,7 @@ const indentLine = (line, size) => {
   return line.replace(new RegExp(`^${indent}`, 'i'), '');
 };
 const indentCode = (code, size) => code && indentLines(code.split('\n'), size).join('\n');
-const removeDoubleNewlines = (code) => code.replace(/\n\n\n/g, '\n');
+const removeDoubleNewlines = (code) => code.replace(/\n\n\n/g, '\n').replace(/\n\s*\n\s*\n/g, '\n\n');
 const squeezeCode = (code, size, restSize) => {
   const [ first, ...rest ] = code.split('\n');
   return [

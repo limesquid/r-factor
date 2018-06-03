@@ -36,10 +36,11 @@ class ClassBuilder extends Builder {
     const definedPropTypesLines = codeLines
       .slice(propTypesFirstLine, propTypesLastLine)
       .filter((line) => !line.match(/^\s*$/));
+    const undefinedPropTypes = this.getUndefinedPropTypes();
     const allPropTypesLines = [
-      this.buildPropTypesContent(this.newPropTypes),
+      this.buildPropTypesContent(undefinedPropTypes),
       ...definedPropTypesLines.map((line) => line.trim().replace(/,$/, ''))
-    ];
+    ].filter(Boolean);
     const allPropTypesCode = sortPropTypes(allPropTypesLines).join(',\n');
 
     let code = '';
@@ -64,6 +65,22 @@ class ClassBuilder extends Builder {
     propTypesCode = indentCode(propTypesCode, indent);
 
     return insertCodeBelowNode(this.code, this.componentNode, propTypesCode);
+  }
+
+  getUndefinedPropTypes() {
+    const undefinedPropTypesKeys = Object.keys(this.newPropTypes).filter(
+      (key) => !this.propTypesNode.properties.find(
+        (property) => property.key.name === key
+      )
+    );
+    const undefinedPropTypes = undefinedPropTypesKeys.reduce(
+      (propTypes, key) => ({
+        ...propTypes,
+        [key]: this.newPropTypes[key]
+      }),
+      {}
+    );
+    return undefinedPropTypes;
   }
 
   setComponentName(name) {
