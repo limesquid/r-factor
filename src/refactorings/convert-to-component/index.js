@@ -5,12 +5,12 @@ const {
   isFunctionalComponentDeclaration,
   isReactImport
 } = require('../../utils/ast');
-const { addImportDeclaration } = require('../../transformations');
 const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const MoveDefaultPropsToClass = require('../move-default-props-to-class');
 const MovePropTypesToClass = require('../move-prop-types-to-class');
 const ComponentBuilder = require('./component-builder');
+const ReactImportBuilder = require('./react-import-builder');
 
 class ConvertToComponent extends Refactoring {
   constructor() {
@@ -71,13 +71,17 @@ class ConvertToComponent extends Refactoring {
   }
 
   refactorReactImport(code, ast) {
-    return addImportDeclaration(code, ast, {
-      module: 'react',
-      identifier: 'React',
-      subImports: {
-        Component: 'Component'
+    const builder = new ReactImportBuilder(code);
+
+    traverse(ast, {
+      ImportDeclaration({ node }) {
+        if (isReactImport(node)) {
+          builder.setNode(node);
+        }
       }
     });
+
+    return builder.build();
   }
 }
 
