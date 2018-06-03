@@ -10,7 +10,7 @@ class Button extends Component {
     ozet: PropTypes.any,
     onClick: PropTypes.any,
     onMouseEnter: PropTypes.func,
-    onMouseLeave: PropTypes.func
+    onMouseLeave: PropTypes.any
   };
 
   render() {
@@ -20,7 +20,7 @@ class Button extends Component {
         className={classNames(styles.button, className)}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
-        onMouseLeave={props.onMouseLeave}
+        onMouseLeave={this.props.onMouseLeave}
         {...props}>
         {this.props.children}
         {this.props.ozet}

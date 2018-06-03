@@ -16,7 +16,7 @@ class Button extends Component {
         className={classNames(styles.button, className)}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
-        onMouseLeave={props.onMouseLeave}
+        onMouseLeave={this.props.onMouseLeave}
         {...props}>
         {this.props.children}
         {this.props.ozet}

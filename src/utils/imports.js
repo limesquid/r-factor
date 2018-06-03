@@ -28,7 +28,11 @@ class Imports {
     let code = '';
     code += importsCode;
     code += '\n';
+
     if (!newCode.startsWith('\n\n') && !newCode.match(/^\s*$/)) {
+      code += '\n';
+    }
+    if (!newCode.startsWith('\n') && !newCode.match(/^\s*$/)) {
       code += '\n';
     }
     code += '\n';

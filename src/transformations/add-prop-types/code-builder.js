@@ -38,7 +38,7 @@ class ClassBuilder extends Builder {
       .filter((line) => !line.match(/^\s*$/));
     const undefinedPropTypes = this.getUndefinedPropTypes();
     const allPropTypesLines = [
-      this.buildPropTypesContent(undefinedPropTypes),
+      ...this.buildPropTypesContent(undefinedPropTypes).split(',\n'),
       ...definedPropTypesLines.map((line) => line.trim().replace(/,$/, ''))
     ].filter(Boolean);
     const allPropTypesCode = sortPropTypes(allPropTypesLines).join(',\n');
