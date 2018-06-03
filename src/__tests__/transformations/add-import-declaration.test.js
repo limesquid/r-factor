@@ -1,12 +1,9 @@
 const babylon = require('@babel/parser');
-const { readFile } = require('../test-utils');
+const { readTransformationsFile } = require('../test-utils');
 const { babylonOptions } = require('../../options');
 const addImportDeclaration = require('../../transformations/add-import-declaration');
 
-const TEST_INPUTS_PATH = '../data/transformations/add-import-declarations/input';
-const TEST_OUTPUTS_PATH = '../data/transformations/add-import-declarations/output';
-
-const code = readFile(`${TEST_INPUTS_PATH}/common.js`);
+const code = readTransformationsFile('add-import-declaration/input/common.js');
 const ast = babylon.parse(code, babylonOptions);
 
 describe('transformation:add-import-declaration', () => {
@@ -17,7 +14,7 @@ describe('transformation:add-import-declaration', () => {
         PureComponent: 'PureComponent'
       }
     });
-    const expectedResult = readFile(`${TEST_OUTPUTS_PATH}/sub-import.js`);
+    const expectedResult = readTransformationsFile('add-import-declaration/output/sub-import.js');
     expect(result).toEqual(expectedResult);
   });
 
@@ -28,7 +25,7 @@ describe('transformation:add-import-declaration', () => {
         PureComponent: 'PurestComponent'
       }
     });
-    const expectedResult = readFile(`${TEST_OUTPUTS_PATH}/sub-import-alias.js`);
+    const expectedResult = readTransformationsFile('add-import-declaration/output/sub-import-alias.js');
     expect(result).toEqual(expectedResult);
   });
 
@@ -37,7 +34,7 @@ describe('transformation:add-import-declaration', () => {
       module: 'react',
       identifier: 'Reacto'
     });
-    const expectedResult = readFile(`${TEST_OUTPUTS_PATH}/default-import.js`);
+    const expectedResult = readTransformationsFile('add-import-declaration/output/default-import.js');
     expect(result).toEqual(expectedResult);
   });
 
@@ -46,7 +43,7 @@ describe('transformation:add-import-declaration', () => {
       module: 'prop-types',
       identifier: 'PropTypes'
     });
-    const expectedResult = readFile(`${TEST_OUTPUTS_PATH}/new-import.js`);
+    const expectedResult = readTransformationsFile('add-import-declaration/output/new-import.js');
     expect(result).toEqual(expectedResult);
   });
 
@@ -58,7 +55,7 @@ describe('transformation:add-import-declaration', () => {
         Something: 'Something'
       }
     });
-    const expectedResult = readFile(`${TEST_OUTPUTS_PATH}/new-import-with-alias.js`);
+    const expectedResult = readTransformationsFile('add-import-declaration/output/new-import-with-alias.js');
     expect(result).toEqual(expectedResult);
   });
 });
