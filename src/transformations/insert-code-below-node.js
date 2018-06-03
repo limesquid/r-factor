@@ -1,17 +1,17 @@
 const { getNodeIndent } = require('../utils/ast');
 const { squeezeCode } = require('../utils');
 
-const insertCodeBelowNode = (source, node, codeToInsert) => {
+const insertCodeBelowNode = (code, node, codeToInsert) => {
   const indent = getNodeIndent(node);
   const indentedCodeToInsert = squeezeCode(codeToInsert, indent);
-  const position = source.indexOf('\n', node.end) + 1;
+  const position = code.indexOf('\n', node.end) + 1;
 
-  let code = '';
-  code += source.slice(0, position);
-  code += indentedCodeToInsert;
-  code += source.slice(position);
+  let newCode = '';
+  newCode += code.slice(0, position);
+  newCode += indentedCodeToInsert;
+  newCode += code.slice(position);
 
-  return code;
+  return newCode;
 };
 
 module.exports = insertCodeBelowNode;
