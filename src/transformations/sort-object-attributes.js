@@ -2,7 +2,7 @@ const stable = require('stable');
 const { isSingleLine } = require('../utils/ast');
 const { generateIndent } = require('../utils');
 
-const sortObjectAttributes = (code, indentSize, node) => {
+const sortObjectAttributes = (code, node, indentSize) => {
   const innerIndent = generateIndent(indentSize + 2);
   const isMultiLine = !isSingleLine(node);
   const buildProperty = createBuildProperty(code, innerIndent, isMultiLine);

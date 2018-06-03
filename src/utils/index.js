@@ -16,7 +16,7 @@ const indentLine = (line, size) => {
   return line.replace(new RegExp(`^${indent}`, 'i'), '');
 };
 const indentCode = (code, size) => code && indentLines(code.split('\n'), size).join('\n');
-const removeDoubleNewlines = (code) => code.replace(/\n\n\n/g, '\n');
+const removeDoubleNewlines = (code) => code.replace(/\n\n\n/g, '\n').replace(/\n\s*\n\s*\n/g, '\n\n');
 const squeezeCode = (code, size, restSize) => {
   const [ first, ...rest ] = code.split('\n');
   return [
@@ -36,9 +36,32 @@ const getIndent = (code, start) => {
   const matches = lastLine.match(/^(\s+)/);
   return (matches && matches[0] || '').length;
 };
+const createImportDeclarationCode = (module, defaultImport, subImports = {}) => {
+  const subImportStrings = Object.keys(subImports).map((subImportImportedName) => {
+    const subImportLocalName = subImports[subImportImportedName];
+    return subImportImportedName === subImportLocalName
+      ? subImportImportedName
+      : `${subImportImportedName} as ${subImportLocalName}`;
+  });
+  const sortedSubImportStrings = subImportStrings.sort();
+
+  let code = '';
+  code += 'import ';
+  if (defaultImport) {
+    code += defaultImport;
+  }
+  if (sortedSubImportStrings.length > 0) {
+    code += ', ';
+    code += `{ ${sortedSubImportStrings.join(', ')} }`;
+  }
+  code += ` from '${module}';`;
+
+  return code;
+};
 
 module.exports = {
   cleanUpCode,
+  createImportDeclarationCode,
   generateIndent,
   getIndent,
   indentCode,

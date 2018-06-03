@@ -1,9 +1,9 @@
 const { getIndent } = require('../utils');
 
 class Builder {
-  constructor(code) {
+  constructor(code, node = null) {
     this.code = code;
-    this.node = null;
+    this.node = node;
   }
 
   build() {
