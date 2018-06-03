@@ -1,0 +1,1 @@
+import Reacto from 'react';

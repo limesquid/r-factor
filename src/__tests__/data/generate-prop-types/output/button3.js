@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 const Button = (props) => {
   const { onClick } = props;
 
