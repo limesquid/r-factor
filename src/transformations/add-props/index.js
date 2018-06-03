@@ -12,7 +12,7 @@ const { COMPONENT_TYPE } = require('../../constants');
 const CodeBuilder = require('./code-builder');
 
 const addProps = (code, ast, propTypes = {}) => {
-  const builder = new CodeBuilder(code);
+  const builder = new CodeBuilder(code, ast);
   let componentType = null;
   let componentName = null;
 
@@ -27,13 +27,13 @@ const addProps = (code, ast, propTypes = {}) => {
       }
 
       if (isClassDeclaration(node)) {
-        builder.setNode(node);
+        builder.setComponentNode(node);
         componentName = getClassComponentName(node);
         componentType = COMPONENT_TYPE.Class;
       }
 
       if (isFunctionalComponentDeclaration(node)) {
-        builder.setNode(node);
+        builder.setComponentNode(node);
         componentName = getFunctionalComponentName(node);
         componentType = COMPONENT_TYPE.Functional;
       }

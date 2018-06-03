@@ -1,15 +1,19 @@
 const { Builder } = require('../../model');
 const { cleanUpCode, indentCode, sortPropTypes, squeezeCode } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
-const { insertCodeBelowNode } = require('../../transformations');
+const insertCodeBelowNode = require('../insert-code-below-node');
+const addImportDeclaration = require('../add-import-declaration');
 
 class ClassBuilder extends Builder {
   build() {
-    return cleanUpCode(
-      this.propTypesNode
-        ? this.buildCodeWithExistingPropTypes()
-        : this.buildCodeWithNewPropTypes()
-    );
+    const code = this.propTypesNode
+      ? this.buildCodeWithExistingPropTypes()
+      : this.buildCodeWithNewPropTypes();
+    const codeWithImport = addImportDeclaration(code, this.node, {
+      module: 'prop-types',
+      identifier: 'PropTypes'
+    });
+    return cleanUpCode(codeWithImport);
   }
 
   buildPropTypesContent(propTypes) {
@@ -22,7 +26,7 @@ class ClassBuilder extends Builder {
 
   buildCodeWithExistingPropTypes() {
     const definedPropsFirstPropNode = this.propTypesNode.properties[0];
-    let indent = getNodeIndent(this.node) + 2;
+    let indent = getNodeIndent(this.componentNode) + 2;
     if (definedPropsFirstPropNode) {
       indent = getNodeIndent(definedPropsFirstPropNode);
     }
@@ -48,7 +52,7 @@ class ClassBuilder extends Builder {
 
   buildCodeWithNewPropTypes() {
     const propTypesContent = this.buildPropTypesContent(this.newPropTypes);
-    const indent = getNodeIndent(this.node)
+    const indent = getNodeIndent(this.componentNode)
 
     let propTypesCode = '';
     propTypesCode += '\n';
@@ -57,11 +61,15 @@ class ClassBuilder extends Builder {
     propTypesCode += '\n};\n';
     propTypesCode = indentCode(propTypesCode, indent);
 
-    return insertCodeBelowNode(this.code, this.node, propTypesCode);
+    return insertCodeBelowNode(this.code, this.componentNode, propTypesCode);
   }
 
   setComponentName(name) {
     this.componentName = name;
+  }
+
+  setComponentNode(node) {
+    this.componentNode = node;
   }
 
   setComponentType(type) {
