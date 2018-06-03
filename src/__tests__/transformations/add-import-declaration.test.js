@@ -1,11 +1,15 @@
 const babylon = require('@babel/parser');
+const { readFile } = require('../test-utils');
 const { babylonOptions } = require('../../options');
 const addImportDeclaration = require('../../transformations/add-import-declaration');
 
-const code = 'import React from \'react\';';
+const TEST_INPUTS_PATH = '../data/transformations/add-import-declarations/input';
+const TEST_OUTPUTS_PATH = '../data/transformations/add-import-declarations/output';
+
+const code = readFile(`${TEST_INPUTS_PATH}/common.js`);
 const ast = babylon.parse(code, babylonOptions);
 
-describe('utils', () => {
+describe('transformation:add-import-declaration', () => {
   it('should add sub import to existing module import', () => {
     const result = addImportDeclaration(code, ast, {
       module: 'react',
@@ -13,7 +17,8 @@ describe('utils', () => {
         PureComponent: 'PureComponent'
       }
     });
-    expect(result).toEqual('import React, { PureComponent } from \'react\';');
+    const expectedResult = readFile(`${TEST_OUTPUTS_PATH}/sub-import.js`);
+    expect(result).toEqual(expectedResult);
   });
 
   it('should add aliased sub import to existing module import', () => {
@@ -23,7 +28,8 @@ describe('utils', () => {
         PureComponent: 'PurestComponent'
       }
     });
-    expect(result).toEqual('import React, { PureComponent as PurestComponent } from \'react\';');
+    const expectedResult = readFile(`${TEST_OUTPUTS_PATH}/sub-import-alias.js`);
+    expect(result).toEqual(expectedResult);
   });
 
   it('should add default import to existing module import', () => {
@@ -31,7 +37,8 @@ describe('utils', () => {
       module: 'react',
       identifier: 'Reacto'
     });
-    expect(result).toEqual('import Reacto from \'react\';');
+    const expectedResult = readFile(`${TEST_OUTPUTS_PATH}/default-import.js`);
+    expect(result).toEqual(expectedResult);
   });
 
   it('should add new import', () => {
@@ -39,11 +46,7 @@ describe('utils', () => {
       module: 'prop-types',
       identifier: 'PropTypes'
     });
-    let expectedResult = '';
-    expectedResult += 'import PropTypes from \'prop-types\';';
-    expectedResult += '\n';
-    expectedResult += 'import React from \'react\';';
-
+    const expectedResult = readFile(`${TEST_OUTPUTS_PATH}/new-import.js`);
     expect(result).toEqual(expectedResult);
   });
 
@@ -55,11 +58,7 @@ describe('utils', () => {
         Something: 'Something'
       }
     });
-    let expectedResult = '';
-    expectedResult += 'import PropTypes, { Something } from \'prop-types\';';
-    expectedResult += '\n';
-    expectedResult += 'import React from \'react\';';
-
+    const expectedResult = readFile(`${TEST_OUTPUTS_PATH}/new-import-with-alias.js`);
     expect(result).toEqual(expectedResult);
   });
 });

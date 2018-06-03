@@ -1,5 +1,5 @@
 const traverse = require('@babel/traverse').default;
-const { isImportDefaultSpecifier, isImportSpecifier } = require('@babel/types');
+const { getDefaultImportName, getSubImports } from '../../utils/ast';
 
 const addImportDeclaration = (source, ast, options) => {
   const { module, identifier, subImports } = options;
@@ -41,19 +41,12 @@ const createImportDeclarationCode = (module, defaultImport, subImports = {}) => 
 
 const extendImportDeclaration = (source, moduleImportNode, options) => {
   const { module, identifier, subImports: newSubImports } = options;
-  const existingSubImports = moduleImportNode.specifiers
-    .filter((specifier) => isImportSpecifier(specifier))
-    .reduce((result, specifier) => ({
-      ...result,
-      [specifier.imported.name]: specifier.local.name
-    }), {});
+  const existingSubImports = getSubImports(moduleImportNode);
   const subImports = {
     ...existingSubImports,
     ...newSubImports
   };
-  const defaultImportNode = moduleImportNode.specifiers.find(isImportDefaultSpecifier);
-  const existingDefaultImport = defaultImportNode && defaultImportNode.local.name;
-  const defaultImport = identifier || existingDefaultImport;
+  const defaultImport = identifier || getDefaultImportName(moduleImportNode);
   const importDeclarationCode = createImportDeclarationCode(module, defaultImport, subImports);
 
   let code = '';
