@@ -33,7 +33,9 @@ class ClassBuilder extends Builder {
     const propTypesFirstLine = this.propTypesNode.loc.start.line;
     const propTypesLastLine = this.propTypesNode.loc.end.line - 1;
     const codeLines = this.code.split('\n');
-    const definedPropTypesLines = codeLines.slice(propTypesFirstLine, propTypesLastLine);
+    const definedPropTypesLines = codeLines
+      .slice(propTypesFirstLine, propTypesLastLine)
+      .filter((line) => !line.match(/^\s*$/));
     const allPropTypesLines = [
       this.buildPropTypesContent(this.newPropTypes),
       ...definedPropTypesLines.map((line) => line.trim().replace(/,$/, ''))

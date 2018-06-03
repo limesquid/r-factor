@@ -28,14 +28,14 @@ const addProps = (code, ast, propTypes = {}) => {
 
       if (isClassDeclaration(node)) {
         builder.setComponentNode(node);
-        componentName = getClassComponentName(node);
-        componentType = COMPONENT_TYPE.Class;
+        builder.setComponentName(getClassComponentName(node));
+        builder.setComponentType(COMPONENT_TYPE.Class);
       }
 
       if (isFunctionalComponentDeclaration(node)) {
         builder.setComponentNode(node);
-        componentName = getFunctionalComponentName(node);
-        componentType = COMPONENT_TYPE.Functional;
+        builder.setComponentName(getFunctionalComponentName(node));
+        builder.setComponentType(COMPONENT_TYPE.Functional);
       }
     }
   });

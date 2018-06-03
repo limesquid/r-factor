@@ -3,7 +3,7 @@ const { readTransformationsFile } = require('./../test-utils');
 const { babylonOptions } = require('../../options');
 const addProps = require('../../transformations/add-props');
 
-const files = [ 1, 2, 3 ].map((n) => `file${n}`);
+const files = [ 1, 2, 3, 4 ].map((n) => `file${n}`);
 
 describe('add-prop', () => {
   const tests = files.map((file) => ({
