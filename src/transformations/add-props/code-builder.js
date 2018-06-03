@@ -1,5 +1,5 @@
 const { Builder } = require('../../model');
-const { cleanUpCode, indentCode, sortPropTypes, squeezeCode } = require('../../utils');
+const { cleanUpCode, indentCode, sortPropTypes } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 const insertCodeBelowNode = require('../insert-code-below-node');
 const addImportDeclaration = require('../add-import-declaration');
@@ -54,7 +54,7 @@ class ClassBuilder extends Builder {
 
   buildCodeWithNewPropTypes() {
     const propTypesContent = this.buildPropTypesContent(this.newPropTypes);
-    const indent = getNodeIndent(this.componentNode)
+    const indent = getNodeIndent(this.componentNode);
 
     let propTypesCode = '';
     propTypesCode += '\n';

@@ -1,5 +1,4 @@
 const traverse = require('@babel/traverse').default;
-const { babylonOptions } = require('../../options');
 const {
   getClassComponentName,
   getFunctionalComponentName,
@@ -13,8 +12,8 @@ const CodeBuilder = require('./code-builder');
 
 const addProps = (code, ast, propTypes = {}) => {
   const builder = new CodeBuilder(code, ast);
-  let componentType = null;
-  let componentName = null;
+
+  builder.setNewPropTypes(propTypes);
 
   traverse(ast, {
     enter({ node }) {
@@ -27,22 +26,18 @@ const addProps = (code, ast, propTypes = {}) => {
       }
 
       if (isClassDeclaration(node)) {
-        builder.setComponentNode(node);
         builder.setComponentName(getClassComponentName(node));
+        builder.setComponentNode(node);
         builder.setComponentType(COMPONENT_TYPE.Class);
       }
 
       if (isFunctionalComponentDeclaration(node)) {
-        builder.setComponentNode(node);
         builder.setComponentName(getFunctionalComponentName(node));
+        builder.setComponentNode(node);
         builder.setComponentType(COMPONENT_TYPE.Functional);
       }
     }
   });
-
-  builder.setNewPropTypes(propTypes);
-  builder.setComponentName(componentName);
-  builder.setComponentType(componentType);
 
   return builder.build();
 };
