@@ -9,6 +9,7 @@ const {
   isPropTypesDeclaration,
   isStaticPropTypesDeclaration
 } = require('../../utils/ast');
+const { addImportDeclaration } = require('../../transformations');
 const { getProps } = require('../../utils/props');
 const { COMPONENT_TYPE } = require('../../constants');
 const { Refactoring } = require('../../model');
@@ -21,7 +22,11 @@ class GeneratePropTypes extends Refactoring {
     this.generatePropTypes = this.generatePropTypes.bind(this);
 
     this.transformations = [
-      this.generatePropTypes
+      this.generatePropTypes,
+      (code, ast) => addImportDeclaration(code, ast, {
+        module: 'prop-types',
+        identifier: 'PropTypes'
+      })
     ];
   }
 
