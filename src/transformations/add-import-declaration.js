@@ -1,5 +1,6 @@
 const traverse = require('@babel/traverse').default;
-const { getDefaultImportName, getSubImports } from '../../utils/ast';
+const { getDefaultImportName, getSubImports } = require('../utils/ast');
+const { createImportDeclarationCode } = require('../utils');
 
 const addImportDeclaration = (source, ast, options) => {
   const { module, identifier, subImports } = options;
@@ -16,27 +17,6 @@ const addImportDeclaration = (source, ast, options) => {
   return moduleImportNode
     ? extendImportDeclaration(source, moduleImportNode, { module, identifier, subImports })
     : createImportDeclaration(source, { module, identifier, subImports });
-};
-
-const createImportDeclarationCode = (module, defaultImport, subImports = {}) => {
-  const subImportStrings = Object.keys(subImports).map((subImportImportedName) => {
-    const subImportLocalName = subImports[subImportImportedName];
-    return subImportImportedName === subImportLocalName
-      ? subImportImportedName
-      : `${subImportImportedName} as ${subImportLocalName}`;
-  });
-  const sortedSubImportStrings = subImportStrings.sort();
-
-  let code = '';
-  code += 'import ';
-  code += defaultImport ? `${defaultImport}` : '';
-  code += sortedSubImportStrings.length > 0 ? ', ' : '';
-  code += sortedSubImportStrings.length > 0
-    ? `{ ${sortedSubImportStrings.join(', ')} }`
-    : '';
-  code += ` from '${module}';`;
-
-  return code;
 };
 
 const extendImportDeclaration = (source, moduleImportNode, options) => {

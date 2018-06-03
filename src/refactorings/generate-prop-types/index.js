@@ -18,15 +18,9 @@ const ClassBuilder = require('./class-builder');
 class GeneratePropTypes extends Refactoring {
   constructor() {
     super();
-
-    this.generatePropTypes = this.generatePropTypes.bind(this);
-
     this.transformations = [
       this.generatePropTypes,
-      (code, ast) => addImportDeclaration(code, ast, {
-        module: 'prop-types',
-        identifier: 'PropTypes'
-      })
+      this.addPropTypesDeclaration
     ];
   }
 
@@ -87,6 +81,13 @@ class GeneratePropTypes extends Refactoring {
     builder.setComponentType(componentType);
 
     return builder.build();
+  }
+
+  addPropTypesDeclaration(code, ast) {
+    return addImportDeclaration(code, ast, {
+      module: 'prop-types',
+      identifier: 'PropTypes'
+    });
   }
 }
 
