@@ -1,6 +1,5 @@
 const {
   isIdentifier,
-  isImportDefaultSpecifier,
   isImportSpecifier,
   isMemberExpression,
   isObjectProperty,
@@ -83,9 +82,6 @@ const isStaticPropertyDeclaration = (node, name) => node.type === 'ClassProperty
   && node.key.type === 'Identifier'
   && node.key.name === name;
 
-const getObjectExpressionKeys = (node) => node.properties
-  .map((property) => property.key.name);
-
 const getNodeIndent = (node) => node.loc.start.column;
 
 const getFunctionalComponentName = (node) => node.declarations[0].id.name;
@@ -123,11 +119,6 @@ const getFunctionalComponentPropVariableName = (componentNode) => componentNode.
 
 const getFunctionalComponentDefinition = (node) => node.declarations[0].init;
 
-const getDefaultImportName = (moduleImportNode) => {
-  const defaultImportNode = moduleImportNode.specifiers.find(isImportDefaultSpecifier);
-  return defaultImportNode && defaultImportNode.local.name;
-};
-
 const getSubImports = (moduleImportNode) => moduleImportNode.specifiers
   .filter((specifier) => isImportSpecifier(specifier))
   .reduce((result, specifier) => ({
@@ -142,13 +133,11 @@ module.exports = {
   arePropsDestructuredInFunctionalComponentArguments,
   getClassComponentName,
   getClassMethod,
-  getDefaultImportName,
   getFirstArgumentDestructuredAttributes,
   getFunctionalComponentDefinition,
   getFunctionalComponentName,
   getFunctionalComponentPropVariableName,
   getNodeIndent,
-  getObjectExpressionKeys,
   getPropertyNames,
   getReturnStatement,
   getSubImports,

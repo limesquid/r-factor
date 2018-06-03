@@ -5,7 +5,7 @@ const {
   isClassDeclaration,
   isFunctionalComponentDeclaration
 } = require('../../utils/ast');
-const { addProps } = require('../../transformations');
+const { addPropTypes } = require('../../transformations');
 const { getProps } = require('../../utils/props');
 const { Refactoring } = require('../../model');
 
@@ -42,7 +42,7 @@ class GeneratePropTypes extends Refactoring {
       ...propTypes,
       [prop]: 'PropTypes.any'
     }), {});
-    return addProps(code, ast, newPropTypes);
+    return addPropTypes(code, ast, newPropTypes);
   }
 }
 

@@ -47,7 +47,9 @@ const createImportDeclarationCode = (module, defaultImport, subImports = {}) => 
 
   let code = '';
   code += 'import ';
-  code += defaultImport ? `${defaultImport}` : '';
+  if (defaultImport) {
+    code += defaultImport;
+  }
   if (sortedSubImportStrings.length > 0) {
     code += ', ';
     code += `{ ${sortedSubImportStrings.join(', ')} }`;

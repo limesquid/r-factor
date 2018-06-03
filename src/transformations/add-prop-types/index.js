@@ -10,7 +10,7 @@ const {
 const { COMPONENT_TYPE } = require('../../constants');
 const CodeBuilder = require('./code-builder');
 
-const addProps = (code, ast, propTypes = {}) => {
+const addProps = (code, ast, propTypes) => {
   const builder = new CodeBuilder(code, ast);
 
   builder.setNewPropTypes(propTypes);
