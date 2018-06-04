@@ -18,7 +18,9 @@ class ClassBuilder extends Builder {
     let code = '';
     if (isFunctionalComponent) {
       if (destructuringNode) {
-
+        code += this.code.substring(0, destructuringNode.start);
+        code += `{ ${this.props.join(',')} }`;
+        code += this.code.substring(destructuringNode.end);
       } else {
         const functionNode = this.getFunctionNode();
         const start = this.code.indexOf('(', functionNode.start);
@@ -29,7 +31,9 @@ class ClassBuilder extends Builder {
       }
     } else {
       if (destructuringNode) {
-
+        code += this.code.substring(0, destructuringNode.start);
+        code += `const { ${this.props.join(',')} } = this.props;`;
+        code += this.code.substring(destructuringNode.end);
       } else {
         const renderDefinition = this.getFunctionNode();
         const renderBody = renderDefinition.body.body;

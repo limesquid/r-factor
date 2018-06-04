@@ -5,15 +5,13 @@ const CodeBuilder = require('./code-builder');
 
 const addRootJsxProps = (code, ast, props) => Object.keys(props).reduce(
   (refactoredCode, key) => {
-    const builder = new CodeBuilder(
-      refactoredCode,
-      code === refactoredCode ? ast : babylon.parse(refactoredCode, babylonOptions)
-    );
+    const nextAst = code === refactoredCode ? ast : babylon.parse(refactoredCode, babylonOptions);
+    const builder = new CodeBuilder(refactoredCode, nextAst);
     let jsxNode = null;
 
     builder.setProp(key, props[key]);
 
-    traverse(ast, {
+    traverse(nextAst, {
       JSXElement({ node }) {
         if (!jsxNode) {
           jsxNode = node;
