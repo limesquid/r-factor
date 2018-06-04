@@ -1,14 +1,12 @@
 const { Builder } = require('../../model');
-const { cleanUpCode, generateIndent, indentCode, sortPropTypes } = require('../../utils');
+const { cleanUpCode, generateIndent } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 const { COMPONENT_TYPE } = require('../../constants');
-const insertCodeBelowNode = require('../insert-code-below-node');
-const addImportDeclaration = require('../add-import-declaration');
 
 class ClassBuilder extends Builder {
   constructor(code, node) {
     super(code, node);
-    this.componentNode = null
+    this.componentNode = null;
     this.componentType = null;
     this.props = null;
   }
@@ -44,7 +42,8 @@ class ClassBuilder extends Builder {
       }
     }
 
-    return cleanUpCode(code);
+    code = cleanUpCode(code);
+    return code;
   }
 
   getDestructuringNode() {

@@ -8,7 +8,12 @@ const {
 } = require('../../utils/ast');
 const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
-const { addImportDeclaration, addPropsUsage, addPropTypes } = require('../../transformations');
+const {
+  addImportDeclaration,
+  addPropsUsage,
+  addPropTypes,
+  addRootJsxProps
+} = require('../../transformations');
 const ComponentBuilder = require('./component-builder');
 
 class AddClassname extends Refactoring {
@@ -25,7 +30,10 @@ class AddClassname extends Refactoring {
       }),
       (code, ast) => addPropsUsage(code, ast, [
         'className'
-      ])
+      ]),
+      (code, ast) => addRootJsxProps(code, ast, {
+        'className': 'className'
+      })
     ];
   }
 
