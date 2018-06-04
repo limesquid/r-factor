@@ -8,10 +8,12 @@ const {
   isStaticPropTypesDeclaration
 } = require('../../utils/ast');
 const { COMPONENT_TYPE } = require('../../constants');
+const MovePropTypesToClass = require('../../refactorings/move-prop-types-to-class');
 const CodeBuilder = require('./code-builder');
 
-const addProps = (code, ast, propTypes) => {
+const addPropTypes = (code, ast, propTypes) => {
   const builder = new CodeBuilder(code, ast);
+  let isClass = false;
 
   builder.setNewPropTypes(propTypes);
 
@@ -26,6 +28,7 @@ const addProps = (code, ast, propTypes) => {
       }
 
       if (isClassDeclaration(node)) {
+        isClass = true;
         builder.setComponentName(getClassComponentName(node));
         builder.setComponentNode(node);
         builder.setComponentType(COMPONENT_TYPE.Class);
@@ -39,7 +42,12 @@ const addProps = (code, ast, propTypes) => {
     }
   });
 
+  if (isClass) {
+    const movePropTypesToClass = new MovePropTypesToClass();
+    return movePropTypesToClass.refactor(builder.build());
+  }
+
   return builder.build();
 };
 
-module.exports = addProps;
+module.exports = addPropTypes;

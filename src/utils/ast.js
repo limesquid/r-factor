@@ -68,10 +68,16 @@ const isPropsDeclaration = (declaration) => declaration.type === 'VariableDeclar
 
 const isPropTypesDeclaration = (node) => isMemberDeclaration(node, 'propTypes');
 
-const isReactImport = (node) => node.type === 'ImportDeclaration'
+const createIsDefaultImport = (name) => (node) => node.type === 'ImportDeclaration'
   && node.specifiers[0].type === 'ImportDefaultSpecifier'
   && node.specifiers[0].local.type === 'Identifier'
-  && node.specifiers[0].local.name === 'React';
+  && node.specifiers[0].local.name === name;
+
+const isPropTypesImport = createIsDefaultImport('prop-types');
+
+const isClassnamesImport = createIsDefaultImport('classnames');
+
+const isReactImport = createIsDefaultImport('React');
 
 const isSingleLine = (node) => node.loc.end.line === node.loc.start.line;
 
