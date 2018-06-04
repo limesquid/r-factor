@@ -12,18 +12,25 @@ const MovePropTypesToClass = require('../../refactorings/move-prop-types-to-clas
 const CodeBuilder = require('./code-builder');
 
 const addPropTypes = (code, ast, propTypes) => {
-  const builder = new CodeBuilder(code, ast);
+  const builder = new CodeBuilder(
+    code.replace(/^(\s+)static\s+propTypes\s*=\s*{\s*}\s*(;?)/m, '$1static propTypes = {\n$1}$2'),
+    ast
+  );
   let isClass = false;
+  let isStatic = false;
 
   builder.setNewPropTypes(propTypes);
 
   traverse(ast, {
     enter({ node }) {
       if (isPropTypesDeclaration(node)) {
+        builder.setPropTypesNode(node);
         builder.setPropTypesObjectNode(node.expression.right);
       }
 
       if (isStaticPropTypesDeclaration(node)) {
+        isStatic = true;
+        builder.setPropTypesNode(node);
         builder.setPropTypesObjectNode(node.value);
       }
 
@@ -42,7 +49,7 @@ const addPropTypes = (code, ast, propTypes) => {
     }
   });
 
-  if (isClass) {
+  if (isClass && !isStatic) {
     const movePropTypesToClass = new MovePropTypesToClass();
     return movePropTypesToClass.refactor(builder.build());
   }

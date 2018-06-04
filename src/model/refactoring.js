@@ -12,7 +12,14 @@ class Refactoring {
 
   refactor(code) {
     return this.transformations.reduce(
-      (nextCode, transformation) => transformation(nextCode, babylon.parse(nextCode, babylonOptions)),
+      (nextCode, transformation) => {
+        try {
+          return transformation(nextCode, babylon.parse(nextCode, babylonOptions));
+        } catch (error) {
+          console.log(error);
+          console.log(`Code: "${nextCode}"`);
+        }
+      },
       code
     );
   }

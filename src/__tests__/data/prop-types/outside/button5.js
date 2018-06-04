@@ -4,13 +4,6 @@ import classNames from 'classnames';
 import styles from './styles.scss';
 
 class Button extends Component {
-  static propTypes = {
-    children: PropTypes.node,
-    className: PropTypes.any,
-    defaultLabel: PropTypes.any,
-    defaultValue: PropTypes.any
-  };
-
   constructor({ defaultValue, ...props }) {
     super(props);
     this.state = {
@@ -29,5 +22,12 @@ class Button extends Component {
     );
   }
 }
+
+Button.propTypes = {
+  children: PropTypes.node,
+  className: PropTypes.any,
+  defaultLabel: PropTypes.any,
+  defaultValue: PropTypes.any
+};
 
 export default Button;

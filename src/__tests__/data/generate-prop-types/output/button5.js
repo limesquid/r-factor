@@ -4,6 +4,10 @@ import classNames from 'classnames';
 import styles from './styles.scss';
 
 class Button extends Component {
+  static propTypes = {
+    children: PropTypes.node,
+    className: PropTypes.any
+  };
 
   render() {
     const { className, ...props } = this.props;
@@ -15,10 +19,5 @@ class Button extends Component {
     );
   }
 }
-
-Button.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.any
-};
 
 export default Button;

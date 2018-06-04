@@ -6,7 +6,7 @@ const addImportDeclaration = require('../add-import-declaration');
 
 class ClassBuilder extends Builder {
   build() {
-    const code = this.propTypesNode
+    const code = this.propTypesObjectNode
       ? this.buildCodeWithExistingPropTypes()
       : this.buildCodeWithNewPropTypes();
     const codeWithImport = addImportDeclaration(code, this.node, {
@@ -25,13 +25,15 @@ class ClassBuilder extends Builder {
   }
 
   buildCodeWithExistingPropTypes() {
-    const definedPropsFirstPropNode = this.propTypesNode.properties[0];
+    const definedPropsFirstPropNode = this.propTypesObjectNode.properties[0];
     let indent = getNodeIndent(this.componentNode) + 2;
     if (definedPropsFirstPropNode) {
       indent = getNodeIndent(definedPropsFirstPropNode);
+    } else {
+      indent = getNodeIndent(this.propTypesNode) + 2;
     }
-    const propTypesFirstLine = this.propTypesNode.loc.start.line;
-    const propTypesLastLine = this.propTypesNode.loc.end.line - 1;
+    const propTypesFirstLine = this.propTypesObjectNode.loc.start.line;
+    const propTypesLastLine = this.propTypesObjectNode.loc.end.line - 1;
     const codeLines = this.code.split('\n');
     const definedPropTypesLines = codeLines
       .slice(propTypesFirstLine, propTypesLastLine)
@@ -42,13 +44,14 @@ class ClassBuilder extends Builder {
       ...definedPropTypesLines.map((line) => line.trim().replace(/,$/, ''))
     ].filter(Boolean);
     const allPropTypesCode = sortPropTypes(allPropTypesLines).join(',\n');
+    const sameLines = propTypesFirstLine === propTypesLastLine + 1;
 
     let code = '';
     code += codeLines.slice(0, propTypesFirstLine).join('\n');
     code += '\n';
     code += indentCode(allPropTypesCode, indent);
     code += '\n';
-    code += codeLines.slice(propTypesLastLine).join('\n');
+    code += codeLines.slice(propTypesLastLine + (sameLines ? 1 : 0)).join('\n');
 
     return code;
   }
@@ -69,7 +72,7 @@ class ClassBuilder extends Builder {
 
   getUndefinedPropTypes() {
     const undefinedPropTypesKeys = Object.keys(this.newPropTypes).filter(
-      (key) => !this.propTypesNode.properties.find(
+      (key) => !this.propTypesObjectNode.properties.find(
         (property) => property.key.name === key
       )
     );
@@ -95,8 +98,12 @@ class ClassBuilder extends Builder {
     this.componentType = type;
   }
 
-  setPropTypesObjectNode(node) {
+  setPropTypesNode(node) {
     this.propTypesNode = node;
+  }
+
+  setPropTypesObjectNode(node) {
+    this.propTypesObjectNode = node;
   }
 
   setNewPropTypes(propTypes) {
