@@ -15,7 +15,11 @@ class FunctionalComponentBuilder extends Builder {
 
     if (destructuringNode) {
       code += this.code.substring(0, destructuringNode.start);
-      code += this.getProps(destructuringNode);
+      if (destructuringNode.type === 'Identifier') {
+        code += `{ ${this.getProps()}, ...${destructuringNode.name} }`;
+      } else {
+        code += this.getProps(destructuringNode);
+      }
       code += this.code.substring(destructuringNode.end);
     } else {
       const functionNode = this.getFunctionNode();

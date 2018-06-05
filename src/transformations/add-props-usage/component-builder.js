@@ -16,7 +16,11 @@ class ComponentBuilder extends Builder {
 
     if (destructuringNode) {
       code += this.code.substring(0, destructuringNode.start);
-      code += `${this.getProps(destructuringNode)}`;
+      if (destructuringNode.type === 'Identifier') {
+        code += `{ ${this.getProps()}, ...${destructuringNode.name} }`;
+      } else {
+        code += this.getProps(destructuringNode);
+      }
       code += this.code.substring(destructuringNode.end);
     } else {
       const renderDefinition = this.getFunctionNode();
@@ -39,14 +43,12 @@ class ComponentBuilder extends Builder {
       ({ declarations, type }) => type === 'VariableDeclaration'
         && declarations.find(
           ({ id, init, type: declarationType }) => declarationType === 'VariableDeclarator'
-            && id.type === 'ObjectPattern'
             && this.code.substring(init.start, init.end) === 'this.props'
         )
     );
     if (declaration) {
       const declarator = declaration.declarations.find(
         ({ id, init, type }) => type === 'VariableDeclarator'
-          && id.type === 'ObjectPattern'
           && this.code.substring(init.start, init.end) === 'this.props'
       );
       return declarator && declarator.id;
