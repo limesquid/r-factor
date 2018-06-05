@@ -10,13 +10,15 @@ class Imports {
   }
 
   build() {
-    const sortedAndFilteredImports = sortImports(filterImports(this.imports));
+    const sortedAndFilteredImports = sortImports(this.imports);
     const imports = [];
     let newCode = this.code;
 
     sortedAndFilteredImports.forEach(({ code, identifier, module, subImports }) => {
       const importCode = createImportDeclarationCode(module, identifier, subImports);
-      imports.push(importCode);
+      if (!isEmptyImport({ identifier, subImports })) {
+        imports.push(importCode);
+      }
 
       if (code) {
         newCode = newCode.replace(code, '');
@@ -120,9 +122,7 @@ class Imports {
   }
 }
 
-const filterImports = (imports) => imports.filter(
-  ({ identifier, subImports }) => !identifier || Object.keys(subImports).length === 0
-);
+const isEmptyImport = ({ identifier, subImports }) => !identifier || Object.keys(subImports).length === 0;
 
 const sortImports = (imports) => [ ...imports ].sort();
 
