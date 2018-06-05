@@ -16,10 +16,11 @@ class Refactoring {
         try {
           return transformation(nextCode, babylon.parse(nextCode, babylonOptions));
         } catch (error) {
-          console.log(error);
-          console.log(`Code: "${nextCode}"`);
+          return [
+            `Error: "${error}"`,
+            `Code: "${nextCode}"`
+          ].join('\n');
         }
-        return nextCode;
       },
       code
     );
