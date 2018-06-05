@@ -3,27 +3,31 @@ const {
   isClassDeclaration,
   isFunctionalComponentDeclaration
 } = require('../../utils/ast');
-const { COMPONENT_TYPE } = require('../../constants');
-const CodeBuilder = require('./code-builder');
+const ComponentBuilder = require('./component-builder');
+const FunctionalComponentBuilder = require('./functional-component-builder');
 
 const addPropsUsage = (code, ast, props) => {
-  const builder = new CodeBuilder(code, ast);
-
-  builder.setProps(props);
+  let builder = null;
 
   traverse(ast, {
     enter({ node }) {
       if (isClassDeclaration(node)) {
+        builder = new ComponentBuilder(code, ast);
         builder.setComponentNode(node);
-        builder.setComponentType(COMPONENT_TYPE.Class);
       }
 
       if (isFunctionalComponentDeclaration(node)) {
+        builder = new FunctionalComponentBuilder(code, ast);
         builder.setComponentNode(node);
-        builder.setComponentType(COMPONENT_TYPE.Functional);
       }
     }
   });
+
+  if (!builder) {
+    return code;
+  }
+
+  builder.setProps(props);
 
   return builder.build();
 };

@@ -1,7 +1,6 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const {
-  isClassnamesImport,
   isComponentDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration
@@ -32,7 +31,7 @@ class AddClassname extends Refactoring {
         'className'
       ]),
       (code, ast) => addRootJsxProps(code, ast, {
-        'className': 'className'
+        className: 'className'
       })
     ];
   }

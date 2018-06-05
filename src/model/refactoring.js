@@ -19,6 +19,7 @@ class Refactoring {
           console.log(error);
           console.log(`Code: "${nextCode}"`);
         }
+        return nextCode;
       },
       code
     );
