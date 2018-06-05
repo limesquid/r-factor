@@ -34,20 +34,43 @@ class ComponentBuilder extends Builder {
     });
   }
 
-  buildClassNames(classNameAttribute) {
-    const { value } = classNameAttribute;
+  buildClassNames({ value }) {
     if (value.type === 'StringLiteral') {
       return `classNames('${value.value}', className)`;
     }
 
-    const { start, end } = value.expression;
-    return `classNames(${this.code.substring(start, end)}, className)`;
+    if (this.isClassNamesUsage(value)) {
+      const args = this.getClassNamesArguments(value);
+      return `classNames(${args}, className)`;
+    }
+
+    const { start, end } = value.expression.start;
+    const existingExpression = this.code.substring(
+      value.expression.start,
+      value.expression.end
+    );
+    return `classNames(${existingExpression}, className)`;
   }
 
   getClassNameAttribute() {
     return this.node.openingElement.attributes.find(
       ({ name }) => name.name === 'className'
     );
+  }
+
+  isClassNamesUsage(jsxValue) {
+    return jsxValue.expression.type === 'CallExpression'
+      && jsxValue.expression.callee.name === 'classNames';
+  }
+
+  getClassNamesArguments(jsxValue) {
+    const args = jsxValue.expression.arguments;
+    const firstArgument = args[0];
+    if (!firstArgument) {
+      return '';
+    }
+    const lastArgument = args[args.length - 1];
+    return this.code.substring(firstArgument.start, lastArgument.end);
   }
 
   setAst(ast) {
