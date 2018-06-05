@@ -1,7 +1,8 @@
 const babylon = require('@babel/parser');
 const { babylonOptions } = require('../../options');
 const { Builder } = require('../../model');
-const { cleanUpCode } = require('../../utils');
+const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
+const { getNodeIndent } = require('../../utils/ast');
 const { addImportDeclaration, addRootJsxProps } = require('../../transformations');
 
 class ComponentBuilder extends Builder {
@@ -34,14 +35,27 @@ class ComponentBuilder extends Builder {
     });
   }
 
-  buildClassNames({ value }) {
+  buildClassNames(node) {
+    const { loc, value } = node;
+    const indent = getNodeIndent(node);
+
     if (value.type === 'StringLiteral') {
       return `classNames('${value.value}', className)`;
     }
 
     if (this.isClassNamesUsage(value)) {
       const args = this.getClassNamesArguments(value);
-      return `classNames(${args}, className)`;
+      const isMultiLine = loc.start.line !== loc.end.line;
+      if (isMultiLine) {
+        let code = 'classNames(\n';
+        code += indentCode(
+          args.split(',').map((arg) => arg.trim()).join(',\n'),
+          2
+        );
+        code += '\n)';
+        return squeezeCode(code, 0, indent);
+      }
+      return `classNames(${args})`;
     }
 
     const { start, end } = value.expression.start;
@@ -67,10 +81,10 @@ class ComponentBuilder extends Builder {
     const args = jsxValue.expression.arguments;
     const firstArgument = args[0];
     if (!firstArgument) {
-      return '';
+      return 'className';
     }
     const lastArgument = args[args.length - 1];
-    return this.code.substring(firstArgument.start, lastArgument.end);
+    return `${this.code.substring(firstArgument.start, lastArgument.end)}, className`;
   }
 
   setAst(ast) {
