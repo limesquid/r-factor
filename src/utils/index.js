@@ -36,32 +36,9 @@ const getIndent = (code, start) => {
   const matches = lastLine.match(/^(\s+)/);
   return (matches && matches[0] || '').length;
 };
-const createImportDeclarationCode = (module, defaultImport, subImports = {}) => {
-  const subImportStrings = Object.keys(subImports).map((subImportImportedName) => {
-    const subImportLocalName = subImports[subImportImportedName];
-    return subImportImportedName === subImportLocalName
-      ? subImportImportedName
-      : `${subImportImportedName} as ${subImportLocalName}`;
-  });
-  const sortedSubImportStrings = subImportStrings.sort();
-
-  let code = '';
-  code += 'import ';
-  if (defaultImport) {
-    code += defaultImport;
-  }
-  if (sortedSubImportStrings.length > 0) {
-    code += ', ';
-    code += `{ ${sortedSubImportStrings.join(', ')} }`;
-  }
-  code += ` from '${module}';`;
-
-  return code;
-};
 
 module.exports = {
   cleanUpCode,
-  createImportDeclarationCode,
   generateIndent,
   getIndent,
   indentCode,
