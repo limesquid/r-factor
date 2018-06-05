@@ -1,6 +1,7 @@
 const { Builder } = require('../../model');
 const { cleanUpCode, generateIndent } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
+const sortObjectAttributes = require('../sort-object-attributes');
 const { COMPONENT_TYPE } = require('../../constants');
 
 class ClassBuilder extends Builder {
@@ -19,20 +20,20 @@ class ClassBuilder extends Builder {
     if (isFunctionalComponent) {
       if (destructuringNode) {
         code += this.code.substring(0, destructuringNode.start);
-        code += `{ ${this.props.join(',')} }`;
+        code += this.getProps(destructuringNode);
         code += this.code.substring(destructuringNode.end);
       } else {
         const functionNode = this.getFunctionNode();
         const start = this.code.indexOf('(', functionNode.start);
         const end = this.code.indexOf(')', functionNode.start);
         code += this.code.substring(0, start + 1);
-        code += `{ ${this.props.join(',')} }`;
+        code += `{ ${this.getProps()} }`;
         code += this.code.substring(end);
       }
     } else {
       if (destructuringNode) {
         code += this.code.substring(0, destructuringNode.start);
-        code += `const { ${this.props.join(',')} } = this.props;`;
+        code += `${this.getProps(destructuringNode)}`;
         code += this.code.substring(destructuringNode.end);
       } else {
         const renderDefinition = this.getFunctionNode();
@@ -40,7 +41,7 @@ class ClassBuilder extends Builder {
         const start = renderBody[0].start - 1;
         const end = renderBody[0].start;
         code += this.code.substring(0, start + 1);
-        code += `const { ${this.props.join(',')} } = this.props;\n\n`;
+        code += `const { ${this.getProps()} } = this.props;\n\n`;
         code += generateIndent(getNodeIndent(renderBody[0]));
         code += this.code.substring(end);
       }
@@ -62,7 +63,7 @@ class ClassBuilder extends Builder {
 
     const renderDefinition = this.getFunctionNode();
     const renderBody = renderDefinition.body.body;
-    return renderBody.find(
+    const declaration = renderBody.find(
       ({ declarations, type }) => type === 'VariableDeclaration'
         && declarations.find(
           ({ id, init, type }) => type === 'VariableDeclarator'
@@ -70,6 +71,15 @@ class ClassBuilder extends Builder {
             && this.code.substring(init.start, init.end) === 'this.props'
         )
     );
+    if (declaration) {
+      const declarator = declaration.declarations.find(
+        ({ id, init, type }) => type === 'VariableDeclarator'
+          && id.type === 'ObjectPattern'
+          && this.code.substring(init.start, init.end) === 'this.props'
+      );
+      return declarator && declarator.id;
+    }
+    return declaration;
   }
 
   getFunctionNode() {
@@ -82,6 +92,21 @@ class ClassBuilder extends Builder {
     return classBody.find(
       ({ key, type }) => type === 'ClassMethod' && key.name === 'render'
     );
+  }
+
+  getProps(destructuringNode) {
+    if (destructuringNode) {
+      const extendedNode = {
+        ...destructuringNode,
+        properties: [
+          ...destructuringNode.properties,
+          { code: 'className', name: 'className' }
+        ]
+      };
+      return sortObjectAttributes(this.code, extendedNode, 0);
+    }
+
+    return this.props.join(',');
   }
 
   isFunctionalComponent() {

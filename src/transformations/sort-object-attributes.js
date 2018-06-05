@@ -58,7 +58,9 @@ const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index
     propertyCode += '[';
   }
 
-  if ([ 'RestElement', 'SpreadElement' ].includes(property.type)) {
+  if (property.code) {
+    propertyCode += property.code;
+  } else if ([ 'RestElement', 'SpreadElement' ].includes(property.type)) {
     propertyCode += code.substring(property.start, property.end);
   } else if (property.value && property.value.type === 'AssignmentPattern') {
     propertyCode += code.substring(property.start, property.end);
@@ -114,20 +116,24 @@ const propertyComparator = (a, b) => {
 
 const restPropertyComparator = (a) => a.type === 'RestElement' ? 1 : -1;
 
-const getName = (code, { end, key, start, type, value }) => {
+const getName = (code, { code: name, end, key, start, type, value }) => {
   if ([ 'RestElement', 'SpreadElement' ].includes(type)) {
     return '';
   }
 
-  if (value.type === 'AssignmentPattern') {
+  if (name) {
+    return name;
+  }
+
+  if (value && value.type === 'AssignmentPattern') {
     return code.substring(start, end);
   }
 
-  if (key.value) {
+  if (key && key.value) {
     return String(key.value);
   }
 
-  if (key.name) {
+  if (key && key.name) {
     return key.name;
   }
 
