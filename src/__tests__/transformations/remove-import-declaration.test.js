@@ -28,4 +28,32 @@ describe('transformation:remove-import-declaration', () => {
     const expectedResult = readTransformationsFile(`${OUTPUT_PATH}/remove-default-retain-sub-imports.js`);
     expect(result).toEqual(expectedResult);
   });
+
+  it('should remove default import and one of subImport', () => {
+    const result = removeImportDeclaration(code, ast, {
+      module: 'react',
+      identifier: true,
+      subImports: [ 'Fragment' ]
+    });
+    const expectedResult = readTransformationsFile(`${OUTPUT_PATH}/remove-default-and-one-sub-import.js`);
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('should remove whole import when it is invalid', () => {
+    const result = removeImportDeclaration(code, ast, {
+      module: 'prop-types',
+      identifier: true
+    });
+    const expectedResult = readTransformationsFile(`${OUTPUT_PATH}/remove-whole-import.js`);
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('should remove aliased sub import', () => {
+    const result = removeImportDeclaration(code, ast, {
+      module: 'react',
+      subImports: [ 'PureComponent' ]
+    });
+    const expectedResult = readTransformationsFile(`${OUTPUT_PATH}/remove-aliased-sub-import.js`);
+    expect(result).toEqual(expectedResult);
+  });
 });
