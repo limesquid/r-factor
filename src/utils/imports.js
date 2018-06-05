@@ -122,7 +122,7 @@ class Imports {
   }
 }
 
-const isEmptyImport = ({ identifier, subImports }) => !identifier || Object.keys(subImports).length === 0;
+const isEmptyImport = ({ identifier, subImports }) => !identifier && Object.keys(subImports).length === 0;
 
 const sortImports = (imports) => [ ...imports ].sort();
 
