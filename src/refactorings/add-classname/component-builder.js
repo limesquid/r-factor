@@ -39,6 +39,9 @@ class ComponentBuilder extends Builder {
     if (value.type === 'StringLiteral') {
       return `classNames('${value.value}', className)`;
     }
+
+    const { start, end } = value.expression;
+    return `classNames(${this.code.substring(start, end)}, className)`;
   }
 
   getClassNameAttribute() {
