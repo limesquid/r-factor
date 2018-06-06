@@ -1,11 +1,11 @@
 const { Builder } = require('../../model');
-const { cleanUpCode } = require('../../utils');
+const { cleanUpCode, squeezeCode } = require('../../utils');
+const { getNodeIndent } = require('../../utils/ast');
 const sortObjectAttributes = require('../sort-object-attributes');
 
 class FunctionalComponentBuilder extends Builder {
   constructor(code, node) {
     super(code, node);
-    this.componentNode = null;
     this.props = null;
   }
 
@@ -18,7 +18,8 @@ class FunctionalComponentBuilder extends Builder {
       if (destructuringNode.type === 'Identifier') {
         code += `{ ${this.getProps()}, ...${destructuringNode.name} }`;
       } else {
-        code += this.getProps(destructuringNode);
+        const props = this.getProps(destructuringNode);
+        code += squeezeCode(props, 0, getNodeIndent(this.node));
       }
       code += this.code.substring(destructuringNode.end);
     } else {
@@ -34,7 +35,7 @@ class FunctionalComponentBuilder extends Builder {
   }
 
   getDestructuringNode() {
-    const componentDeclaration = this.componentNode.declarations[0];
+    const componentDeclaration = this.node.declarations[0];
     const params = componentDeclaration.init.params;
     if (params.length === 0) {
       return null;
@@ -43,7 +44,7 @@ class FunctionalComponentBuilder extends Builder {
   }
 
   getFunctionNode() {
-    const componentDeclaration = this.componentNode.declarations[0];
+    const componentDeclaration = this.node.declarations[0];
     return componentDeclaration.init;
   }
 
@@ -60,10 +61,6 @@ class FunctionalComponentBuilder extends Builder {
     }
 
     return this.props.join(',');
-  }
-
-  setComponentNode(node) {
-    this.componentNode = node;
   }
 
   setProps(props) {

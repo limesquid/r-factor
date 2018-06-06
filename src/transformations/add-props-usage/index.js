@@ -13,12 +13,12 @@ const addPropsUsage = (code, ast, props) => {
     enter({ node }) {
       if (isClassDeclaration(node)) {
         builder = new ComponentBuilder(code, ast);
-        builder.setComponentNode(node);
+        builder.setNode(node);
       }
 
       if (isFunctionalComponentDeclaration(node)) {
         builder = new FunctionalComponentBuilder(code, ast);
-        builder.setComponentNode(node);
+        builder.setNode(node);
       }
     }
   });

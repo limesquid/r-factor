@@ -1,17 +1,17 @@
 const { Builder } = require('../../model');
-const { cleanUpCode, generateIndent } = require('../../utils');
+const { cleanUpCode, generateIndent, squeezeCode } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 const sortObjectAttributes = require('../sort-object-attributes');
 
 class ComponentBuilder extends Builder {
   constructor(code, node) {
     super(code, node);
-    this.componentNode = null;
     this.props = null;
   }
 
   build() {
     const destructuringNode = this.getDestructuringNode();
+    const renderDefinition = this.getFunctionNode();
     let code = '';
 
     if (destructuringNode) {
@@ -19,11 +19,11 @@ class ComponentBuilder extends Builder {
       if (destructuringNode.type === 'Identifier') {
         code += `{ ${this.getProps()}, ...${destructuringNode.name} }`;
       } else {
-        code += this.getProps(destructuringNode);
+        const props = this.getProps(destructuringNode);
+        code += squeezeCode(props, 0, getNodeIndent(renderDefinition) + 2);
       }
       code += this.code.substring(destructuringNode.end);
     } else {
-      const renderDefinition = this.getFunctionNode();
       const renderBody = renderDefinition.body.body;
       const start = renderBody[0].start - 1;
       const end = renderBody[0].start;
@@ -57,7 +57,7 @@ class ComponentBuilder extends Builder {
   }
 
   getFunctionNode() {
-    const classBody = this.componentNode.body.body;
+    const classBody = this.node.body.body;
     return classBody.find(
       ({ key, type }) => type === 'ClassMethod' && key.name === 'render'
     );
@@ -76,10 +76,6 @@ class ComponentBuilder extends Builder {
     }
 
     return this.props.join(',');
-  }
-
-  setComponentNode(node) {
-    this.componentNode = node;
   }
 
   setProps(props) {

@@ -12,8 +12,8 @@ const hoc = (x) => {
       a={3}
       className={classNames(
         b,
-        className,
-        e
+        e,
+        className
       )}
       d={4}>
       asd
