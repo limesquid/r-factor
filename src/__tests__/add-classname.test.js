@@ -7,7 +7,7 @@ const types = [
   'non-functional'
 ];
 
-types.forEach((type) => {
+const run = (type, files) => {
   describe('add-classname:canApply', () => {
     const refactoring = new AddClassname();
     const tests = files.map((file) => ({
@@ -38,6 +38,12 @@ types.forEach((type) => {
       it(`refactor "${name}"`, () => {
         expect(refactoring.refactor(input)).toBe(output);
       });
+      // it(`should not modify refactored code "${name}"`, () => {
+      //   expect(refactoring.refactor(output)).toBe(output);
+      // });
     });
   });
-});
+};
+
+// types.forEach((type) => run(type, files));
+run('functional', [ 'alerts' ]);
