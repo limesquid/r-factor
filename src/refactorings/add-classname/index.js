@@ -1,18 +1,11 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const {
-  isClassnamesImport,
-  isComponentDeclaration,
-  isExportDefaultFunctionalComponentDeclaration,
-  isFunctionalComponentDeclaration
-} = require('../../utils/ast');
 const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const {
   addImportDeclaration,
   addPropsUsage,
-  addPropTypes,
-  addRootJsxProps
+  addPropTypes
 } = require('../../transformations');
 const ComponentBuilder = require('./component-builder');
 
@@ -30,59 +23,39 @@ class AddClassname extends Refactoring {
       }),
       (code, ast) => addPropsUsage(code, ast, [
         'className'
-      ]),
-      (code, ast) => addRootJsxProps(code, ast, {
-        'className': 'className'
-      })
+      ])
     ];
   }
 
   canApply(code) {
     const ast = babylon.parse(code, babylonOptions);
-    let isComponent = false;
-    let isFunctionalComponent = false;
+    let jsxNode = null;
 
     traverse(ast, {
-      ClassDeclaration({ node }) {
-        if (isComponentDeclaration(node)) {
-          isComponent = true;
-        }
-      },
-      ExportDefaultDeclaration({ node }) {
-        if (isExportDefaultFunctionalComponentDeclaration(node)) {
-          isFunctionalComponent = true;
-        }
-      },
-      VariableDeclaration({ node }) {
-        if (isFunctionalComponentDeclaration(node)) {
-          isFunctionalComponent = true;
+      JSXElement({ node }) {
+        if (!jsxNode) {
+          jsxNode = node;
         }
       }
     });
 
-    return isComponent || isFunctionalComponent;
+    return Boolean(jsxNode);
   }
 
   refactorCode(code, ast) {
     const builder = new ComponentBuilder(code);
+    let jsxNode = null;
 
     traverse(ast, {
-      ClassDeclaration({ node }) {
-        if (isComponentDeclaration(node)) {
-          builder.setNode(node);
-        }
-      },
-      ExportDefaultDeclaration({ node }) {
-        if (isExportDefaultFunctionalComponentDeclaration(node)) {
-          builder.setNode(node);
-        }
-      },
-      VariableDeclaration({ node }) {
-        if (isFunctionalComponentDeclaration(node)) {
+      JSXElement({ node }) {
+        if (!jsxNode) {
+          jsxNode = node;
           builder.setNode(node);
         }
       }
     });
+
+    builder.setAst(ast);
 
     return builder.build();
   }
