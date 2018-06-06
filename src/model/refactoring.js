@@ -12,16 +12,10 @@ class Refactoring {
 
   refactor(code) {
     return this.transformations.reduce(
-      (nextCode, transformation) => {
-        try {
-          return transformation(nextCode, babylon.parse(nextCode, babylonOptions));
-        } catch (error) {
-          return [
-            `Error: "${error}"`,
-            `Code: "${nextCode}"`
-          ].join('\n');
-        }
-      },
+      (nextCode, transformation) => transformation(
+        nextCode,
+        babylon.parse(nextCode, babylonOptions)
+      ),
       code
     );
   }

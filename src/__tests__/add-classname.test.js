@@ -1,7 +1,7 @@
 const { range, readFile } = require('./test-utils');
 const AddClassname = require('../refactorings/add-classname');
 
-const files = range(1, 17).map((n) => `file${n}`);
+const files = range(1, 19).map((n) => `file${n}`);
 const types = [
   'functional',
   'non-functional'

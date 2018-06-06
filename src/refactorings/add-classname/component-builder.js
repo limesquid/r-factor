@@ -1,7 +1,7 @@
 const babylon = require('@babel/parser');
 const { babylonOptions } = require('../../options');
 const { Builder } = require('../../model');
-const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
+const { indentCode, squeezeCode } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 const { addImportDeclaration, addRootJsxProps } = require('../../transformations');
 
@@ -58,7 +58,6 @@ class ComponentBuilder extends Builder {
       return `classNames(${args})`;
     }
 
-    const { start, end } = value.expression.start;
     const existingExpression = this.code.substring(
       value.expression.start,
       value.expression.end

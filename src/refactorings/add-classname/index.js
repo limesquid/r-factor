@@ -1,17 +1,11 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const {
-  isComponentDeclaration,
-  isExportDefaultFunctionalComponentDeclaration,
-  isFunctionalComponentDeclaration
-} = require('../../utils/ast');
 const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const {
   addImportDeclaration,
   addPropsUsage,
-  addPropTypes,
-  addRootJsxProps
+  addPropTypes
 } = require('../../transformations');
 const ComponentBuilder = require('./component-builder');
 

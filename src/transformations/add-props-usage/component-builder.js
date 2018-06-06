@@ -42,13 +42,13 @@ class ComponentBuilder extends Builder {
     const declaration = renderBody.find(
       ({ declarations, type }) => type === 'VariableDeclaration'
         && declarations.find(
-          ({ id, init, type: declarationType }) => declarationType === 'VariableDeclarator'
+          ({ init, type: declarationType }) => declarationType === 'VariableDeclarator'
             && this.code.substring(init.start, init.end) === 'this.props'
         )
     );
     if (declaration) {
       const declarator = declaration.declarations.find(
-        ({ id, init, type }) => type === 'VariableDeclarator'
+        ({ init, type }) => type === 'VariableDeclarator'
           && this.code.substring(init.start, init.end) === 'this.props'
       );
       return declarator && declarator.id;
