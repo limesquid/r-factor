@@ -45,5 +45,5 @@ const run = (type, files) => {
   });
 };
 
-// types.forEach((type) => run(type, files));
+types.forEach((type) => run(type, files));
 run('functional', [ 'alerts' ]);

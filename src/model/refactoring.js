@@ -13,7 +13,6 @@ class Refactoring {
   refactor(code) {
     return this.transformations.reduce(
       (nextCode, transformation) => {
-        debugger;
         return transformation(
           nextCode,
           babylon.parse(nextCode, babylonOptions)

@@ -21,12 +21,12 @@ class CodeBuilder extends Builder {
     } else if (this.isMultiLine()) {
       code += this.code.substring(0, openingElement.start);
       code += `<${openingElement.name.name}\n`;
-      code += indentCode(this.getNewAttributes(), getNodeIndent(openingElement) + 2);
+      code += indentCode(this.getNewAttributes().join('\n'), getNodeIndent(openingElement) + 2);
       code += '>';
       code += this.code.substring(openingElement.end);
     } else {
       code += this.code.substring(0, openingElement.start);
-      code += `<${openingElement.name.name} ${this.key}={${this.value}}>`;
+      code += `<${openingElement.name.name} ${this.getNewAttributes().join(' ')}>`;
       code += this.code.substring(openingElement.end);
     }
 
@@ -48,7 +48,7 @@ class CodeBuilder extends Builder {
         return `${name.name}`;
       }),
       `${this.key}={${this.value}}`
-    ]).join('\n');
+    ]);
   }
 
   isMultiLine() {

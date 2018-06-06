@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { hideAlert } from 'alerts/state';
 import { selectAlerts } from 'alerts/selectors';
