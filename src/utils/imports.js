@@ -31,14 +31,16 @@ class Imports {
     code += importsCode;
     code += '\n';
 
-    if (!newCode.startsWith('\n\n') && !newCode.match(/^\s*$/)) {
+    if (newCode.trim().length > 0) {
+      if (!newCode.startsWith('\n\n')) {
+        code += '\n';
+      }
+      if (!newCode.startsWith('\n')) {
+        code += '\n';
+      }
       code += '\n';
+      code += newCode;
     }
-    if (!newCode.startsWith('\n') && !newCode.match(/^\s*$/)) {
-      code += '\n';
-    }
-    code += '\n';
-    code += newCode;
 
     return cleanUpCode(code);
   }

@@ -1,2 +1,2 @@
 import PropTypes from 'prop-types';
-import React, { PureComponent as Component, Fragment } from 'react';
+import React, { Fragment, PureComponent as Component } from 'react';
