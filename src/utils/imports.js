@@ -102,7 +102,7 @@ class Imports {
     /* TODO */
   }
 
-  removeSubImports({ module, subImports = {} }) {
+  removeSubImports({ module, subImports }) {
     const existingImportIndex = this.findImportIndex(module);
 
     if (existingImportIndex < 0) {

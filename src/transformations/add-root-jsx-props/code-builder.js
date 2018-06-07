@@ -1,5 +1,5 @@
 const { Builder } = require('../../model');
-const { cleanUpCode, indentCode, sortPropTypes } = require('../../utils');
+const { cleanUpCode, indentCode, isString, sortPropTypes } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 
 class CodeBuilder extends Builder {
@@ -40,6 +40,14 @@ class CodeBuilder extends Builder {
   }
 
   getNewAttributes() {
+    let newAttribute = `${this.key}`;
+
+    if (isString(this.value)) {
+      newAttribute += `=${this.value}`;
+    } else if (this.value !== true) {
+      newAttribute += `={${this.value}}`;
+    }
+
     return sortPropTypes([
       ...this.node.openingElement.attributes.map(({ name, value }) => {
         if (value) {
@@ -47,7 +55,7 @@ class CodeBuilder extends Builder {
         }
         return `${name.name}`;
       }),
-      `${this.key}={${this.value}}`
+      newAttribute
     ]);
   }
 

@@ -12,10 +12,6 @@ class ComponentBuilder extends Builder {
   }
 
   build() {
-    if (!this.node) {
-      return this.code;
-    }
-
     const classNameAttribute = this.getClassNameAttribute();
 
     if (!classNameAttribute) {
