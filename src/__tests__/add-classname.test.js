@@ -4,7 +4,8 @@ const AddClassname = require('../refactorings/add-classname');
 const files = [
   ...range(1, 22).map((n) => `functional/file${n}`),
   ...range(1, 22).map((n) => `non-functional/file${n}`),
-  'functional/alerts'
+  'functional/alerts',
+  'functional/deep-identifier'
 ];
 
 describe('add-classname:canApply', () => {

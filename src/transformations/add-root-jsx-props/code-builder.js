@@ -18,15 +18,19 @@ class CodeBuilder extends Builder {
       code += this.code.substring(0, existingAttribute.value.start);
       code += `{${this.value}}`;
       code += this.code.substring(existingAttribute.value.end);
-    } else if (this.isMultiLine()) {
-      code += this.code.substring(0, openingElement.start);
-      code += `<${openingElement.name.name}\n`;
-      code += indentCode(this.getNewAttributes().join('\n'), getNodeIndent(openingElement) + 2);
-      code += '>';
-      code += this.code.substring(openingElement.end);
     } else {
       code += this.code.substring(0, openingElement.start);
-      code += `<${openingElement.name.name} ${this.getNewAttributes().join(' ')}>`;
+      code += '<';
+      code += this.code.substring(openingElement.name.start, openingElement.name.end);
+      if (this.isMultiLine()) {
+        code += '\n';
+        code += indentCode(this.getNewAttributes().join('\n'), getNodeIndent(openingElement) + 2);
+      } else {
+        code += ' ';
+        code += this.getNewAttributes().join(' ');
+      }
+      code += openingElement.selfClosing ? ' /' : '';
+      code += '>';
       code += this.code.substring(openingElement.end);
     }
 
@@ -36,7 +40,7 @@ class CodeBuilder extends Builder {
 
   getExistingAttribute() {
     const attributes = this.node.openingElement.attributes;
-    return attributes.find(({ name }) => name.name === this.key);
+    return attributes.find(({ name }) => name && name.name === this.key);
   }
 
   getNewAttributes() {
@@ -49,7 +53,10 @@ class CodeBuilder extends Builder {
     }
 
     return sortPropTypes([
-      ...this.node.openingElement.attributes.map(({ name, value }) => {
+      ...this.node.openingElement.attributes.map(({ argument, name, type, value }) => {
+        if (type === 'JSXSpreadAttribute') {
+          return `{...${argument.name}}`;
+        }
         if (value) {
           return `${name.name}=${this.code.substring(value.start, value.end)}`;
         }

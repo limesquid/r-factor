@@ -40,7 +40,7 @@ const isFunctionalComponentDeclaration = (node) => {
 };
 
 const isFunctionalComponentBody = (node) => Boolean(
-  node.body.type === 'JSXElement'
+  [ 'JSXElement', 'JSXFragment' ].includes(node.body.type)
   ||
   (
     node.body.type === 'BlockStatement'

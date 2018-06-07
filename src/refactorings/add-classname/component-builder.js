@@ -73,13 +73,8 @@ class ComponentBuilder extends Builder {
 
   getClassNameAttribute() {
     return this.node.openingElement.attributes.find(
-      ({ name }) => name.name === 'className'
+      ({ name }) => name && name.name === 'className'
     );
-  }
-
-  isClassNamesUsage(jsxValue) {
-    return jsxValue.expression.type === 'CallExpression'
-      && jsxValue.expression.callee.name === 'classNames';
   }
 
   getClassNamesArguments(jsxValue) {
@@ -94,6 +89,11 @@ class ComponentBuilder extends Builder {
       return `${argsCode}`;
     }
     return `${argsCode}, className`;
+  }
+
+  isClassNamesUsage(jsxValue) {
+    return jsxValue.expression.type === 'CallExpression'
+      && jsxValue.expression.callee.name === 'classNames';
   }
 
   setAst(ast) {
