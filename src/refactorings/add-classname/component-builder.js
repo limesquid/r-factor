@@ -24,9 +24,14 @@ class ComponentBuilder extends Builder {
       });
     }
 
+    const value = this.buildClassNameValue(classNameAttribute);
     const withJsxPropCode = addRootJsxProps(this.code, this.ast, {
-      className: this.buildClassNames(classNameAttribute)
+      className: value
     });
+
+    if (value === 'className') {
+      return withJsxPropCode;
+    }
 
     const ast = babylon.parse(withJsxPropCode, babylonOptions);
     return addImportDeclaration(withJsxPropCode, ast, {
@@ -35,7 +40,7 @@ class ComponentBuilder extends Builder {
     });
   }
 
-  buildClassNames(node) {
+  buildClassNameValue(node) {
     const { loc, value } = node;
     const indent = getNodeIndent(node);
 
@@ -62,6 +67,11 @@ class ComponentBuilder extends Builder {
       value.expression.start,
       value.expression.end
     );
+
+    if (existingExpression === 'className') {
+      return existingExpression;
+    }
+
     return `classNames(${existingExpression}, className)`;
   }
 
@@ -83,7 +93,11 @@ class ComponentBuilder extends Builder {
       return 'className';
     }
     const lastArgument = args[args.length - 1];
-    return `${this.code.substring(firstArgument.start, lastArgument.end)}, className`;
+    const argsCode = this.code.substring(firstArgument.start, lastArgument.end);
+    if (args.find(({ name }) => name === 'className')) {
+      return `${argsCode}`;
+    }
+    return `${argsCode}, className`;
   }
 
   setAst(ast) {

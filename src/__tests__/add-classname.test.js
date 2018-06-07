@@ -7,10 +7,10 @@ const types = [
   'non-functional'
 ];
 
-const run = (type, files) => {
+const run = (type, fileNames) => {
   describe('add-classname:canApply', () => {
     const refactoring = new AddClassname();
-    const tests = files.map((file) => ({
+    const tests = fileNames.map((file) => ({
       name: `add-classname/${type}/input/${file}.js`,
       input: readFile(`add-classname/${type}/input/${file}.js`),
       output: true
@@ -29,7 +29,7 @@ const run = (type, files) => {
 
   describe('add-classname:refactor', () => {
     const refactoring = new AddClassname();
-    const tests = files.map((file) => ({
+    const tests = fileNames.map((file) => ({
       name: `add-classname/${type}/input/${file}.js -> add-classname/${type}/output/${file}.js`,
       input: readFile(`add-classname/${type}/input/${file}.js`),
       output: readFile(`add-classname/${type}/output/${file}.js`)
@@ -38,9 +38,9 @@ const run = (type, files) => {
       it(`refactor "${name}"`, () => {
         expect(refactoring.refactor(input)).toBe(output);
       });
-      // it(`should not modify refactored code "${name}"`, () => {
-      //   expect(refactoring.refactor(output)).toBe(output);
-      // });
+      it(`should not modify refactored code "${name}"`, () => {
+        expect(refactoring.refactor(output)).toBe(output);
+      });
     });
   });
 };

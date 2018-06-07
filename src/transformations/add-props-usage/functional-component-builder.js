@@ -1,9 +1,8 @@
-const { Builder } = require('../../model');
 const { cleanUpCode, squeezeCode } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
-const sortObjectAttributes = require('../sort-object-attributes');
+const ComponentBuilder = require('./component-builder');
 
-class FunctionalComponentBuilder extends Builder {
+class FunctionalComponentBuilder extends ComponentBuilder {
   constructor(code, node) {
     super(code, node);
     this.props = null;
@@ -46,21 +45,6 @@ class FunctionalComponentBuilder extends Builder {
   getFunctionNode() {
     const componentDeclaration = this.node.declarations[0];
     return componentDeclaration.init;
-  }
-
-  getProps(destructuringNode) {
-    if (destructuringNode) {
-      const extendedNode = {
-        ...destructuringNode,
-        properties: [
-          ...destructuringNode.properties,
-          { code: 'className', name: 'className' }
-        ]
-      };
-      return sortObjectAttributes(this.code, extendedNode, 0);
-    }
-
-    return this.props.join(',');
   }
 
   setProps(props) {

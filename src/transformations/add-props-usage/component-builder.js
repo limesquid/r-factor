@@ -68,8 +68,15 @@ class ComponentBuilder extends Builder {
       const extendedNode = {
         ...destructuringNode,
         properties: [
-          ...destructuringNode.properties,
-          { code: 'className', name: 'className' }
+          ...destructuringNode.properties.filter(
+            (property) => {
+              if (!property.value) {
+                return true;
+              }
+              return !this.props.includes(property.value.name);
+            }
+          ),
+          ...this.props.map((prop) => ({ code: prop, name: prop }))
         ]
       };
       return sortObjectAttributes(this.code, extendedNode, 0);

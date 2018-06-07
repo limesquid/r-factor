@@ -13,10 +13,19 @@ class Refactoring {
   refactor(code) {
     return this.transformations.reduce(
       (nextCode, transformation) => {
-        return transformation(
-          nextCode,
-          babylon.parse(nextCode, babylonOptions)
-        );
+        try {
+          return transformation(
+            nextCode,
+            babylon.parse(nextCode, babylonOptions)
+          );
+        } catch (error) {
+          console.log([
+            'Exception occured while performing a transformation',
+            `Error: ${error}`,
+            `Code: ${nextCode}`
+          ].join('\n'));
+          throw error;
+        }
       },
       code
     );
