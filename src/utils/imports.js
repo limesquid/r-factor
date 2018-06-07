@@ -130,16 +130,16 @@ const isEmptyImport = ({ identifier, subImports }) => !identifier && Object.keys
 
 const sortImports = (imports) => {
   const modulesToSort = imports.filter(
-    ({ module }) => settings.get('modules-order').includes(module)
+    ({ module }) => settings.modulesOrder.includes(module)
   );
   const modulesToKeep = imports.filter(
-    ({ module }) => !settings.get('modules-order').includes(module)
+    ({ module }) => !settings.modulesOrder.includes(module)
   );
 
   return [
     ...stable([ ...modulesToSort ], (a, b) => {
-      const aIndex = settings.get('modules-order').indexOf(a.module);
-      const bIndex = settings.get('modules-order').indexOf(b.module);
+      const aIndex = settings.modulesOrder.indexOf(a.module);
+      const bIndex = settings.modulesOrder.indexOf(b.module);
       if (aIndex < bIndex) {
         return -1;
       }
