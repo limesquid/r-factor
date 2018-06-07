@@ -1,6 +1,8 @@
 const traverse = require('@babel/traverse').default;
+const stable = require('stable');
 const { getSubImports } = require('../utils/ast');
 const { cleanUpCode } = require('../utils');
+const settings = require('../settings');
 
 class Imports {
   constructor(code, ast) {
@@ -10,12 +12,12 @@ class Imports {
   }
 
   build() {
-    const sortedAndFilteredImports = sortImports(this.imports);
+    const sortedImports = sortImports(this.imports);
     const imports = [];
     let newCode = this.code;
 
-    sortedAndFilteredImports.forEach(({ code, identifier, module, subImports }) => {
-      const importCode = createImportDeclarationCode(module, identifier, subImports);
+    sortedImports.forEach(({ code, identifier, module, subImports }) => {
+      const importCode = buildImportDeclarationCode(module, identifier, subImports);
       if (!isEmptyImport({ identifier, subImports })) {
         imports.push(importCode);
       }
@@ -126,7 +128,29 @@ class Imports {
 
 const isEmptyImport = ({ identifier, subImports }) => !identifier && Object.keys(subImports).length === 0;
 
-const sortImports = (imports) => [ ...imports ].sort();
+const sortImports = (imports) => {
+  const modulesToSort = imports.filter(
+    ({ module }) => settings.get('modules-order').includes(module)
+  );
+  const modulesToKeep = imports.filter(
+    ({ module }) => !settings.get('modules-order').includes(module)
+  );
+
+  return [
+    ...stable([ ...modulesToSort ], (a, b) => {
+      const aIndex = settings.get('modules-order').indexOf(a.module);
+      const bIndex = settings.get('modules-order').indexOf(b.module);
+      if (aIndex < bIndex) {
+        return -1;
+      }
+      if (aIndex > bIndex) {
+        return 1;
+      }
+      return 0;
+    }),
+    ...modulesToKeep
+  ];
+};
 
 const extractImports = (code, ast) => {
   const imports = [];
@@ -154,7 +178,7 @@ const getIdentifier = (node) => {
 
 const getModule = (node) => node.source.value;
 
-const createImportDeclarationCode = (module, defaultImport, subImports = {}) => {
+const buildImportDeclarationCode = (module, defaultImport, subImports = {}) => {
   const subImportStrings = Object.keys(subImports).map((subImportImportedName) => {
     const subImportLocalName = subImports[subImportImportedName];
     return subImportImportedName === subImportLocalName

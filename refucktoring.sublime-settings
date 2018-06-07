@@ -1,3 +1,21 @@
 {
-  "indent": "2"
+  "indent": "2",
+  "modules-order": [
+    "react",
+    "react-dom",
+    "prop-types",
+    "classnames",
+    "lodash",
+    "lodash-es",
+    "underscore",
+    "redux-saga",
+    "redux-saga/effects",
+    "react-redux",
+    "react-router-redux",
+    "redux-actions",
+    "reselect",
+    "re-reselect",
+    "react-router-dom",
+    "react-hot-loader"
+  ]
 }

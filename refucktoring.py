@@ -1,3 +1,4 @@
+import json
 import os
 import sublime
 import sublime_plugin
@@ -30,7 +31,10 @@ class BaseCommand(sublime_plugin.TextCommand):
     try:
       return node_bridge(data, BIN_PATH, [
         '-r', refactoring_name,
-        '-i', self.get_setting('indent') # example: option from configuration file
+        '-s', json.dumps({
+          'indent': self.get_setting('indent'),
+          'modules-order': self.get_setting('modules-order')
+        })
       ])
     except Exception as e:
       return str(e)
