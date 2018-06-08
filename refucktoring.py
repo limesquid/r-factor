@@ -97,3 +97,9 @@ class SortAttributesCommand(BaseCommand):
   def __init__(self, arg):
     super(SortAttributesCommand, self).__init__(arg)
     self.refactoring_name = 'sort-attributes'
+
+
+class SortImportsCommand(BaseCommand):
+  def __init__(self, arg):
+    super(SortImportsCommand, self).__init__(arg)
+    self.refactoring_name = 'sort-imports'

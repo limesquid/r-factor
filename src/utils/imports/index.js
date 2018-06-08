@@ -14,11 +14,10 @@ class Imports {
   }
 
   build() {
-    const sortedImports = sortImports(this.imports);
     const imports = [];
     let newCode = this.code;
 
-    sortedImports.forEach(({ code, identifier, module, subImports }) => {
+    this.imports.forEach(({ code, identifier, module, subImports }) => {
       const importCode = buildImportDeclarationCode(module, identifier, subImports);
       if (!isEmptyImport({ identifier, subImports })) {
         imports.push(importCode);
@@ -53,6 +52,10 @@ class Imports {
     return this.imports.findIndex(
       (importDefinition) => importDefinition.module === module
     );
+  }
+
+  sort() {
+    this.imports = sortImports(this.imports);
   }
 
   updateImportAtIndex(index, updatedImport) {
