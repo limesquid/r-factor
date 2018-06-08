@@ -42,15 +42,11 @@ const sortImports = (imports) => {
 const sortImportsAlphabetically = (imports) => stable(
   [ ...imports ],
   (a, b) => {
-    if (a.module.startsWith('.')) {
-      if (!b.module.startsWith('.')) {
-        return 1;
-      }
+    if (a.module.startsWith('.') && !b.module.startsWith('.')) {
+      return 1;
     }
-    if (b.module.startsWith('.')) {
-      if (!a.module.startsWith('.')) {
-        return -1;
-      }
+    if (b.module.startsWith('.') && !a.module.startsWith('.')) {
+      return -1;
     }
     return a.module.localeCompare(b.module);
   }
