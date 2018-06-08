@@ -36,9 +36,9 @@ class ComponentBuilder extends Builder {
 
   buildDeclaration() {
     const name = this.buildName();
-    let declaration = 'class extends Component {';
+    let declaration = `class extends ${settings.componentSuperclass} {`;
     if (name) {
-      declaration = `class ${name} extends Component {`;
+      declaration = `class ${name} extends ${settings.componentSuperclass} {`;
     }
     if (isExportDefaultFunctionalComponentDeclaration(this.node)) {
       return `export default ${declaration}`;

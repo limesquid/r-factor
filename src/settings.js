@@ -3,6 +3,7 @@ const SETTINGS = Symbol('settings');
 class Settings {
   constructor() {
     this[SETTINGS] = {
+      'component-superclass': 'Component',
       'end-of-line': '\n',
       indent: 2,
       'modules-order': [ 'react', 'prop-types', 'classnames' ],
@@ -19,6 +20,10 @@ class Settings {
       ...this[SETTINGS],
       ...settings
     };
+  }
+
+  get componentSuperclass() {
+    return this.get('component-superclass');
   }
 
   get doubleEndOfLine() {

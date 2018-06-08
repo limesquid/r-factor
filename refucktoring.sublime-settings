@@ -1,4 +1,5 @@
 {
+  "component-superclass": "Component",
   "end-of-line": "\n",
   "indent": 2,
   "modules-order": [

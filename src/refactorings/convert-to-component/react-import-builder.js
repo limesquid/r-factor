@@ -20,7 +20,7 @@ class ReactImportBuilder extends Builder {
   }
 
   buildImport() {
-    const subImports = [ 'Component' ];
+    const subImports = [ settings.componentSuperclass ];
     subImports.push(...this.node.specifiers.slice(1).map((specifier) => {
       if (specifier.local.name !== specifier.imported.name) {
         return `${specifier.imported.name} as ${specifier.local.name}`;
