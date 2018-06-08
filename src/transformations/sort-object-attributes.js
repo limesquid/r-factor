@@ -9,9 +9,9 @@ const sortObjectAttributes = (code, node, indentSize) => {
   const buildProperty = createBuildProperty(code, innerIndent, isMultiLine);
 
   let newCode = '{';
-  newCode += isMultiLine ? '\n' : ' ';
+  newCode += isMultiLine ? settings.endOfLine : ' ';
   newCode += buildProperties(node.properties, code, buildProperty);
-  newCode += isMultiLine ? `\n${generateIndent(indentSize)}` : ' ';
+  newCode += isMultiLine ? `${settings.endOfLine}${generateIndent(indentSize)}` : ' ';
   newCode += '}';
   return newCode;
 };
@@ -80,7 +80,7 @@ const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index
   }
 
   if (index < properties.length - 1) {
-    propertyCode += `,${isMultiLine ? '\n' : ' '}`;
+    propertyCode += `,${isMultiLine ? settings.endOfLine : ' '}`;
   }
 
   return propertyCode;

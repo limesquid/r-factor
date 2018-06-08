@@ -33,9 +33,9 @@ class ClassBuilder extends Builder {
   buildBody() {
     let body = '';
     if (this.isClassBodyEmpty()) {
-      body += '{\n';
+      body += `{${settings.endOfLine}`;
       body += squeezeCode(this.buildClassBody(), settings.indent);
-      body += '\n}';
+      body += `${settings.endOfLine}}`;
     } else {
       body += this.buildClassBody();
     }
@@ -58,7 +58,7 @@ class ClassBuilder extends Builder {
       ...babelGeneratorOptions,
       concise: false
     });
-    return `static ${this.staticFieldName} = ${staticField.code};\n\n`;
+    return `static ${this.staticFieldName} = ${staticField.code};${settings.doubleEndOfLine}`;
   }
 
   getOldBody() {

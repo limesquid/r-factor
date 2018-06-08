@@ -18,7 +18,7 @@ class ClassBuilder extends Builder {
   }
 
   buildPropTypesContent(propTypes) {
-    return sortPropTypes(this.buildPropTypesLines(propTypes)).join(',\n');
+    return sortPropTypes(this.buildPropTypesLines(propTypes)).join(`,${settings.endOfLine}`);
   }
 
   buildPropTypesLines(propTypes) {
@@ -35,24 +35,24 @@ class ClassBuilder extends Builder {
     }
     const propTypesFirstLine = this.propTypesObjectNode.loc.start.line;
     const propTypesLastLine = this.propTypesObjectNode.loc.end.line - 1;
-    const codeLines = this.code.split('\n');
+    const codeLines = this.code.split(settings.endOfLine);
     const definedPropTypesLines = codeLines
       .slice(propTypesFirstLine, propTypesLastLine)
       .filter((line) => !line.match(/^\s*$/));
     const undefinedPropTypes = this.getUndefinedPropTypes();
     const allPropTypesLines = [
-      ...this.buildPropTypesContent(undefinedPropTypes).split(',\n'),
+      ...this.buildPropTypesContent(undefinedPropTypes).split(`,${settings.endOfLine}`),
       ...definedPropTypesLines.map((line) => line.trim().replace(/,$/, ''))
     ].filter(Boolean);
-    const allPropTypesCode = sortPropTypes(allPropTypesLines).join(',\n');
+    const allPropTypesCode = sortPropTypes(allPropTypesLines).join(`,${settings.endOfLine}`);
     const sameLines = propTypesFirstLine === propTypesLastLine + 1;
 
     let code = '';
-    code += codeLines.slice(0, propTypesFirstLine).join('\n');
-    code += '\n';
+    code += codeLines.slice(0, propTypesFirstLine).join(settings.endOfLine);
+    code += settings.endOfLine;
     code += indentCode(allPropTypesCode, indent);
-    code += '\n';
-    code += codeLines.slice(propTypesLastLine + (sameLines ? 1 : 0)).join('\n');
+    code += settings.endOfLine;
+    code += codeLines.slice(propTypesLastLine + (sameLines ? 1 : 0)).join(settings.endOfLine);
 
     return code;
   }
@@ -62,10 +62,10 @@ class ClassBuilder extends Builder {
     const indent = getNodeIndent(this.componentNode);
 
     let propTypesCode = '';
-    propTypesCode += '\n';
-    propTypesCode += `${this.componentName}.propTypes = {\n`;
+    propTypesCode += settings.endOfLine;
+    propTypesCode += `${this.componentName}.propTypes = {${settings.endOfLine}`;
     propTypesCode += indentCode(propTypesContent, settings.indent);
-    propTypesCode += '\n};\n';
+    propTypesCode += `${settings.endOfLine}};${settings.endOfLine}`;
     propTypesCode = indentCode(propTypesCode, indent);
 
     return insertCodeBelowNode(this.code, this.componentNode, propTypesCode);

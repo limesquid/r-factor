@@ -1,5 +1,6 @@
 const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
+const settings = require('../../settings');
 const { babelGeneratorOptions } = require('../../options');
 const { cleanUpCode, indentCode } = require('../../utils');
 
@@ -22,7 +23,7 @@ class ClassBuilder extends Builder {
     if (this.staticFieldNode) {
       code += indentCode(this.buildStaticField(), indent);
       if (this.node.body.body.length === 1) {
-        code = code.replace(this.getOldBody(), '{\n}');
+        code = code.replace(this.getOldBody(), `{${settings.endOfLine}}`);
       } else {
         code = code.replace(this.getOldStaticField(), '');
       }
@@ -37,7 +38,9 @@ class ClassBuilder extends Builder {
       ...babelGeneratorOptions,
       concise: false
     });
-    return `\n\n${this.buildName()}.${this.staticFieldName} = ${staticField.code};\n\n`;
+    const left = `${settings.doubleEndOfLine}${this.buildName()}.${this.staticFieldName}`;
+    const right = `${staticField.code};${settings.doubleEndOfLine}`;
+    return `${left} = ${right}`;
   }
 
   buildName() {

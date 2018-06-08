@@ -1,5 +1,6 @@
 {
-  "indent": "2",
+  "end-of-line": "\n",
+  "indent": 2,
   "modules-order": [
     "react",
     "react-dom",

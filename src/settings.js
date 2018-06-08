@@ -3,6 +3,7 @@ const SETTINGS = Symbol('settings');
 class Settings {
   constructor() {
     this[SETTINGS] = {
+      'end-of-line': '\n',
       indent: 2,
       'modules-order': [ 'react', 'prop-types', 'classnames' ]
     };
@@ -19,8 +20,16 @@ class Settings {
     };
   }
 
+  get doubleEndOfLine() {
+    return `${this.endOfLine}${this.endOfLine}`;
+  }
+
   get doubleIndent() {
     return 2 * this.indent;
+  }
+
+  get endOfLine() {
+    return this.get('end-of-line');
   }
 
   get indent() {

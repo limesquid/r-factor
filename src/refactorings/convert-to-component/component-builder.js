@@ -16,7 +16,7 @@ class ComponentBuilder extends Builder {
     code += this.buildPrefix();
     code += this.buildDeclaration();
     code += this.buildRender();
-    code += '\n';
+    code += settings.endOfLine;
     code += indentCode('}', indent);
     code += this.buildSuffix();
     code = cleanUpCode(code);
@@ -83,11 +83,11 @@ class ComponentBuilder extends Builder {
     const body = this.buildBody();
     const props = this.buildProps();
     let code = '';
-    code += '\n';
+    code += settings.endOfLine;
     code += indentCode('render() {', indent + settings.indent);
-    code += '\n';
+    code += settings.endOfLine;
     code += indentCode(props, indent + settings.doubleIndent);
-    code += props ? '\n' : '';
+    code += props ? settings.endOfLine : '';
     if (body) {
       code += squeezeCode(
         body,
@@ -95,10 +95,10 @@ class ComponentBuilder extends Builder {
         indent + settings.indent
       );
     }
-    code += body ? '\n\n' : '';
-    code += ((props && !body) ? '\n' : '');
+    code += body ? settings.doubleEndOfLine : '';
+    code += ((props && !body) ? settings.endOfLine : '');
     code += this.buildReturnStatement();
-    code += '\n';
+    code += settings.endOfLine;
     code += indentCode('}', indent + settings.indent);
     return code;
   }
@@ -107,9 +107,9 @@ class ComponentBuilder extends Builder {
     const indent = this.getIndent();
     let code = '';
     code += indentCode('return (', indent + settings.doubleIndent);
-    code += '\n';
+    code += settings.endOfLine;
     code += indentCode(this.buildJsx(), indent);
-    code += '\n';
+    code += settings.endOfLine;
     code += indentCode(');', indent + settings.doubleIndent);
     return code;
   }

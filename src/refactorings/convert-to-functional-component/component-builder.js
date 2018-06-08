@@ -15,14 +15,14 @@ class ComponentBuilder extends Builder {
     let code = '';
     code += this.buildPrefix();
     code += this.buildDeclaration();
-    code += '\n';
+    code += settings.endOfLine;
     code += indentCode(this.buildBody(), indent);
-    code += '\n';
+    code += settings.endOfLine;
     code += indentCode(this.isSingleReturnStatement() ? ')' : '}', indent);
     code += ';';
     code += this.buildSuffix();
     if (this.hasPropsDeclaration()) {
-      code = code.replace(`${this.getOldPropsDeclaration()}\n`, '');
+      code = code.replace(`${this.getOldPropsDeclaration()}${settings.endOfLine}`, '');
     }
     code = this.ensureProperExport(code);
     code = cleanUpCode(code);
@@ -37,11 +37,11 @@ class ComponentBuilder extends Builder {
     }
 
     let code = this.buildBodyNonReturnStatements();
-    code += '\n\n';
+    code += settings.doubleEndOfLine;
     code += indentCode('return (', settings.indent);
-    code += '\n';
+    code += settings.endOfLine;
     code += squeezeCode(this.buildJsx(), settings.doubleIndent, -settings.indent - indent);
-    code += '\n';
+    code += settings.endOfLine;
     code += indentCode(');', settings.indent);
     return code;
   }
@@ -93,9 +93,9 @@ class ComponentBuilder extends Builder {
     let newCode = code;
     if (newCode.includes(defaultExportCode)) {
       newCode = newCode.replace(defaultExportCode, declarationCode);
-      newCode += '\n';
+      newCode += settings.endOfLine;
       newCode += `export default ${this.buildName()};`;
-      newCode += '\n';
+      newCode += settings.endOfLine;
     }
     return newCode;
   }

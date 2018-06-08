@@ -24,9 +24,9 @@ class CodeBuilder extends Builder {
       code += '<';
       code += this.code.substring(openingElement.name.start, openingElement.name.end);
       if (this.isMultiLine()) {
-        code += '\n';
+        code += settings.endOfLine;
         code += indentCode(
-          this.getNewAttributes().join('\n'),
+          this.getNewAttributes().join(settings.endOfLine),
           getNodeIndent(openingElement) + settings.indent
         );
       } else {

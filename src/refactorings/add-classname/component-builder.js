@@ -49,12 +49,12 @@ class ComponentBuilder extends Builder {
       const args = this.getClassNamesArguments(value);
       const isMultiLine = loc.start.line !== loc.end.line;
       if (isMultiLine) {
-        let code = 'classNames(\n';
+        let code = `classNames(${settings.endOfLine}`;
         code += indentCode(
-          args.split(',').map((arg) => arg.trim()).join(',\n'),
-          settings.get('indent')
+          args.split(',').map((arg) => arg.trim()).join(`,${settings.endOfLine}`),
+          settings.indent
         );
-        code += '\n)';
+        code += `${settings.endOfLine})`;
         return squeezeCode(code, 0, indent);
       }
       return `classNames(${args})`;

@@ -8,12 +8,13 @@ const {
   isStaticPropTypesDeclaration
 } = require('../../utils/ast');
 const { COMPONENT_TYPE } = require('../../constants');
+const settings = require('../../settings');
 const MovePropTypesToClass = require('../../refactorings/move-prop-types-to-class');
 const CodeBuilder = require('./code-builder');
 
 const addPropTypes = (code, ast, propTypes) => {
   const builder = new CodeBuilder(
-    code.replace(/^(\s+)static\s+propTypes\s*=\s*{\s*}\s*(;?)/m, '$1static propTypes = {\n$1}$2'),
+    code.replace(/^(\s+)static\s+propTypes\s*=\s*{\s*}\s*(;?)/m, `$1static propTypes = {${settings.endOfLine}$1}$2`),
     ast
   );
   let isClass = false;

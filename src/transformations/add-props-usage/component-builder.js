@@ -29,7 +29,7 @@ class ComponentBuilder extends Builder {
       const start = renderBody[0].start - 1;
       const end = renderBody[0].start;
       code += this.code.substring(0, start + 1);
-      code += `const { ${this.getProps()} } = this.props;\n\n`;
+      code += `const { ${this.getProps()} } = this.props;${settings.doubleEndOfLine}`;
       code += generateIndent(getNodeIndent(renderBody[0]));
       code += this.code.substring(end);
     }

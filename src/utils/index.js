@@ -1,4 +1,5 @@
 const stable = require('stable');
+const settings = require('../settings');
 
 const composeReversed = (firstFunction, ...restFunctions) => (...args) => restFunctions
   .reduce((result, fn) => fn(result), firstFunction(...args));
@@ -15,16 +16,27 @@ const indentLine = (line, size) => {
   }
   return line.replace(new RegExp(`^${indent}`, 'i'), '');
 };
-const indentCode = (code, size) => code && indentLines(code.split('\n'), size).join('\n');
-const removeDoubleNewlines = (code) => code.replace(/\n\n\n/g, '\n').replace(/\n\s*\n\s*\n/g, '\n\n');
+const indentCode = (code, size) => code && indentLines(code.split(settings.endOfLine), size).join(settings.endOfLine);
+const removeDoubleNewlines = (code) => code
+  .replace(
+    new RegExp(`${settings.endOfLine}${settings.endOfLine}${settings.endOfLine}`, 'g'),
+    settings.endOfLine
+  )
+  .replace(
+    new RegExp(`${settings.endOfLine}\\s*${settings.endOfLine}\\s*${settings.endOfLine}`, 'g'),
+    settings.doubleEndOfLine
+  );
 const squeezeCode = (code, size, restSize) => {
-  const [ first, ...rest ] = code.split('\n');
+  const [ first, ...rest ] = code.split(settings.endOfLine);
   return [
     indentLine(first, size),
     ...indentLines(rest, restSize)
-  ].join('\n');
+  ].join(settings.endOfLine);
 };
-const removeTrailingWhitespace = (code) => code.replace(/[ ]+\n/g, '\n');
+const removeTrailingWhitespace = (code) => code.replace(
+  new RegExp(`[ ]+${settings.endOfLine}`, 'g'),
+  settings.endOfLine
+);
 const cleanUpCode = compose(removeDoubleNewlines, removeTrailingWhitespace);
 const sortPropTypes = (propTypesLines) => stable(
   stable(propTypesLines),
@@ -40,7 +52,7 @@ const isString = (value) => {
   return false;
 };
 const getIndent = (code, start) => {
-  const lines = code.substring(0, start).split('\n');
+  const lines = code.substring(0, start).split(settings.endOfLine);
   const lastLine = lines[lines.length - 1] || '';
   const matches = lastLine.match(/^(\s+)/);
   return (matches && matches[0] || '').length;

@@ -1,3 +1,4 @@
+const settings = require('../../settings');
 const { cleanUpCode } = require('../index');
 const {
   buildImportDeclarationCode,
@@ -28,20 +29,20 @@ class Imports {
       }
     });
 
-    const importsCode = imports.join('\n');
+    const importsCode = imports.join(settings.endOfLine);
     newCode = cleanUpCode(newCode);
     let code = '';
     code += importsCode;
-    code += '\n';
+    code += settings.endOfLine;
 
     if (newCode.trim().length > 0) {
-      if (!newCode.startsWith('\n\n')) {
-        code += '\n';
+      if (!newCode.startsWith(settings.doubleEndOfLine)) {
+        code += settings.endOfLine;
       }
-      if (!newCode.startsWith('\n')) {
-        code += '\n';
+      if (!newCode.startsWith(settings.endOfLine)) {
+        code += settings.endOfLine;
       }
-      code += '\n';
+      code += settings.endOfLine;
       code += newCode;
     }
 
