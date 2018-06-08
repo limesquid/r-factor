@@ -58,7 +58,9 @@ class ClassBuilder extends Builder {
       ...babelGeneratorOptions,
       concise: false
     });
-    return `static ${this.staticFieldName} = ${staticField.code};${settings.doubleEndOfLine}`;
+    const left = `static ${this.staticFieldName}`;
+    const right = `${staticField.code}${settings.semicolon}${settings.doubleEndOfLine}`;
+    return `${left} = ${right}`;
   }
 
   getOldBody() {

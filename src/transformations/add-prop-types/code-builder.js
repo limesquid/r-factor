@@ -65,7 +65,7 @@ class ClassBuilder extends Builder {
     propTypesCode += settings.endOfLine;
     propTypesCode += `${this.componentName}.propTypes = {${settings.endOfLine}`;
     propTypesCode += indentCode(propTypesContent, settings.indent);
-    propTypesCode += `${settings.endOfLine}};${settings.endOfLine}`;
+    propTypesCode += `${settings.endOfLine}}${settings.semicolon}${settings.endOfLine}`;
     propTypesCode = indentCode(propTypesCode, indent);
 
     return insertCodeBelowNode(this.code, this.componentNode, propTypesCode);

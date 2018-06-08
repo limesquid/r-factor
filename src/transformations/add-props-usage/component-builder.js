@@ -28,8 +28,10 @@ class ComponentBuilder extends Builder {
       const renderBody = renderDefinition.body.body;
       const start = renderBody[0].start - 1;
       const end = renderBody[0].start;
+      const left = `const { ${this.getProps()} }`;
+      const right = `this.props${settings.semicolon}${settings.doubleEndOfLine}`;
       code += this.code.substring(0, start + 1);
-      code += `const { ${this.getProps()} } = this.props;${settings.doubleEndOfLine}`;
+      code += `${left} = ${right}`;
       code += generateIndent(getNodeIndent(renderBody[0]));
       code += this.code.substring(end);
     }

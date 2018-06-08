@@ -5,7 +5,8 @@ class Settings {
     this[SETTINGS] = {
       'end-of-line': '\n',
       indent: 2,
-      'modules-order': [ 'react', 'prop-types', 'classnames' ]
+      'modules-order': [ 'react', 'prop-types', 'classnames' ],
+      semicolons: true
     };
   }
 
@@ -42,6 +43,10 @@ class Settings {
 
   get modulesOrder() {
     return this.get('modules-order');
+  }
+
+  get semicolon() {
+    return this.get('semicolons') ? ';' : '';
   }
 }
 

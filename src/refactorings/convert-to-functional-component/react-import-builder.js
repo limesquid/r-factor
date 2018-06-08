@@ -1,3 +1,4 @@
+const settings = require('../../settings');
 const { Builder } = require('../../model');
 
 class ReactImportBuilder extends Builder {
@@ -29,9 +30,9 @@ class ReactImportBuilder extends Builder {
     const sortedSubImports = Array.from(new Set(subImports)).sort()
       .filter((subImport) => subImport !== superClass);
     if (sortedSubImports.length === 0) {
-      return 'import React from \'react\';';
+      return `import React from 'react'${settings.semicolon}`;
     }
-    return `import React, { ${sortedSubImports.join(', ')} } from 'react';`;
+    return `import React, { ${sortedSubImports.join(', ')} } from 'react'${settings.semicolon}`;
   }
 }
 

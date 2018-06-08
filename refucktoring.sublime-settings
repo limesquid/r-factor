@@ -18,5 +18,6 @@
     "re-reselect",
     "react-router-dom",
     "react-hot-loader"
-  ]
+  ],
+  "semicolons": true
 }

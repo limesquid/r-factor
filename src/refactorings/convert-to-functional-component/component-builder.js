@@ -19,7 +19,7 @@ class ComponentBuilder extends Builder {
     code += indentCode(this.buildBody(), indent);
     code += settings.endOfLine;
     code += indentCode(this.isSingleReturnStatement() ? ')' : '}', indent);
-    code += ';';
+    code += settings.semicolon;
     code += this.buildSuffix();
     if (this.hasPropsDeclaration()) {
       code = code.replace(`${this.getOldPropsDeclaration()}${settings.endOfLine}`, '');
@@ -42,7 +42,7 @@ class ComponentBuilder extends Builder {
     code += settings.endOfLine;
     code += squeezeCode(this.buildJsx(), settings.doubleIndent, -settings.indent - indent);
     code += settings.endOfLine;
-    code += indentCode(');', settings.indent);
+    code += indentCode(`)${settings.semicolon}`, settings.indent);
     return code;
   }
 
@@ -94,7 +94,7 @@ class ComponentBuilder extends Builder {
     if (newCode.includes(defaultExportCode)) {
       newCode = newCode.replace(defaultExportCode, declarationCode);
       newCode += settings.endOfLine;
-      newCode += `export default ${this.buildName()};`;
+      newCode += `export default ${this.buildName()}${settings.semicolon}`;
       newCode += settings.endOfLine;
     }
     return newCode;

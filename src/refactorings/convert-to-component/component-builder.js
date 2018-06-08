@@ -70,9 +70,11 @@ class ComponentBuilder extends Builder {
 
     if (params.length > 0) {
       if (propsNode.type === 'ObjectPattern') {
-        return `const ${generate(propsNode, babelGeneratorOptions).code} = this.props;`;
+        const left = `const ${generate(propsNode, babelGeneratorOptions).code}`;
+        const right = `this.props${settings.semicolon}`;
+        return `${left} = ${right}`;
       }
-      return `const ${propsNode.name} = this.props;`;
+      return `const ${propsNode.name} = this.props${settings.semicolon}`;
     }
 
     return '';
@@ -110,7 +112,7 @@ class ComponentBuilder extends Builder {
     code += settings.endOfLine;
     code += indentCode(this.buildJsx(), indent);
     code += settings.endOfLine;
-    code += indentCode(');', indent + settings.doubleIndent);
+    code += indentCode(`)${settings.semicolon}`, indent + settings.doubleIndent);
     return code;
   }
 

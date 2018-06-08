@@ -39,7 +39,7 @@ class ClassBuilder extends Builder {
       concise: false
     });
     const left = `${settings.doubleEndOfLine}${this.buildName()}.${this.staticFieldName}`;
-    const right = `${staticField.code};${settings.doubleEndOfLine}`;
+    const right = `${staticField.code}${settings.semicolon}${settings.doubleEndOfLine}`;
     return `${left} = ${right}`;
   }
 
