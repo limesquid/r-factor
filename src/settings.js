@@ -7,6 +7,7 @@ class Settings {
       'end-of-line': '\n',
       indent: 2,
       'modules-order': [ 'react', 'prop-types', 'classnames' ],
+      quotes: 'single',
       semicolons: true
     };
   }
@@ -48,6 +49,17 @@ class Settings {
 
   get modulesOrder() {
     return this.get('modules-order');
+  }
+
+  get quote() {
+    const quotes = this.get('quotes');
+    if (quotes === 'double') {
+      return '"';
+    }
+    if (quotes === 'backtick') {
+      return '`';
+    }
+    return '\'';
   }
 
   get semicolon() {

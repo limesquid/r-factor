@@ -107,7 +107,7 @@ const buildImportDeclarationCode = (importData) => {
   if (identifier || sortedSubImportStrings.length > 0) {
     code += ' from ';
   }
-  code += `'${module}'${settings.semicolon}`;
+  code += `${settings.quote}${module}${settings.quote}${settings.semicolon}`;
 
   return code;
 };

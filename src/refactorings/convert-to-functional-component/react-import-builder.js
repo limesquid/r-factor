@@ -29,10 +29,11 @@ class ReactImportBuilder extends Builder {
     }));
     const sortedSubImports = Array.from(new Set(subImports)).sort()
       .filter((subImport) => subImport !== superClass);
+    const module = `${settings.quote}react${settings.quote}`;
     if (sortedSubImports.length === 0) {
-      return `import React from 'react'${settings.semicolon}`;
+      return `import React from ${module}${settings.semicolon}`;
     }
-    return `import React, { ${sortedSubImports.join(', ')} } from 'react'${settings.semicolon}`;
+    return `import React, { ${sortedSubImports.join(', ')} } from ${module}${settings.semicolon}`;
   }
 }
 

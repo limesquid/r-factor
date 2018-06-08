@@ -20,5 +20,6 @@
     "react-router-dom",
     "react-hot-loader"
   ],
+  "quotes": "single",
   "semicolons": true
 }
