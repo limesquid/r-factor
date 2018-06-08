@@ -40,10 +40,11 @@ describe('transformation:remove-import-declaration', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  it('should remove whole import when it is invalid', () => {
+  it('should remove whole import', () => {
     const result = removeImportDeclaration(code, ast, {
       module: 'prop-types',
-      identifier: true
+      identifier: true,
+      removeImportIfEmpty: true
     });
     const expectedResult = readTransformationsFile(`${OUTPUT_PATH}/remove-whole-import.js`);
     expect(result).toEqual(expectedResult);

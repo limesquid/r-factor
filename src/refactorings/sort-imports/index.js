@@ -9,7 +9,7 @@ class SortImports extends Refactoring {
     ];
   }
 
-  canApply(code) {
+  canApply() {
     return true;
   }
 }

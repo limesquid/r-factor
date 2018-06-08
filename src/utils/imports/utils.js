@@ -29,7 +29,11 @@ const extractImports = (code, ast) => {
   return imports;
 };
 
-const isEmptyImport = ({ identifier, subImports }) => !identifier && Object.keys(subImports).length === 0;
+const isEmptyImport = ({ identifier, subImports, module }) => [
+  !identifier,
+  Object.keys(subImports).length === 0,
+  !module
+].every(Boolean);
 
 const sortImports = (imports) => {
   if (settings.isModulesOrderAlphabetic) {
@@ -76,7 +80,11 @@ const sortImportsCustom = (imports) => {
   ];
 };
 
-const buildImportDeclarationCode = (module, defaultImport, subImports = {}) => {
+const buildImportDeclarationCode = (importData) => {
+  const { identifier, module, subImports } = importData;
+  if (!module) {
+    return '';
+  }
   const subImportStrings = Object.keys(subImports).map((subImportImportedName) => {
     const subImportLocalName = subImports[subImportImportedName];
     return subImportImportedName === subImportLocalName
@@ -87,16 +95,19 @@ const buildImportDeclarationCode = (module, defaultImport, subImports = {}) => {
 
   let code = '';
   code += 'import ';
-  if (defaultImport) {
-    code += defaultImport;
+  if (identifier) {
+    code += identifier;
   }
-  if (defaultImport && sortedSubImportStrings.length > 0) {
+  if (identifier && sortedSubImportStrings.length > 0) {
     code += ', ';
   }
   if (sortedSubImportStrings.length > 0) {
     code += `{ ${sortedSubImportStrings.join(', ')} }`;
   }
-  code += ` from '${module}';`;
+  if (identifier || sortedSubImportStrings.length > 0) {
+    code += ' from ';
+  }
+  code += `'${module}';`;
 
   return code;
 };

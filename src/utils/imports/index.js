@@ -17,14 +17,14 @@ class Imports {
     const imports = [];
     let newCode = this.code;
 
-    this.imports.forEach(({ code, identifier, module, subImports }) => {
-      const importCode = buildImportDeclarationCode(module, identifier, subImports);
-      if (!isEmptyImport({ identifier, subImports })) {
+    this.imports.forEach((importData) => {
+      const importCode = buildImportDeclarationCode(importData);
+      if (!isEmptyImport(importData)) {
         imports.push(importCode);
       }
 
-      if (code) {
-        newCode = newCode.replace(code, '');
+      if (importData.code) {
+        newCode = newCode.replace(importData.code, '');
       }
     });
 
@@ -66,7 +66,7 @@ class Imports {
     ];
   }
 
-  add({ module, identifier, subImports }) {
+  add({ module, identifier, subImports = {} }) {
     const existingImportIndex = this.findImportIndex(module);
 
     if (existingImportIndex >= 0) {
@@ -86,7 +86,7 @@ class Imports {
     }
   }
 
-  removeDefault({ module }) {
+  removeDefault({ module, removeImportIfEmpty }) {
     const existingImportIndex = this.findImportIndex(module);
 
     if (existingImportIndex < 0) {
@@ -98,7 +98,13 @@ class Imports {
       ...existingImport,
       identifier: null
     };
-    this.updateImportAtIndex(existingImportIndex, updatedImport);
+    const hasSubImports = Object.keys(updatedImport.subImports).length > 0;
+
+    if (removeImportIfEmpty && !hasSubImports) {
+      this.removeImport(existingImportIndex);
+    } else {
+      this.updateImportAtIndex(existingImportIndex, updatedImport);
+    }
   }
 
   removeNamespace(/* { module } */) {
@@ -128,6 +134,15 @@ class Imports {
       }, {})
     };
     this.updateImportAtIndex(existingImportIndex, updatedImport);
+  }
+
+  removeImport(index) {
+    const { code } = this.imports[index];
+    this.code = this.code.replace(code, '');
+    this.imports = [
+      ...this.imports.slice(0, index),
+      ...this.imports.slice(index + 1)
+    ];
   }
 }
 
