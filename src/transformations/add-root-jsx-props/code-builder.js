@@ -1,4 +1,5 @@
 const { Builder } = require('../../model');
+const settings = require('../../settings');
 const { cleanUpCode, indentCode, isString, sortPropTypes } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 
@@ -24,7 +25,10 @@ class CodeBuilder extends Builder {
       code += this.code.substring(openingElement.name.start, openingElement.name.end);
       if (this.isMultiLine()) {
         code += '\n';
-        code += indentCode(this.getNewAttributes().join('\n'), getNodeIndent(openingElement) + 2);
+        code += indentCode(
+          this.getNewAttributes().join('\n'),
+          getNodeIndent(openingElement) + settings.indent
+        );
       } else {
         code += ' ';
         code += this.getNewAttributes().join(' ');

@@ -1,9 +1,10 @@
 const stable = require('stable');
+const settings = require('../settings');
 const { isSingleLine } = require('../utils/ast');
 const { generateIndent } = require('../utils');
 
 const sortObjectAttributes = (code, node, indentSize) => {
-  const innerIndent = generateIndent(indentSize + 2);
+  const innerIndent = generateIndent(indentSize + settings.indent);
   const isMultiLine = !isSingleLine(node);
   const buildProperty = createBuildProperty(code, innerIndent, isMultiLine);
 

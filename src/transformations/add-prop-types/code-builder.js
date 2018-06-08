@@ -1,4 +1,5 @@
 const { Builder } = require('../../model');
+const settings = require('../../settings');
 const { cleanUpCode, indentCode, sortPropTypes } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 const insertCodeBelowNode = require('../insert-code-below-node');
@@ -26,11 +27,11 @@ class ClassBuilder extends Builder {
 
   buildCodeWithExistingPropTypes() {
     const definedPropsFirstPropNode = this.propTypesObjectNode.properties[0];
-    let indent = getNodeIndent(this.componentNode) + 2;
+    let indent = getNodeIndent(this.componentNode) + settings.indent;
     if (definedPropsFirstPropNode) {
       indent = getNodeIndent(definedPropsFirstPropNode);
     } else {
-      indent = getNodeIndent(this.propTypesNode) + 2;
+      indent = getNodeIndent(this.propTypesNode) + settings.indent;
     }
     const propTypesFirstLine = this.propTypesObjectNode.loc.start.line;
     const propTypesLastLine = this.propTypesObjectNode.loc.end.line - 1;
@@ -63,7 +64,7 @@ class ClassBuilder extends Builder {
     let propTypesCode = '';
     propTypesCode += '\n';
     propTypesCode += `${this.componentName}.propTypes = {\n`;
-    propTypesCode += indentCode(propTypesContent, 2);
+    propTypesCode += indentCode(propTypesContent, settings.indent);
     propTypesCode += '\n};\n';
     propTypesCode = indentCode(propTypesCode, indent);
 

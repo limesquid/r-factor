@@ -1,5 +1,6 @@
 const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
+const settings = require('../../settings');
 const { babelGeneratorOptions } = require('../../options');
 const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
 const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../../utils/ast');
@@ -32,16 +33,16 @@ class ComponentBuilder extends Builder {
     const indent = this.getIndent();
 
     if (this.isSingleReturnStatement()) {
-      return squeezeCode(this.buildJsx(), 2, -4 - indent);
+      return squeezeCode(this.buildJsx(), settings.indent, -settings.doubleIndent - indent);
     }
 
     let code = this.buildBodyNonReturnStatements();
     code += '\n\n';
-    code += indentCode('return (', 2);
+    code += indentCode('return (', settings.indent);
     code += '\n';
-    code += squeezeCode(this.buildJsx(), 4, -2 - indent);
+    code += squeezeCode(this.buildJsx(), settings.doubleIndent, -settings.indent - indent);
     code += '\n';
-    code += indentCode(');', 2);
+    code += indentCode(');', settings.indent);
     return code;
   }
 
@@ -61,7 +62,7 @@ class ComponentBuilder extends Builder {
     const firstNode = bodyNodes[0];
     const lastNonReturnNode = [ ...bodyNodes ].reverse().find((node) => node.type !== 'ReturnStatement');
     let code = this.code.substring(firstNode.start, lastNonReturnNode.end);
-    code = indentCode(code, -2);
+    code = indentCode(code, -settings.indent);
     return code;
   }
 

@@ -25,7 +25,6 @@ const isClassDeclaration = (node) => node.type === 'ClassDeclaration';
 
 const isComponentDeclaration = (node) => isClassDeclaration(node)
   && classExtendsSomething(node);
-  // && classHasMethod(node, 'render'); TODO
 
 const isExportDefaultFunctionalComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
   && node.declaration.type === 'ArrowFunctionExpression'
@@ -121,12 +120,15 @@ const getFunctionalComponentPropVariableName = (componentNode) => componentNode.
 
 const getFunctionalComponentDefinition = (node) => node.declarations[0].init;
 
-const getSubImports = (moduleImportNode) => moduleImportNode.specifiers
+const getSubImports = ({ specifiers }) => specifiers
   .filter((specifier) => isImportSpecifier(specifier))
-  .reduce((result, specifier) => ({
-    ...result,
-    [specifier.imported.name]: specifier.local.name
-  }), {});
+  .reduce(
+    (result, specifier) => ({
+      ...result,
+      [specifier.imported.name]: specifier.local.name
+    }),
+    {}
+  );
 
 const isObjectKeyAccessing = (node, propsVariableName) => isMemberExpression(node)
   && isIdentifier(node.object, { name: propsVariableName });

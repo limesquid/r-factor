@@ -1,6 +1,7 @@
 const babylon = require('@babel/parser');
 const { babylonOptions } = require('../../options');
 const { Builder } = require('../../model');
+const settings = require('../../settings');
 const { indentCode, squeezeCode } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 const { addImportDeclaration, addRootJsxProps } = require('../../transformations');
@@ -51,7 +52,7 @@ class ComponentBuilder extends Builder {
         let code = 'classNames(\n';
         code += indentCode(
           args.split(',').map((arg) => arg.trim()).join(',\n'),
-          2
+          settings.get('indent')
         );
         code += '\n)';
         return squeezeCode(code, 0, indent);

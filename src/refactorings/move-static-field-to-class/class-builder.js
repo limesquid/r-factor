@@ -1,5 +1,6 @@
 const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
+const settings = require('../../settings');
 const { babelGeneratorOptions } = require('../../options');
 const { cleanUpCode, squeezeCode } = require('../../utils');
 
@@ -33,7 +34,7 @@ class ClassBuilder extends Builder {
     let body = '';
     if (this.isClassBodyEmpty()) {
       body += '{\n';
-      body += squeezeCode(this.buildClassBody(), 2);
+      body += squeezeCode(this.buildClassBody(), settings.indent);
       body += '\n}';
     } else {
       body += this.buildClassBody();
@@ -45,7 +46,7 @@ class ClassBuilder extends Builder {
     const indent = this.getIndent();
     const body = this.node.body.body;
     let newBodyCode = '';
-    newBodyCode += squeezeCode(this.buildStaticField(), 0, 2 + indent);
+    newBodyCode += squeezeCode(this.buildStaticField(), 0, settings.indent + indent);
     if (body.length > 0) {
       newBodyCode += this.getOldBody();
     }

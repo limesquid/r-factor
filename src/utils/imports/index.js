@@ -1,6 +1,10 @@
-const traverse = require('@babel/traverse').default;
-const { getSubImports } = require('../utils/ast');
-const { cleanUpCode } = require('../utils');
+const { cleanUpCode } = require('../index');
+const {
+  buildImportDeclarationCode,
+  extractImports,
+  isEmptyImport,
+  sortImports
+} = require('./utils');
 
 class Imports {
   constructor(code, ast) {
@@ -10,18 +14,17 @@ class Imports {
   }
 
   build() {
-    const sortedAndFilteredImports = sortImports(this.imports);
     const imports = [];
     let newCode = this.code;
 
-    sortedAndFilteredImports.forEach(({ code, identifier, module, subImports }) => {
-      const importCode = createImportDeclarationCode(module, identifier, subImports);
-      if (!isEmptyImport({ identifier, subImports })) {
+    this.imports.forEach((importData) => {
+      const importCode = buildImportDeclarationCode(importData);
+      if (!isEmptyImport(importData)) {
         imports.push(importCode);
       }
 
-      if (code) {
-        newCode = newCode.replace(code, '');
+      if (importData.code) {
+        newCode = newCode.replace(importData.code, '');
       }
     });
 
@@ -51,6 +54,10 @@ class Imports {
     );
   }
 
+  sort() {
+    this.imports = sortImports(this.imports);
+  }
+
   updateImportAtIndex(index, updatedImport) {
     this.imports = [
       ...this.imports.slice(0, index),
@@ -59,7 +66,7 @@ class Imports {
     ];
   }
 
-  add({ module, identifier, subImports }) {
+  add({ module, identifier, subImports = {} }) {
     const existingImportIndex = this.findImportIndex(module);
 
     if (existingImportIndex >= 0) {
@@ -79,7 +86,7 @@ class Imports {
     }
   }
 
-  removeDefault({ module }) {
+  removeDefault({ module, removeImportIfEmpty }) {
     const existingImportIndex = this.findImportIndex(module);
 
     if (existingImportIndex < 0) {
@@ -91,7 +98,13 @@ class Imports {
       ...existingImport,
       identifier: null
     };
-    this.updateImportAtIndex(existingImportIndex, updatedImport);
+    const hasSubImports = Object.keys(updatedImport.subImports).length > 0;
+
+    if (removeImportIfEmpty && !hasSubImports) {
+      this.removeImport(existingImportIndex);
+    } else {
+      this.updateImportAtIndex(existingImportIndex, updatedImport);
+    }
   }
 
   removeNamespace(/* { module } */) {
@@ -122,61 +135,15 @@ class Imports {
     };
     this.updateImportAtIndex(existingImportIndex, updatedImport);
   }
+
+  removeImport(index) {
+    const { code } = this.imports[index];
+    this.code = this.code.replace(code, '');
+    this.imports = [
+      ...this.imports.slice(0, index),
+      ...this.imports.slice(index + 1)
+    ];
+  }
 }
-
-const isEmptyImport = ({ identifier, subImports }) => !identifier && Object.keys(subImports).length === 0;
-
-const sortImports = (imports) => [ ...imports ].sort();
-
-const extractImports = (code, ast) => {
-  const imports = [];
-
-  traverse(ast, {
-    ImportDeclaration({ node }) {
-      imports.push(createImport(code, node));
-    }
-  });
-
-  return imports;
-};
-
-const createImport = (code, node) => ({
-  code: code.substring(node.start, node.end),
-  identifier: getIdentifier(node),
-  module: getModule(node),
-  subImports: getSubImports(node)
-});
-
-const getIdentifier = (node) => {
-  const defaultImport = node.specifiers.find(({ type }) => type === 'ImportDefaultSpecifier');
-  return defaultImport && defaultImport.local.name;
-};
-
-const getModule = (node) => node.source.value;
-
-const createImportDeclarationCode = (module, defaultImport, subImports = {}) => {
-  const subImportStrings = Object.keys(subImports).map((subImportImportedName) => {
-    const subImportLocalName = subImports[subImportImportedName];
-    return subImportImportedName === subImportLocalName
-      ? subImportImportedName
-      : `${subImportImportedName} as ${subImportLocalName}`;
-  });
-  const sortedSubImportStrings = subImportStrings.sort();
-
-  let code = '';
-  code += 'import ';
-  if (defaultImport) {
-    code += defaultImport;
-  }
-  if (defaultImport && sortedSubImportStrings.length > 0) {
-    code += ', ';
-  }
-  if (sortedSubImportStrings.length > 0) {
-    code += `{ ${sortedSubImportStrings.join(', ')} }`;
-  }
-  code += ` from '${module}';`;
-
-  return code;
-};
 
 module.exports = Imports;

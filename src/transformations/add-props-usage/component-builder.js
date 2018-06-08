@@ -1,4 +1,5 @@
 const { Builder } = require('../../model');
+const settings = require('../../settings');
 const { cleanUpCode, generateIndent, squeezeCode } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 const sortObjectAttributes = require('../sort-object-attributes');
@@ -20,7 +21,7 @@ class ComponentBuilder extends Builder {
         code += `{ ${this.getProps()}, ...${destructuringNode.name} }`;
       } else {
         const props = this.getProps(destructuringNode);
-        code += squeezeCode(props, 0, getNodeIndent(renderDefinition) + 2);
+        code += squeezeCode(props, 0, getNodeIndent(renderDefinition) + settings.indent);
       }
       code += this.code.substring(destructuringNode.end);
     } else {

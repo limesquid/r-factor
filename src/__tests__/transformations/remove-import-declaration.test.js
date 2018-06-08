@@ -9,7 +9,7 @@ const code = readTransformationsFile('remove-import-declaration/input/common.js'
 const ast = babylon.parse(code, babylonOptions);
 
 describe('transformation:remove-import-declaration', () => {
-  it('should do nothing when module is not found', () => {
+  it('should just sort when module is not found', () => {
     const result = removeImportDeclaration(code, ast, {
       module: 'react2',
       global: true,
@@ -17,7 +17,8 @@ describe('transformation:remove-import-declaration', () => {
       identifier: true,
       subImports: [ 'PureComponent' ]
     });
-    expect(result).toEqual(code);
+    const expectedResult = readTransformationsFile(`${OUTPUT_PATH}/just-sort-when-module-not-found.js`);
+    expect(result).toEqual(expectedResult);
   });
 
   it('should remove default import and leave subImports', () => {
@@ -39,16 +40,17 @@ describe('transformation:remove-import-declaration', () => {
     expect(result).toEqual(expectedResult);
   });
 
-  it('should remove whole import when it is invalid', () => {
+  it('should remove whole import', () => {
     const result = removeImportDeclaration(code, ast, {
       module: 'prop-types',
-      identifier: true
+      identifier: true,
+      removeImportIfEmpty: true
     });
     const expectedResult = readTransformationsFile(`${OUTPUT_PATH}/remove-whole-import.js`);
     expect(result).toEqual(expectedResult);
   });
 
-  it('should remove aliased sub import', () => {
+  it('should remove aliased subImport', () => {
     const result = removeImportDeclaration(code, ast, {
       module: 'react',
       subImports: [ 'PureComponent' ]

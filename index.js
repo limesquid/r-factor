@@ -1,5 +1,6 @@
 const getStdin = require('get-stdin');
 const argv = require('./cli');
+const settings = require('./src/settings');
 
 const refactorings = {
   'add-classname': require('./src/refactorings/add-classname'),
@@ -10,9 +11,10 @@ const refactorings = {
   'move-default-props-to-class': require('./src/refactorings/move-default-props-to-class'),
   'move-prop-types-out-of-class': require('./src/refactorings/move-prop-types-out-of-class'),
   'move-prop-types-to-class': require('./src/refactorings/move-prop-types-to-class'),
-  'sort-attributes': require('./src/refactorings/sort-attributes')
+  'sort-attributes': require('./src/refactorings/sort-attributes'),
+  'sort-imports': require('./src/refactorings/sort-imports')
 };
-
+settings.set(JSON.parse(argv.settings));
 const refactoring = new refactorings[argv.refactoring]();
 
 getStdin().then((data) => {

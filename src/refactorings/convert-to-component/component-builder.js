@@ -1,5 +1,6 @@
 const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
+const settings = require('../../settings');
 const { babelGeneratorOptions } = require('../../options');
 const { isExportDefaultFunctionalComponentDeclaration } = require('../../utils/ast');
 const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
@@ -52,7 +53,7 @@ class ComponentBuilder extends Builder {
       ? functionBody
       : [ ...functionBody.body ].reverse().find((node) => node.type === 'ReturnStatement').argument;
     const jsx = this.code.substring(jsxNode.start, jsxNode.end);
-    const squeeze = this.isSingleReturnStatement() ? 4 : 2;
+    const squeeze = this.isSingleReturnStatement() ? settings.doubleIndent : settings.indent;
     return squeezeCode(jsx, 6, squeeze - indent);
   }
 
@@ -83,29 +84,33 @@ class ComponentBuilder extends Builder {
     const props = this.buildProps();
     let code = '';
     code += '\n';
-    code += indentCode('render() {', indent + 2);
+    code += indentCode('render() {', indent + settings.indent);
     code += '\n';
-    code += indentCode(props, indent + 4);
+    code += indentCode(props, indent + settings.doubleIndent);
     code += props ? '\n' : '';
     if (body) {
-      code += squeezeCode(body, indent + 4, indent + 2);
+      code += squeezeCode(
+        body,
+        indent + settings.doubleIndent,
+        indent + settings.indent
+      );
     }
     code += body ? '\n\n' : '';
     code += ((props && !body) ? '\n' : '');
     code += this.buildReturnStatement();
     code += '\n';
-    code += indentCode('}', indent + 2);
+    code += indentCode('}', indent + settings.indent);
     return code;
   }
 
   buildReturnStatement() {
     const indent = this.getIndent();
     let code = '';
-    code += indentCode('return (', indent + 4);
+    code += indentCode('return (', indent + settings.doubleIndent);
     code += '\n';
     code += indentCode(this.buildJsx(), indent);
     code += '\n';
-    code += indentCode(');', indent + 4);
+    code += indentCode(');', indent + settings.doubleIndent);
     return code;
   }
 

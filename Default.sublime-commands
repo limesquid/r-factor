@@ -34,5 +34,9 @@
   {
     "caption": "R-factor: Sort attributes in objects",
     "command": "sort_attributes"
+  },
+  {
+    "caption": "R-factor: Sort imports",
+    "command": "sort_imports"
   }
 ]
