@@ -27,6 +27,10 @@ class Settings {
     return this.get('indent');
   }
 
+  get isModulesOrderAlphabetic() {
+    return this.get('modules-order') === 'alphabetic';
+  }
+
   get modulesOrder() {
     return this.get('modules-order');
   }
