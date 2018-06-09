@@ -6,8 +6,8 @@ const files = range(1, 14).map((n) => `button${n}`);
 describe('convert-to-functional-component:canApply', () => {
   const refactoring = new ConvertToFunctionalComponent();
   const tests = files.map((file) => ({
-    name: `non-functional/${file}.js`,
-    input: readFile(`non-functional/${file}.js`),
+    name: `class/${file}.js`,
+    input: readFile(`class/${file}.js`),
     output: true
   }));
   tests.push({
@@ -48,8 +48,8 @@ describe('convert-to-functional-component:refactor:react-imports', () => {
 describe('convert-to-functional-component:refactor', () => {
   const refactoring = new ConvertToFunctionalComponent();
   const tests = files.map((file) => ({
-    name: `non-functional/${file}.js -> functional/${file}.js`,
-    input: readFile(`non-functional/${file}.js`),
+    name: `class/${file}.js -> functional/${file}.js`,
+    input: readFile(`class/${file}.js`),
     output: readFile(`functional/${file}.js`)
   }));
   tests.forEach(({ name, input, output }) => {

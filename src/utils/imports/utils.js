@@ -29,7 +29,7 @@ const extractImports = (code, ast) => {
   return imports;
 };
 
-const isEmptyImport = ({ identifier, subImports, module }) => !identifier && Object.keys(subImports).length === 0;
+const isEmptyImport = ({ identifier, subImports }) => !identifier && Object.keys(subImports).length === 0;
 
 const sortImports = (imports) => {
   if (settings.isModulesOrderAlphabetic) {

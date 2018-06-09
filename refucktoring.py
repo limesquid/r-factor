@@ -51,10 +51,10 @@ class AddClassnameCommand(BaseCommand):
     self.refactoring_name = 'add-classname'
 
 
-class ConvertToComponentCommand(BaseCommand):
+class ConvertToClassComponentCommand(BaseCommand):
   def __init__(self, arg):
-    super(ConvertToComponentCommand, self).__init__(arg)
-    self.refactoring_name = 'convert-to-component'
+    super(ConvertToClassComponentCommand, self).__init__(arg)
+    self.refactoring_name = 'convert-to-class-component'
 
 
 class ConvertToFunctionalComponentCommand(BaseCommand):

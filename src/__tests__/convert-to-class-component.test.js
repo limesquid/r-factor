@@ -1,9 +1,9 @@
 const { range, readFile } = require('./test-utils');
-const ConvertToComponent = require('../refactorings/convert-to-component');
+const ConvertToComponent = require('../refactorings/convert-to-class-component');
 
-const files = [ ...range(1, 6), ...range(10, 14) ].map((n) => `button${n}`);
+const files = [ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`);
 
-describe('convert-to-component:canApply', () => {
+describe('convert-to-class-component:canApply', () => {
   const refactoring = new ConvertToComponent();
   const tests = files.map((file) => ({
     name: `functional/${file}.js`,
@@ -17,7 +17,7 @@ describe('convert-to-component:canApply', () => {
   });
 });
 
-describe('convert-to-component:refactor:react-imports', () => {
+describe('convert-to-class-component:refactor:react-imports', () => {
   const refactoring = new ConvertToComponent();
   const tests = [
     {
@@ -40,12 +40,12 @@ describe('convert-to-component:refactor:react-imports', () => {
   });
 });
 
-describe('convert-to-component:refactor', () => {
+describe('convert-to-class-component:refactor', () => {
   const refactoring = new ConvertToComponent();
   const tests = files.map((file) => ({
-    name: `functional/${file}.js -> non-functional/${file}.js`,
+    name: `functional/${file}.js -> class/${file}.js`,
     input: readFile(`functional/${file}.js`),
-    output: readFile(`non-functional/${file}.js`)
+    output: readFile(`class/${file}.js`)
   }));
   tests.forEach(({ name, input, output }) => {
     it(`refactor "${name}"`, () => {

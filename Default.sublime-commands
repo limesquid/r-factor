@@ -4,8 +4,8 @@
     "command": "add_classname"
   },
   {
-    "caption": "R-factor: Convert to component",
-    "command": "convert_to_component"
+    "caption": "R-factor: Convert to class component",
+    "command": "convert_to_class_component"
   },
   {
     "caption": "R-factor: Convert to functional component",
