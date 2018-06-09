@@ -42,7 +42,7 @@ class ComponentBuilder extends Builder {
     const indent = getNodeIndent(node);
 
     if (value.type === 'StringLiteral') {
-      return `classNames('${value.value}', className)`;
+      return `classNames(${settings.quote}${value.value}${settings.quote}, className)`;
     }
 
     if (this.isClassNamesUsage(value)) {

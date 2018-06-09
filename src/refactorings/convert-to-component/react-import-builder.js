@@ -28,7 +28,8 @@ class ReactImportBuilder extends Builder {
       return specifier.local.name;
     }));
     const sortedSubImports = Array.from(new Set(subImports)).sort();
-    return `import React, { ${sortedSubImports.join(', ')} } from 'react'${settings.semicolon}`;
+    const module = `${settings.quote}react${settings.quote}`;
+    return `import React, { ${sortedSubImports.join(', ')} } from ${module}${settings.semicolon}`;
   }
 }
 
