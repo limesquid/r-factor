@@ -29,11 +29,7 @@ const extractImports = (code, ast) => {
   return imports;
 };
 
-const isEmptyImport = ({ identifier, subImports, module }) => [
-  !identifier,
-  Object.keys(subImports).length === 0,
-  !module
-].every(Boolean);
+const isEmptyImport = ({ identifier, subImports, module }) => !identifier && Object.keys(subImports).length === 0;
 
 const sortImports = (imports) => {
   if (settings.isModulesOrderAlphabetic) {
@@ -82,9 +78,6 @@ const sortImportsCustom = (imports) => {
 
 const buildImportDeclarationCode = (importData) => {
   const { identifier, module, subImports } = importData;
-  if (!module) {
-    return '';
-  }
   const subImportStrings = Object.keys(subImports).map((subImportImportedName) => {
     const subImportLocalName = subImports[subImportImportedName];
     return subImportImportedName === subImportLocalName

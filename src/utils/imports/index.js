@@ -20,9 +20,7 @@ class Imports {
 
     this.imports.forEach((importData) => {
       const importCode = buildImportDeclarationCode(importData);
-      if (!isEmptyImport(importData)) {
-        imports.push(importCode);
-      }
+      imports.push(importCode);
 
       if (importData.code) {
         newCode = newCode.replace(importData.code, '');
@@ -99,9 +97,8 @@ class Imports {
       ...existingImport,
       identifier: null
     };
-    const hasSubImports = Object.keys(updatedImport.subImports).length > 0;
 
-    if (removeImportIfEmpty && !hasSubImports) {
+    if (removeImportIfEmpty && isEmptyImport(updatedImport)) {
       this.removeImport(existingImportIndex);
     } else {
       this.updateImportAtIndex(existingImportIndex, updatedImport);
