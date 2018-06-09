@@ -22,6 +22,7 @@ class ComponentBuilder extends Builder {
     code += settings.semicolon;
     code += this.buildSuffix();
     if (this.hasPropsDeclaration()) {
+      code = code.replace(`${this.getOldPropsDeclaration()}${settings.doubleEndOfLine}`, '');
       code = code.replace(`${this.getOldPropsDeclaration()}${settings.endOfLine}`, '');
     }
     code = this.ensureProperExport(code);
@@ -36,13 +37,27 @@ class ComponentBuilder extends Builder {
       return squeezeCode(this.buildJsx(), settings.indent, -settings.doubleIndent - indent);
     }
 
+    const returnStatementValue = this.getReturnStatementValue();
+    const returnsJsx = [ 'JSXElement', 'JSXFragment' ].includes(returnStatementValue.type);
+    const returnsMultiline = returnStatementValue.loc.start.line !== returnStatementValue.loc.end.line;
     let code = this.buildBodyNonReturnStatements();
     code += settings.doubleEndOfLine;
-    code += indentCode('return (', settings.indent);
-    code += settings.endOfLine;
-    code += squeezeCode(this.buildJsx(), settings.doubleIndent, -settings.indent - indent);
-    code += settings.endOfLine;
-    code += indentCode(`)${settings.semicolon}`, settings.indent);
+    code += indentCode(`return ${returnsJsx ? '(' : ''}`, settings.indent);
+    if (returnsJsx) {
+      code += settings.endOfLine;
+    }
+    if (returnsMultiline) {
+      code += squeezeCode(this.buildJsx(), settings.doubleIndent, -settings.indent - indent);
+    } else {
+      code += this.buildJsx();
+    }
+    if (returnsJsx) {
+      code += settings.endOfLine;
+    }
+    code += indentCode(
+      `${returnsJsx ? ')' : ''}${settings.semicolon}`,
+      returnsMultiline ? settings.indent : 0
+    );
     return code;
   }
 
@@ -67,9 +82,7 @@ class ComponentBuilder extends Builder {
   }
 
   buildJsx() {
-    const render = getClassMethod(this.node, 'render');
-    const returnStatement = getReturnStatement(render);
-    const jsxNode = returnStatement.argument;
+    const jsxNode = this.getReturnStatementValue();
     return this.code.substring(jsxNode.start, jsxNode.end);
   }
 
@@ -100,14 +113,6 @@ class ComponentBuilder extends Builder {
     return newCode;
   }
 
-  getPropsNode() {
-    const render = getClassMethod(this.node, 'render');
-    const bodyNodes = render.body.body;
-    return bodyNodes.find(
-      ({ type, declarations }) => type === 'VariableDeclaration' && declarations.find(isPropsDeclaration)
-    );
-  }
-
   getOldPropsDeclaration() {
     const propsNode = this.getPropsNode();
     return this.code.substring(propsNode.start, propsNode.end);
@@ -116,6 +121,20 @@ class ComponentBuilder extends Builder {
   getPropsDeclaration() {
     const propsNode = this.getPropsNode();
     return propsNode.declarations.find(isPropsDeclaration);
+  }
+
+  getPropsNode() {
+    const render = getClassMethod(this.node, 'render');
+    const bodyNodes = render.body.body;
+    return bodyNodes.find(
+      ({ type, declarations }) => type === 'VariableDeclaration' && declarations.find(isPropsDeclaration)
+    );
+  }
+
+  getReturnStatementValue() {
+    const render = getClassMethod(this.node, 'render');
+    const returnStatement = getReturnStatement(render);
+    return returnStatement.argument;
   }
 
   hasPropsDeclaration() {

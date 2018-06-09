@@ -44,7 +44,7 @@ const isFunctionalComponentBody = (node) => Boolean(
   (
     node.body.type === 'BlockStatement'
     && node.body.body[node.body.body.length - 1].type === 'ReturnStatement'
-    && node.body.body[node.body.body.length - 1].argument.type === 'JSXElement'
+    && [ 'JSXElement', 'JSXFragment' ].includes(node.body.body[node.body.body.length - 1].argument.type)
   )
 );
 

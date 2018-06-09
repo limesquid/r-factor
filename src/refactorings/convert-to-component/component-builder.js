@@ -132,7 +132,7 @@ class ComponentBuilder extends Builder {
   }
 
   isSingleReturnStatement() {
-    return this.getDeclarationInit().body.type === 'JSXElement';
+    return [ 'JSXElement', 'JSXFragment' ].includes(this.getDeclarationInit().body.type);
   }
 }
 
