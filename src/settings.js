@@ -1,19 +1,25 @@
 const SETTINGS = Symbol('settings');
 
+const DEFAULT_SETTINGS = {
+  'component-superclass': 'Component',
+  'end-of-line': '\n',
+  indent: 2,
+  'modules-order': [ 'react', 'prop-types', 'classnames' ],
+  quotes: 'single',
+  semicolons: true
+};
+
 class Settings {
   constructor() {
-    this[SETTINGS] = {
-      'component-superclass': 'Component',
-      'end-of-line': '\n',
-      indent: 2,
-      'modules-order': [ 'react', 'prop-types', 'classnames' ],
-      quotes: 'single',
-      semicolons: true
-    };
+    this[SETTINGS] = DEFAULT_SETTINGS;
   }
 
   get(key) {
     return this[SETTINGS][key];
+  }
+
+  revert() {
+    this[SETTINGS] = DEFAULT_SETTINGS;
   }
 
   set(settings) {

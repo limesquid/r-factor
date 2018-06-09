@@ -22,6 +22,7 @@ describe('sort-imports:canApply', () => {
         'modules-order': [ 'react', 'prop-types', 'classnames' ]
       });
       expect(refactoring.canApply(input)).toBe(output);
+      settings.revert();
     });
   });
 });
@@ -39,6 +40,7 @@ describe('sort-imports:refactor:custom', () => {
         'modules-order': [ 'react', 'prop-types', 'classnames' ]
       });
       expect(refactoring.refactor(input)).toBe(output);
+      settings.revert();
     });
   });
 });
@@ -56,6 +58,7 @@ describe('sort-imports:refactor:alphabetic', () => {
         'modules-order': 'alphabetic'
       });
       expect(refactoring.refactor(input)).toBe(output);
+      settings.revert();
     });
   });
 });
