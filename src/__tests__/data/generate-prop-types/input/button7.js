@@ -4,27 +4,25 @@ import classNames from 'classnames';
 import styles from './styles.scss';
 
 class Button extends Component {
-  constructor({ defaultValue, ...props }) {
-    super(props);
-    this.state = {
-      label: props.defaultLabel,
-      value: defaultValue
-    };
-  }
+  static propTypes = {
+    onMouseEnter: PropTypes.func,
+    children: PropTypes.node
+  };
 
   render() {
-    const { className, ...props } = this.props;
-
+    const { className, onClick, onMouseEnter, ...props } = this.props;
     return (
-      <div className={classNames(styles.button, className)} {...props}>
+      <div
+        className={classNames(styles.button, className)}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={this.props.onMouseLeave}
+        {...props}>
         {this.props.children}
+        {this.props.ozet}
       </div>
     );
   }
 }
-
-Button.propTypes = {
-  children: PropTypes.node
-};
 
 export default Button;
