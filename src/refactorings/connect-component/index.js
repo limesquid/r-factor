@@ -30,26 +30,43 @@ class ConnectComponent extends Refactoring {
   connectComponent(code) {
     const ast = parser.parse(code);
     const builder = new ComponentBuilder(code, ast);
+    let functionalComponentName = null;
 
     traverse(ast, {
       ExportDefaultDeclaration(path) {
         const { node } = path;
+
+        if (functionalComponentName) {
+          builder.setIsDefaultExport(true);
+          builder.setIsInstantExport(false);
+          builder.setComponentExportPath(path);
+        }
+
         if (isExportDefaultFunctionalComponentDeclaration(node)) {
           builder.setIsDefaultExport(true);
-          builder.setFunctionalComponentPath(path);
+          builder.setIsInstantExport(true);
           builder.setComponentExportPath(path);
         }
       },
       ExportNamedDeclaration(path) {
-        builder.setComponentExportPath(path);
-        // builder.setFunctionalComponentPath()
-        // builder.setOriginalComponentName()
+        if (functionalComponentName) {
+          builder.setComponentExportPath(path);
+          return;
+        }
+        const variableDeclaration = path.node.declaration;
+        if (isFunctionalComponentDeclaration(variableDeclaration)) {
+          builder.setIsInstantExport(true);
+          builder.setComponentExportPath(path);
+          // builder.setFunctionalComponentPath(componentDeclaration);
+          // builder.setOriginalComponentName(functionalComponentName);
+        }
       },
       VariableDeclaration(path) {
         const { node } = path;
         if (isFunctionalComponentDeclaration(node)) {
+          functionalComponentName = node.declarations[0].id.name;
           builder.setFunctionalComponentPath(path);
-          builder.setOriginalComponentName(node.declarations[0].id.name)
+          builder.setOriginalComponentName(functionalComponentName);
         }
       }
     });

@@ -13,38 +13,23 @@ class ComponentBuilder extends Builder {
     super(code);
     this.ast = ast;
     this.isDefaultExport = false;
-    this.defaultExportDeclarationPath = null;
+    this.isInstantExport = false;
     this.functionalComponentPath = null;
     this.componentExportPath = null;
     this.originalComponentName = '';
-    this.newComponentName = '';
+    this.newComponentName = 'Component';
   }
 
   build() {
-    if (!this.originalComponentName) {
-      this.nameComponent();
-    }
+    this.removeExportStatement();
 
-    if (this.componentExportPath) {
-      this.removeExportStatement(this.componentExportPath);
-    }
-
-    if (!this.defaultExportDeclarationPath) {
+    if (!this.isDefaultExport) {
       this.renameComponent();
     }
 
     this.appendConnect();
 
     return parser.print(this.ast);
-  }
-
-  nameComponent() {
-    const code = this.code
-      .replace('export default class', 'class Component')
-      .replace('export default', 'const Component =');
-    console.log(code);
-    this.code = code;
-    this.ast = parser.parse(code);
   }
 
   buildConnectAst() {
@@ -63,8 +48,6 @@ class ComponentBuilder extends Builder {
       code += `export const ${this.originalComponentName} = ${connectCode}`;
     }
 
-    // console.log(code);
-
     return parser.parse(code).program.body;
   }
 
@@ -74,22 +57,23 @@ class ComponentBuilder extends Builder {
     this.ast.program.body.push(...connectAst);
   }
 
-  removeExportStatement(path) {
-    if (this.originalComponentName) {
-      path.replaceWith(path.node.declaration);
-    } else {
-      path.replaceWith(
-        t.variableDeclaration(
-          'const',
-          [
-            t.variableDeclarator(
-              t.identifier('Component'),
-              path.node.declaration
-            )
-          ]
-        )
-      )
+  removeExportStatement() {
+    if (!this.isInstantExport) {
+      this.componentExportPath.remove();
+      return;
     }
+
+    const componentDeclaration = this.componentExportPath.node.declaration;
+
+    if (this.originalComponentName) {
+      this.componentExportPath.replaceWith(componentDeclaration);
+      return;
+    }
+
+    const componentCode = 'const Component = ' + this.code.slice(componentDeclaration.start, componentDeclaration.end);
+    this.componentExportPath.replaceWith(
+      parser.parse(componentCode).program.body[0]
+    );
   }
 
   renameComponent() {
@@ -100,6 +84,10 @@ class ComponentBuilder extends Builder {
 
   setIsDefaultExport(isDefaultExport) {
     this.isDefaultExport = isDefaultExport;
+  }
+
+  setIsInstantExport(isInstantExport) {
+    this.isInstantExport = isInstantExport;
   }
 
   setFunctionalComponentPath(path) {
@@ -113,10 +101,6 @@ class ComponentBuilder extends Builder {
   setOriginalComponentName(name) {
     this.originalComponentName = name;
     this.newComponentName = name;
-  }
-
-  setDefaultExportDeclarationPath(path) {
-    this.defaultExportDeclarationPath = path;
   }
 }
 
