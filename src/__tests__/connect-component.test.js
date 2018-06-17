@@ -1,4 +1,5 @@
 const { readDirectoryFilenames, readFile } = require('./test-utils');
+const ConnectComponent = require('../refactorings/connect-component');
 
 const tests = readDirectoryFilenames('connect-component/input')
   .map((filename) => ({
@@ -8,17 +9,19 @@ const tests = readDirectoryFilenames('connect-component/input')
   }))
 
 describe('connect-component:canApply', () => {
+  const refactoring = new ConnectComponent();
   tests.forEach((test) => {
     it(`canApply: ${test.name}`, () => {
-      expect(1).toBe(1);
+      expect(refactoring.canApply(test.input)).toBeTruthy();
     });
   });
 });
 
 describe('connect-component:refactor', () => {
+  const refactoring = new ConnectComponent();
   tests.forEach((test) => {
     it(`refactor: ${test.name}`, () => {
-      expect(1).toBe(1);
+      expect(refactoring.refactor(test.input)).toBe(test.output);
     });
   });
 });
