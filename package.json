@@ -19,7 +19,8 @@
   },
   "jest": {
     "moduleFileExtensions": [
-      "js"
+      "js",
+      "json"
     ],
     "moduleDirectories": [
       "node_modules"
@@ -34,6 +35,8 @@
     "@babel/template": "7.0.0-beta.49",
     "@babel/traverse": "7.0.0-beta.49",
     "@babel/types": "7.0.0-beta.49",
+    "eslint": "^4.19.1",
+    "eslint-plugin-react": "^7.8.2",
     "get-stdin": "6.0.0",
     "lodash.difference": "4.5.0",
     "stable": "0.1.8",
@@ -41,8 +44,6 @@
   },
   "devDependencies": {
     "babel-eslint": "8.2.3",
-    "eslint": "4.19.1",
-    "eslint-plugin-react": "7.8.2",
     "jest": "23.1.0"
   }
 }

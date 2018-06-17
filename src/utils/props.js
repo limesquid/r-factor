@@ -13,6 +13,7 @@ const {
   isThisPropsDestructuring,
   isThisPropsKeyAccessing
 } = require('./ast');
+const lint = require('./lint');
 
 const getProps = (code, ast) => {
   let componentType = null;
@@ -88,9 +89,20 @@ const getPropsFromPropsVariable = (componentNodePath, propsVariableName) => {
   return props;
 };
 
+const getUnusedProps = (code) => {
+  const rules = { 'react/prop-types': 2 };
+  const linterMessages = lint(code, rules);
+  const unusedProps = linterMessages
+    .filter((linterError) => linterError.ruleId === 'react/prop-types')
+    .map((linterError) => linterError.message.match(/\w+/)[0]);
+
+  return unusedProps;
+};
+
 module.exports = {
   getProps,
   getClassComponentProps,
   getFunctionalComponentProps,
-  getPropsFromPropsVariable
+  getPropsFromPropsVariable,
+  getUnusedProps
 };

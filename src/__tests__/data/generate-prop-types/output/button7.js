@@ -7,24 +7,23 @@ class Button extends Component {
   static propTypes = {
     children: PropTypes.node,
     className: PropTypes.any,
-    defaultLabel: PropTypes.any,
-    defaultValue: PropTypes.any
+    ozet: PropTypes.any,
+    onClick: PropTypes.any,
+    onMouseEnter: PropTypes.func,
+    onMouseLeave: PropTypes.any
   };
 
-  constructor({ defaultValue, ...props }) {
-    super(props);
-    this.state = {
-      label: props.defaultLabel,
-      value: defaultValue
-    };
-  }
-
   render() {
-    const { className, ...props } = this.props;
-
+    const { className, onClick, onMouseEnter, ...props } = this.props;
     return (
-      <div className={classNames(styles.button, className)} {...props}>
+      <div
+        className={classNames(styles.button, className)}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={this.props.onMouseLeave}
+        {...props}>
         {this.props.children}
+        {this.props.ozet}
       </div>
     );
   }
