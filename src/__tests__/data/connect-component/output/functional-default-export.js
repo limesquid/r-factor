@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
 import styles from './styles.scss';
 
 const Button = ({ className, children, ...props }) => (
@@ -15,12 +15,8 @@ Button.propTypes = {
   className: PropTypes.string
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => ({});
 
-});
-
-const mapDispatchToProps = {
-
-};
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Button);

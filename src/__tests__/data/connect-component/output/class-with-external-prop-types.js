@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-class PrefixButtonSuffix extends Component {
+class ButtonComponent extends Component {
   render() {
     const { a } = this.props;
 
@@ -12,16 +12,12 @@ class PrefixButtonSuffix extends Component {
   }
 }
 
-PrefixButtonSuffix.propTypes = {
+ButtonComponent.propTypes = {
   a: PropTypes.string
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => ({});
 
-});
+const mapDispatchToProps = {};
 
-const mapDispatchToProps = {
-
-};
-
-export const Button = connect(mapStateToProps, mapDispatchToProps)(PrefixButtonSuffix);
+export const Button = connect(mapStateToProps, mapDispatchToProps)(ButtonComponent);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const ButtonComponent = (props) => (
+const Component = (props) => (
   <div>Button</div>
 );
 
@@ -9,4 +9,4 @@ const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = {};
 
-export const Button = connect(mapStateToProps, mapDispatchToProps)(ButtonComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(Component);

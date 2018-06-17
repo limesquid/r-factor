@@ -21,5 +21,6 @@
     "react-hot-loader"
   ],
   "quotes": "single",
-  "semicolons": true
+  "semicolons": true,
+  "connected-component-name-pattern": "${name}Component",
 }

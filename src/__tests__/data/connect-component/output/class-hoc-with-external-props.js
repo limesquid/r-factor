@@ -17,13 +17,9 @@ export default (hoc) => {
     a: PropTypes.string
   };
 
-  const mapStateToProps = (state) => ({
+  const mapStateToProps = (state) => ({});
 
-  });
-
-  const mapDispatchToProps = {
-
-  };
+  const mapDispatchToProps = {};
 
   return connect(mapStateToProps, mapDispatchToProps)(Button);
 };

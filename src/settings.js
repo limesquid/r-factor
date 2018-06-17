@@ -2,6 +2,7 @@ const SETTINGS = Symbol('settings');
 
 const DEFAULT_SETTINGS = {
   'component-superclass': 'Component',
+  'connected-component-name-pattern': '${name}Component',
   'end-of-line': '\n',
   indent: 2,
   'modules-order': [
@@ -48,6 +49,10 @@ class Settings {
 
   get componentSuperclass() {
     return this.get('component-superclass');
+  }
+
+  get connectedComponentNamePattern() {
+    return this.get('connected-component-name-pattern')
   }
 
   get doubleEndOfLine() {

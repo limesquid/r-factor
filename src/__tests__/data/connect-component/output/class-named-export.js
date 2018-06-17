@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-class PrefixButtonSuffix extends Component {
+class ButtonComponent extends Component {
   render() {
     const props = this.props;
 
@@ -10,12 +10,8 @@ class PrefixButtonSuffix extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => ({});
 
-});
+const mapDispatchToProps = {};
 
-const mapDispatchToProps = {
-
-};
-
-export const Button = connect(mapStateToProps, mapDispatchToProps)(PrefixButtonSuffix);
+export const Button = connect(mapStateToProps, mapDispatchToProps)(ButtonComponent);
