@@ -9,6 +9,7 @@ from r_factor_utils import node_bridge
 BIN_PATH = os.path.join(
   sublime.packages_path(),
   os.path.dirname(os.path.realpath(__file__)),
+  'dist',
   'index.js'
 )
 
@@ -31,13 +32,20 @@ class BaseCommand(sublime_plugin.TextCommand):
     try:
       return node_bridge(data, BIN_PATH, [
         '-r', refactoring_name,
-        '-s', json.dumps({
-          'indent': self.get_setting('indent'),
-          'modules-order': self.get_setting('modules-order')
-        })
+        '-s', json.dumps(self.get_settings())
       ])
     except Exception as e:
       return str(e)
+
+  def get_settings(self):
+    return {
+      'component-superclass': self.get_setting('component-superclass'),
+      'end-of-line': self.get_setting('end-of-line'),
+      'indent': self.get_setting('indent'),
+      'modules-order': self.get_setting('modules-order'),
+      'quotes': self.get_setting('quotes'),
+      'semicolons': self.get_setting('semicolons')
+    }
 
   def get_setting(self, key):
     settings = self.view.settings().get('r-factor')
