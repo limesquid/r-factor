@@ -1,107 +1,43 @@
-const settings = require('../../settings');
 const { cleanUpCode } = require('../index');
-const {
-  buildImportDeclarationCode,
-  extractImports,
-  isEmptyImport,
-  sortImports
-} = require('./utils');
+const { extractGroups } = require('./utils');
+const Group = require('./group');
 
 class Imports {
   constructor(code, ast) {
     this.code = code;
     this.ast = ast;
-    this.imports = extractImports(code, ast);
+    this.groups = extractGroups(code, ast).map((group) => new Group(code, group));
   }
 
   build() {
-    const imports = [];
     let newCode = this.code;
-
-    this.imports.forEach((importData) => {
-      const importCode = buildImportDeclarationCode(importData);
-      imports.push(importCode);
-
-      if (importData.code) {
-        newCode = newCode.replace(importData.code, '');
-      }
+    this.groups.forEach((group) => {
+      newCode = newCode.replace(group.originalCode, group.build());
     });
-
-    const importsCode = imports.join(settings.endOfLine);
-    newCode = cleanUpCode(newCode);
-    let code = '';
-    code += importsCode;
-    code += settings.endOfLine;
-
-    if (newCode.trim().length > 0) {
-      if (!newCode.startsWith(settings.doubleEndOfLine)) {
-        code += settings.endOfLine;
-      }
-      if (!newCode.startsWith(settings.endOfLine)) {
-        code += settings.endOfLine;
-      }
-      code += settings.endOfLine;
-      code += newCode;
-    }
-
-    return cleanUpCode(code);
+    return cleanUpCode(newCode);
   }
 
-  findImportIndex(module) {
-    return this.imports.findIndex(
-      (importDefinition) => importDefinition.module === module
+  findGroupIndex(module) {
+    return this.groups.findIndex(
+      (group) => group.findImportIndex(module) >= 0
     );
   }
 
   sort() {
-    this.imports = sortImports(this.imports);
+    this.groups.forEach((group) => group.sort());
   }
 
-  updateImportAtIndex(index, updatedImport) {
-    this.imports = [
-      ...this.imports.slice(0, index),
-      updatedImport,
-      ...this.imports.slice(index + 1)
-    ];
-  }
-
-  add({ module, identifier, subImports = {} }) {
-    const existingImportIndex = this.findImportIndex(module);
-
-    if (existingImportIndex >= 0) {
-      const existingImport = this.imports[existingImportIndex];
-      const updatedImport = {
-        code: existingImport.code,
-        module,
-        identifier: identifier || existingImport.identifier,
-        subImports: {
-          ...existingImport.subImports,
-          ...subImports
-        }
-      };
-      this.updateImportAtIndex(existingImportIndex, updatedImport);
-    } else {
-      this.imports.push({ module, identifier, subImports });
+  add({ groupIndex = 0, module, identifier, subImports }) {
+    if (!this.groups[groupIndex]) {
+      this.groups.push(new Group());
     }
+    this.groups[groupIndex].add({ module, identifier, subImports });
   }
 
   removeDefault({ module, removeImportIfEmpty }) {
-    const existingImportIndex = this.findImportIndex(module);
-
-    if (existingImportIndex < 0) {
-      return;
-    }
-
-    const existingImport = this.imports[existingImportIndex];
-    const updatedImport = {
-      ...existingImport,
-      identifier: null
-    };
-
-    if (removeImportIfEmpty && isEmptyImport(updatedImport)) {
-      this.removeImport(existingImportIndex);
-    } else {
-      this.updateImportAtIndex(existingImportIndex, updatedImport);
+    const groupIndex = this.findGroupIndex(module);
+    if (groupIndex >= 0) {
+      this.groups[groupIndex].removeDefault({ module, removeImportIfEmpty });
     }
   }
 
@@ -114,33 +50,10 @@ class Imports {
   }
 
   removeSubImports({ module, subImports }) {
-    const existingImportIndex = this.findImportIndex(module);
-
-    if (existingImportIndex < 0) {
-      return;
+    const groupIndex = this.findGroupIndex(module);
+    if (groupIndex >= 0) {
+      this.groups[groupIndex].removeSubImports({ module, subImports });
     }
-
-    const existingImport = this.imports[existingImportIndex];
-    const updatedImport = {
-      ...existingImport,
-      subImports: Object.keys(existingImport.subImports).reduce((result, subImport) => {
-        if (!subImports.includes(subImport)) {
-          result[subImport] = existingImport.subImports[subImport];
-        }
-
-        return result;
-      }, {})
-    };
-    this.updateImportAtIndex(existingImportIndex, updatedImport);
-  }
-
-  removeImport(index) {
-    const { code } = this.imports[index];
-    this.code = this.code.replace(code, '');
-    this.imports = [
-      ...this.imports.slice(0, index),
-      ...this.imports.slice(index + 1)
-    ];
   }
 }
 
