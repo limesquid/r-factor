@@ -14,6 +14,6 @@ const lint = (code, rules, options = {}) => {
   const { messages } = cli.executeOnText(code).results[0];
 
   return messages;
-}
+};
 
 module.exports = lint;

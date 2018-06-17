@@ -19,12 +19,11 @@ class Refactoring {
             babylon.parse(nextCode, babylonOptions)
           );
         } catch (error) {
-          console.log([
+          return [
             'Exception occured while performing a transformation',
             `Error: ${error}`,
             `Code: ${nextCode}`
-          ].join('\n'));
-          throw error;
+          ].join('\n');
         }
       },
       code

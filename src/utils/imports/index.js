@@ -1,3 +1,4 @@
+const settings = require('../../settings');
 const { cleanUpCode } = require('../index');
 const { extractGroups } = require('./utils');
 const Group = require('./group');
@@ -10,17 +11,15 @@ class Imports {
   }
 
   build() {
+    const firstGroup = this.groups[0];
+    if (this.groups.length === 1 && !firstGroup.originalCode) {
+      return `${firstGroup.build()}${settings.doubleEndOfLine}${this.code}`;
+    }
     let newCode = this.code;
     this.groups.forEach((group) => {
       newCode = newCode.replace(group.originalCode, group.build());
     });
     return cleanUpCode(newCode);
-  }
-
-  findGroupIndex(module) {
-    return this.groups.findIndex(
-      (group) => group.findImportIndex(module) >= 0
-    );
   }
 
   sort() {
@@ -35,9 +34,8 @@ class Imports {
   }
 
   removeDefault({ module, removeImportIfEmpty }) {
-    const groupIndex = this.findGroupIndex(module);
-    if (groupIndex >= 0) {
-      this.groups[groupIndex].removeDefault({ module, removeImportIfEmpty });
+    for (const group of this.groups) {
+      group.removeDefault({ module, removeImportIfEmpty });
     }
   }
 
@@ -50,9 +48,8 @@ class Imports {
   }
 
   removeSubImports({ module, subImports }) {
-    const groupIndex = this.findGroupIndex(module);
-    if (groupIndex >= 0) {
-      this.groups[groupIndex].removeSubImports({ module, subImports });
+    for (const group of this.groups) {
+      group.removeSubImports({ module, subImports });
     }
   }
 }
