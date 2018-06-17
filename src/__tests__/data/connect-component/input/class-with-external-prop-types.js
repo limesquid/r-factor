@@ -6,7 +6,7 @@ export class Button extends Component {
     const { a } = this.props;
 
     return (
-      <div>{hoc}{a}</div>
+      <div>{a}</div>
     );
   }
 }

@@ -4,6 +4,7 @@ const recast = require("recast");
 const { babylonOptions } = require('../../options');
 const {
   isClassDeclaration,
+  isComponentDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration
 } = require('../../utils/ast');
@@ -30,43 +31,58 @@ class ConnectComponent extends Refactoring {
   connectComponent(code) {
     const ast = parser.parse(code);
     const builder = new ComponentBuilder(code, ast);
-    let functionalComponentName = null;
+    let originalComponentName = null;
 
     traverse(ast, {
       ExportDefaultDeclaration(path) {
         const { node } = path;
 
-        if (functionalComponentName) {
+        if (originalComponentName) {
           builder.setIsDefaultExport(true);
           builder.setIsInstantExport(false);
           builder.setComponentExportPath(path);
         }
 
-        if (isExportDefaultFunctionalComponentDeclaration(node)) {
+        const isComponentExport = isExportDefaultFunctionalComponentDeclaration(node)
+          || isComponentDeclaration(node.declaration);
+
+        if (isComponentExport) {
           builder.setIsDefaultExport(true);
           builder.setIsInstantExport(true);
           builder.setComponentExportPath(path);
         }
       },
       ExportNamedDeclaration(path) {
-        if (functionalComponentName) {
+        if (originalComponentName) {
           builder.setComponentExportPath(path);
           return;
         }
         const variableDeclaration = path.node.declaration;
+        console.log(isComponentDeclaration(variableDeclaration));
         if (isFunctionalComponentDeclaration(variableDeclaration)) {
           builder.setIsInstantExport(true);
           builder.setComponentExportPath(path);
           // builder.setFunctionalComponentPath(componentDeclaration);
-          // builder.setOriginalComponentName(functionalComponentName);
+          // builder.setOriginalComponentName(originalComponentName);
+        }
+
+        if (isComponentDeclaration(variableDeclaration)) {
+          builder.setIsInstantExport(true);
+          builder.setComponentExportPath(path);
         }
       },
       VariableDeclaration(path) {
-        const { node } = path;
-        if (isFunctionalComponentDeclaration(node)) {
-          functionalComponentName = node.declarations[0].id.name;
+        if (isFunctionalComponentDeclaration(path.node)) {
+          originalComponentName = path.node.declarations[0].id.name;
           builder.setFunctionalComponentPath(path);
-          builder.setOriginalComponentName(functionalComponentName);
+          builder.setOriginalComponentName(originalComponentName);
+        }
+      },
+      ClassDeclaration(path) {
+        if (isComponentDeclaration(path.node)) {
+          originalComponentName = path.node.id.name;
+          builder.setClassComponentPath(path);
+          builder.setOriginalComponentName(originalComponentName);
         }
       }
     });

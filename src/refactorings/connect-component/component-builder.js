@@ -14,8 +14,9 @@ class ComponentBuilder extends Builder {
     this.ast = ast;
     this.isDefaultExport = false;
     this.isInstantExport = false;
-    this.functionalComponentPath = null;
+    this.classComponentPath = null;
     this.componentExportPath = null;
+    this.functionalComponentPath = null;
     this.originalComponentName = '';
     this.newComponentName = 'Component';
   }
@@ -79,7 +80,11 @@ class ComponentBuilder extends Builder {
   renameComponent() {
     const { connectedComponentNamePattern: namePattern } = settings;
     this.newComponentName = namePattern.replace('${name}', this.originalComponentName);
-    this.functionalComponentPath.scope.rename(this.originalComponentName, this.newComponentName);
+    if (this.functionalComponentPath) {
+      this.functionalComponentPath.scope.rename(this.originalComponentName, this.newComponentName);
+    } else {
+      this.classComponentPath.scope.rename(this.originalComponentName, this.newComponentName);
+    }
   }
 
   setIsDefaultExport(isDefaultExport) {
@@ -92,6 +97,10 @@ class ComponentBuilder extends Builder {
 
   setFunctionalComponentPath(path) {
     this.functionalComponentPath = path;
+  }
+
+  setClassComponentPath(path) {
+    this.classComponentPath = path;
   }
 
   setComponentExportPath(path) {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
 import styles from './styles.scss';
 
 class Button extends Component {
