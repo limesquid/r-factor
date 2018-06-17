@@ -4,7 +4,24 @@ const DEFAULT_SETTINGS = {
   'component-superclass': 'Component',
   'end-of-line': '\n',
   indent: 2,
-  'modules-order': [ 'react', 'prop-types', 'classnames' ],
+  'modules-order': [
+    'react',
+    'react-dom',
+    'prop-types',
+    'classnames',
+    'lodash',
+    'lodash-es',
+    'underscore',
+    'redux-saga',
+    'redux-saga/effects',
+    'react-redux',
+    'react-router-redux',
+    'redux-actions',
+    'reselect',
+    're-reselect',
+    'react-router-dom',
+    'react-hot-loader'
+  ],
   quotes: 'single',
   semicolons: true
 };

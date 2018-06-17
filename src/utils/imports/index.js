@@ -55,6 +55,7 @@ class Imports {
 
   sort() {
     this.imports = sortImports(this.imports);
+    return this;
   }
 
   updateImportAtIndex(index, updatedImport) {
@@ -83,6 +84,8 @@ class Imports {
     } else {
       this.imports.push({ module, identifier, subImports });
     }
+
+    return this;
   }
 
   removeDefault({ module, removeImportIfEmpty }) {
@@ -103,6 +106,8 @@ class Imports {
     } else {
       this.updateImportAtIndex(existingImportIndex, updatedImport);
     }
+
+    return this;
   }
 
   removeNamespace(/* { module } */) {
@@ -132,6 +137,8 @@ class Imports {
       }, {})
     };
     this.updateImportAtIndex(existingImportIndex, updatedImport);
+
+    return this;
   }
 
   removeImport(index) {
@@ -141,6 +148,8 @@ class Imports {
       ...this.imports.slice(0, index),
       ...this.imports.slice(index + 1)
     ];
+
+    return this;
   }
 }
 
