@@ -6,7 +6,7 @@ const {
   isFunctionalComponentDeclaration
 } = require('../../utils/ast');
 const { addPropTypes } = require('../../transformations');
-const { getProps } = require('../../utils/props');
+const { getUnusedProps } = require('../../utils/props');
 const { Refactoring } = require('../../model');
 
 class GeneratePropTypes extends Refactoring {
@@ -37,11 +37,12 @@ class GeneratePropTypes extends Refactoring {
   }
 
   generatePropTypes(code, ast) {
-    const props = getProps(code, ast);
-    const newPropTypes = props.reduce((propTypes, prop) => ({
+    const unusedProps = getUnusedProps(code);
+    const newPropTypes = unusedProps.reduce((propTypes, prop) => ({
       ...propTypes,
       [prop]: 'PropTypes.any'
     }), {});
+
     return addPropTypes(code, ast, newPropTypes);
   }
 }
