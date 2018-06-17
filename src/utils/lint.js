@@ -1,13 +1,13 @@
 const CLIEngine = require('eslint').CLIEngine;
-const { eslintOtions } = require('../options');
+const { eslintOptions } = require('../options');
 
-const lint = (code, rules, additionalOptions = {}) => {
+const lint = (code, rules, options = {}) => {
   const cli = new CLIEngine({
-    ...eslintOtions,
-    ...additionalOptions,
+    ...eslintOptions,
+    ...options,
     rules: {
-      ...eslintOtions.rules,
-      ...additionalOptions.rules,
+      ...eslintOptions.rules,
+      ...options.rules,
       ...rules
     }
   });

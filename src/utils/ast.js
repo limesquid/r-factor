@@ -7,6 +7,7 @@ const {
   isThisExpression,
   isVariableDeclarator
 } = require('@babel/types');
+const Components = require('eslint-plugin-react/lib/util/Components');
 
 const classExtendsSomething = (node) => Boolean(node.superClass);
 
