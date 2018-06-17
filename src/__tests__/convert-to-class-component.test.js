@@ -6,8 +6,8 @@ const files = [ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`);
 describe('convert-to-class-component:canApply', () => {
   const refactoring = new ConvertToComponent();
   const tests = files.map((file) => ({
-    name: `functional/${file}.js`,
-    input: readFile(`functional/${file}.js`),
+    name: `components/functional/${file}.js`,
+    input: readFile(`components/functional/${file}.js`),
     output: true
   }));
   tests.forEach(({ name, input, output }) => {
@@ -44,8 +44,8 @@ describe('convert-to-class-component:refactor', () => {
   const refactoring = new ConvertToComponent();
   const tests = files.map((file) => ({
     name: `functional/${file}.js -> class/${file}.js`,
-    input: readFile(`functional/${file}.js`),
-    output: readFile(`class/${file}.js`)
+    input: readFile(`components/functional/${file}.js`),
+    output: readFile(`components/class/${file}.js`)
   }));
   tests.forEach(({ name, input, output }) => {
     it(`refactor "${name}"`, () => {
