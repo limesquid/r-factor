@@ -92,7 +92,7 @@ class Imports {
     const existingImportIndex = this.findImportIndex(module);
 
     if (existingImportIndex < 0) {
-      return;
+      return this;
     }
 
     const existingImport = this.imports[existingImportIndex];
@@ -122,7 +122,7 @@ class Imports {
     const existingImportIndex = this.findImportIndex(module);
 
     if (existingImportIndex < 0) {
-      return;
+      return this;
     }
 
     const existingImport = this.imports[existingImportIndex];

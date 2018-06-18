@@ -1,12 +1,7 @@
-const generate = require('@babel/generator').default;
-const template = require('@babel/template').default;
 const t = require('@babel/types');
 const { Builder } = require('../../model');
 const parser = require('../../utils/parser');
 const settings = require('../../settings');
-const { babelGeneratorOptions } = require('../../options');
-const { cleanUpCode, getIndent, indentCode, squeezeCode } = require('../../utils');
-const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../../utils/ast');
 
 class ComponentBuilder extends Builder {
   constructor(code, ast) {
@@ -36,17 +31,17 @@ class ComponentBuilder extends Builder {
   }
 
   buildConnectAst(isExported) {
-    const { semicolon, endOfLine, doubleEndOfLine } = settings;
+    const { semicolon, doubleEndOfLine } = settings;
     let code = '';
     code += doubleEndOfLine;
-    code += 'const mapStateToProps = (state) => ({})' + semicolon;
+    code += `const mapStateToProps = (state) => ({})${semicolon}`;
     code += doubleEndOfLine;
-    code += 'const mapDispatchToProps = {}' + semicolon;
+    code += `const mapDispatchToProps = {}${semicolon}`;
     code += doubleEndOfLine;
 
-    const connectCode = `connect(mapStateToProps, mapDispatchToProps)(${this.newComponentName})` + semicolon;
+    const connectCode = `connect(mapStateToProps, mapDispatchToProps)(${this.newComponentName})${semicolon}`;
     if (isExported) {
-      if(this.isDefaultExport) {
+      if (this.isDefaultExport) {
         code += `export default ${connectCode}`;
       } else {
         code += `export const ${this.originalComponentName} = ${connectCode}`;
@@ -63,9 +58,10 @@ class ComponentBuilder extends Builder {
     const isExported = Boolean(this.componentExportPath);
     const connectAst = this.buildConnectAst(isExported);
     const componentPath = this.functionalComponentPath || this.classComponentPath || this.componentExportPath;
-    const componentScopeBodyNode = componentPath.findParent(({ node }) => t.isBlockStatement(node) || t.isProgram(node)).node
+    const componentScopeBodyNode = componentPath.findParent(
+      ({ node }) => t.isBlockStatement(node) || t.isProgram(node)
+    ).node;
     const blockStatementBodyNode = componentScopeBodyNode.body;
-    const lastDeclaration = blockStatementBodyNode[blockStatementBodyNode.length - 1];
     if (!isExported) {
       componentScopeBodyNode.body = blockStatementBodyNode.filter((node) => !t.isReturnStatement(node));
     }
@@ -85,7 +81,7 @@ class ComponentBuilder extends Builder {
       return;
     }
 
-    const componentCode = 'const Component = ' + this.code.slice(componentDeclaration.start, componentDeclaration.end);
+    const componentCode = `const Component = ${this.code.slice(componentDeclaration.start, componentDeclaration.end)}`;
     this.componentExportPath.replaceWith(
       parser.parse(componentCode).program.body[0]
     );

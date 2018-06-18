@@ -6,7 +6,7 @@ const tests = readDirectoryFilenames('connect-component/input')
     name: filename,
     input: readFile(`connect-component/input/${filename}`),
     output: readFile(`connect-component/output/${filename}`)
-  }))
+  }));
 
 describe('connect-component:canApply', () => {
   const refactoring = new ConnectComponent();

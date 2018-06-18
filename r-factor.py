@@ -12,6 +12,8 @@ BIN_PATH = os.path.join(
   'index.js'
 )
 
+print(BIN_PATH)
+
 class BaseCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     selection = self.view.sel()

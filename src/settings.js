@@ -52,7 +52,7 @@ class Settings {
   }
 
   get connectedComponentNamePattern() {
-    return this.get('connected-component-name-pattern')
+    return this.get('connected-component-name-pattern');
   }
 
   get doubleEndOfLine() {

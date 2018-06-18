@@ -1,9 +1,5 @@
-const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const recast = require("recast");
-const { babylonOptions } = require('../../options');
 const {
-  isClassDeclaration,
   isComponentDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration
@@ -23,8 +19,7 @@ class ConnectComponent extends Refactoring {
     ];
   }
 
-  canApply(code) {
-    // const ast = babylon.parse(code, babylonOptions);
+  canApply() {
     return true;
   }
 
@@ -92,7 +87,7 @@ class ConnectComponent extends Refactoring {
     const importToAdd = {
       module: 'react-redux',
       subImports: {
-        'connect': 'connect'
+        connect: 'connect'
       }
     };
 
