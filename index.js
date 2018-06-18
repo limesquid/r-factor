@@ -4,6 +4,7 @@ const settings = require('./src/settings');
 
 const refactorings = {
   'add-classname': require('./src/refactorings/add-classname'),
+  'connect-component': require('./src/refactorings/connect-component');
   'convert-to-class-component': require('./src/refactorings/convert-to-class-component'),
   'convert-to-functional-component': require('./src/refactorings/convert-to-functional-component'),
   'generate-prop-types': require('./src/refactorings/generate-prop-types'),

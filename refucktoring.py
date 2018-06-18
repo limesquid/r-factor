@@ -51,6 +51,12 @@ class AddClassnameCommand(BaseCommand):
     self.refactoring_name = 'add-classname'
 
 
+class ConnectComponent(BaseCommand):
+  def __init__(self, arg):
+    super(AddClassnameCommand, self).__init__(arg)
+    self.refactoring_name = 'connect-component'
+
+
 class ConvertToClassComponentCommand(BaseCommand):
   def __init__(self, arg):
     super(ConvertToClassComponentCommand, self).__init__(arg)

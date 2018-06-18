@@ -4,6 +4,10 @@
     "command": "add_classname"
   },
   {
+    "caption": "R-factor: Connect component",
+    "command": "connect_component"
+  },
+  {
     "caption": "R-factor: Convert to class component",
     "command": "convert_to_class_component"
   },
