@@ -19,12 +19,12 @@ const webpackConfig = {
     .filter((directory) => directory !== '.bin')
     .reduce(
       (externals, directory) => Object.assign(externals, {
-        [directory]: 'commonjs ' + directory
+        [directory]: `commonjs ${directory}`
       }),
       {}
     ),
   plugins: [
-    new webpack.NormalModuleReplacementPlugin(/@babel-parser/, resource => {
+    new webpack.NormalModuleReplacementPlugin(/@babel-parser/, (resource) => {
       resource.request = '@babel-parser';
     })
   ]
