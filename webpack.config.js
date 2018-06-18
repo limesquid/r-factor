@@ -1,12 +1,13 @@
-const webpack = require('webpack');
 const fs = require('fs');
 const path = require('path');
+const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const ENTRY_FILE = path.resolve(__dirname, 'index.js');
 const DIST_DIR = path.resolve(__dirname, 'dist');
 const BUNDLE_DIST = 'index.js';
 
-module.exports = {
+const webpackConfig = {
   mode: 'production',
   target: 'node',
   output: {
@@ -21,5 +22,12 @@ module.exports = {
         [directory]: 'commonjs ' + directory
       }),
       {}
-    )
+    ),
+  plugins: []
 };
+
+if (process.env.ANALYZE_BUNDLE) {
+  webpackConfig.plugins.push(new BundleAnalyzerPlugin());
+}
+
+module.exports = webpackConfig;
