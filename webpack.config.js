@@ -25,9 +25,7 @@ const webpackConfig = {
     ),
   plugins: [
     new webpack.NormalModuleReplacementPlugin(/@babel-parser/, resource => {
-      // if (resource.context.includes('node_modules/draft-js-plugins-editor')) {
-        resource.request = '@babel-parser';
-      // }
+      resource.request = '@babel-parser';
     })
   ]
 };
