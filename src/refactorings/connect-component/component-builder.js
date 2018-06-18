@@ -5,7 +5,7 @@ const { Builder } = require('../../model');
 const parser = require('../../utils/parser');
 const settings = require('../../settings');
 const { babelGeneratorOptions } = require('../../options');
-const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
+const { cleanUpCode, getIndent, indentCode, squeezeCode } = require('../../utils');
 const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../../utils/ast');
 
 class ComponentBuilder extends Builder {
@@ -22,7 +22,9 @@ class ComponentBuilder extends Builder {
   }
 
   build() {
-    this.removeExportStatement();
+    if (this.componentExportPath) {
+      this.removeExportStatement();
+    }
 
     if (!this.isDefaultExport) {
       this.renameComponent();
@@ -33,7 +35,7 @@ class ComponentBuilder extends Builder {
     return parser.print(this.ast);
   }
 
-  buildConnectAst() {
+  buildConnectAst(isExported) {
     const { semicolon, endOfLine, doubleEndOfLine } = settings;
     let code = '';
     code += doubleEndOfLine;
@@ -43,19 +45,31 @@ class ComponentBuilder extends Builder {
     code += doubleEndOfLine;
 
     const connectCode = `connect(mapStateToProps, mapDispatchToProps)(${this.newComponentName})` + semicolon;
-    if(this.isDefaultExport) {
-      code += `export default ${connectCode}`;
-    } else {
-      code += `export const ${this.originalComponentName} = ${connectCode}`;
+    if (isExported) {
+      if(this.isDefaultExport) {
+        code += `export default ${connectCode}`;
+      } else {
+        code += `export const ${this.originalComponentName} = ${connectCode}`;
+      }
     }
 
-    return parser.parse(code).program.body;
+    return [
+      ...parser.parse(code).program.body,
+      !isExported && t.returnStatement(parser.parse(connectCode).program.body[0].expression)
+    ].filter(Boolean);
   }
 
-  appendConnect(node) {
-    const connectAst = this.buildConnectAst(this.newComponentName);
-    const lastDeclaration = this.ast.program.body[this.ast.program.body.length - 1];
-    this.ast.program.body.push(...connectAst);
+  appendConnect() {
+    const isExported = Boolean(this.componentExportPath);
+    const connectAst = this.buildConnectAst(isExported);
+    const componentPath = this.functionalComponentPath || this.classComponentPath || this.componentExportPath;
+    const componentScopeBodyNode = componentPath.findParent(({ node }) => t.isBlockStatement(node) || t.isProgram(node)).node
+    const blockStatementBodyNode = componentScopeBodyNode.body;
+    const lastDeclaration = blockStatementBodyNode[blockStatementBodyNode.length - 1];
+    if (!isExported) {
+      componentScopeBodyNode.body = blockStatementBodyNode.filter((node) => !t.isReturnStatement(node));
+    }
+    componentScopeBodyNode.body.push(...connectAst);
   }
 
   removeExportStatement() {
@@ -78,6 +92,10 @@ class ComponentBuilder extends Builder {
   }
 
   renameComponent() {
+    if (!this.componentExportPath) {
+      return;
+    }
+
     const { connectedComponentNamePattern: namePattern } = settings;
     this.newComponentName = namePattern.replace('${name}', this.originalComponentName);
     if (this.functionalComponentPath) {

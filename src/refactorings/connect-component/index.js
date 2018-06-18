@@ -58,12 +58,9 @@ class ConnectComponent extends Refactoring {
           return;
         }
         const variableDeclaration = path.node.declaration;
-        console.log(isComponentDeclaration(variableDeclaration));
         if (isFunctionalComponentDeclaration(variableDeclaration)) {
           builder.setIsInstantExport(true);
           builder.setComponentExportPath(path);
-          // builder.setFunctionalComponentPath(componentDeclaration);
-          // builder.setOriginalComponentName(originalComponentName);
         }
 
         if (isComponentDeclaration(variableDeclaration)) {
