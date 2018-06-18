@@ -11,7 +11,7 @@
   "license": "CC BY-NC-ND 4.0",
   "scripts": {
     "analyze-bundle": "better-npm-run analyze-bundle",
-    "build": "webpack",
+    "build": "better-npm-run build",
     "lint": "eslint config . --ext .js",
     "lint:fix": "eslint config . --ext .js --fix",
     "test": "jest --no-cache --coverage",
@@ -23,7 +23,14 @@
     "analyze-bundle": {
       "command": "webpack",
       "env": {
-        "ANALYZE_BUNDLE": "true"
+        "ANALYZE_BUNDLE": "true",
+        "NODE_ENV": "production"
+      }
+    },
+    "build": {
+      "command": "webpack",
+      "env": {
+        "NODE_ENV": "production"
       }
     }
   },
