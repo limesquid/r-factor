@@ -4,7 +4,7 @@ import sublime
 import sublime_plugin
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '.'))
-from r-factor_utils import node_bridge
+from r_factor_utils import node_bridge
 
 BIN_PATH = os.path.join(
   sublime.packages_path(),

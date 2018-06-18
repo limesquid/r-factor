@@ -58,4 +58,20 @@ describe('transformation:remove-import-declaration', () => {
     const expectedResult = readTransformationsFile(`${OUTPUT_PATH}/remove-aliased-sub-import.js`);
     expect(result).toEqual(expectedResult);
   });
+
+  it('should not remove subImport when module is not used', () => {
+    const result = removeImportDeclaration(code, ast, {
+      module: 'react-dom',
+      subImports: [ 'xxx' ]
+    });
+    expect(result).toEqual(code);
+  });
+
+  it('should not remove default import when module is not used', () => {
+    const result = removeImportDeclaration(code, ast, {
+      module: 'react-dom',
+      identifier: true
+    });
+    expect(result).toEqual(code);
+  });
 });

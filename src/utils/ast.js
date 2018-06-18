@@ -1,12 +1,4 @@
-const {
-  isIdentifier,
-  isImportSpecifier,
-  isMemberExpression,
-  isObjectProperty,
-  isObjectPattern,
-  isThisExpression,
-  isVariableDeclarator
-} = require('@babel/types');
+const { isImportSpecifier } = require('@babel/types');
 
 const classExtendsSomething = (node) => Boolean(node.superClass);
 
@@ -89,37 +81,6 @@ const getFunctionalComponentName = (node) => node.declarations[0].id.name;
 
 const getClassComponentName = (node) => node.id.name;
 
-const isThisPropsMemberExpression = (node) => isMemberExpression(node)
-  && isThisExpression(node.object)
-  && isIdentifier(node.property, { name: 'props' });
-
-const isThisPropsDestructuring = (node) => isVariableDeclarator(node)
-  && isThisPropsMemberExpression(node.init);
-
-const isPropertyDestructuring = (node, propertyName) => isVariableDeclarator(node)
-  && isIdentifier(node.init, { name: propertyName });
-
-const getPropertyNames = (properties) => properties
-  .filter(isObjectProperty)
-  .map((property) => property.key.name);
-
-const getVariableDestructuringPropertyNames = (node) =>
-  getPropertyNames(node.id.properties);
-
-const isThisPropsKeyAccessing = (node) => isMemberExpression(node)
-  && isThisPropsMemberExpression(node.object);
-
-const arePropsDestructuredInFunctionalComponentArguments = (componentNode) =>
-  isObjectPattern(componentNode.params[0]);
-
-const getFirstArgumentDestructuredAttributes = (node) =>
-  getPropertyNames(node.params[0].properties);
-
-const getFunctionalComponentPropVariableName = (componentNode) => componentNode.params.length > 0
-  && componentNode.params[0].name;
-
-const getFunctionalComponentDefinition = (node) => node.declarations[0].init;
-
 const getSubImports = ({ specifiers }) => specifiers
   .filter((specifier) => isImportSpecifier(specifier))
   .reduce(
@@ -130,37 +91,23 @@ const getSubImports = ({ specifiers }) => specifiers
     {}
   );
 
-const isObjectKeyAccessing = (node, propsVariableName) => isMemberExpression(node)
-  && isIdentifier(node.object, { name: propsVariableName });
-
 module.exports = {
-  arePropsDestructuredInFunctionalComponentArguments,
   getClassComponentName,
   getClassMethod,
-  getFirstArgumentDestructuredAttributes,
-  getFunctionalComponentDefinition,
   getFunctionalComponentName,
-  getFunctionalComponentPropVariableName,
   getNodeIndent,
-  getPropertyNames,
   getReturnStatement,
   getSubImports,
-  getVariableDestructuringPropertyNames,
   isClassDeclaration,
   isComponentDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration,
   isMemberDeclaration,
   isMemberOfDeclaration,
-  isObjectKeyAccessing,
-  isPropertyDestructuring,
   isPropsDeclaration,
   isPropTypesDeclaration,
   isReactImport,
   isSingleLine,
   isStaticPropTypesDeclaration,
-  isStaticPropertyDeclaration,
-  isThisPropsDestructuring,
-  isThisPropsKeyAccessing,
-  isThisPropsMemberExpression
+  isStaticPropertyDeclaration
 };

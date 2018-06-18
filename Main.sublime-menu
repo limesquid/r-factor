@@ -17,14 +17,14 @@
                 "caption": "Settings – Default",
                 "command": "open_file",
                 "args": {
-                  "file": "${packages}/r-factor/R-factor.sublime-settings"
+                  "file": "${packages}/r-factor/r-factor.sublime-settings"
                 }
               },
               {
                 "caption": "Settings – User",
                 "command": "open_file",
                 "args": {
-                  "file": "${packages}/User/R-factor.sublime-settings"
+                  "file": "${packages}/User/r-factor.sublime-settings"
                 }
               },
               { "caption": "-" },

@@ -2,49 +2,28 @@ const settings = require('../../settings');
 const { cleanUpCode } = require('../index');
 const {
   buildImportDeclarationCode,
-  extractImports,
+  extractOriginalCode,
   isEmptyImport,
   sortImports
 } = require('./utils');
 
-class Imports {
-  constructor(code, ast) {
+class Group {
+  constructor(code, imports = []) {
     this.code = code;
-    this.ast = ast;
-    this.imports = extractImports(code, ast);
+    this.imports = imports;
+    this.originalCode = extractOriginalCode(code, imports);
   }
 
   build() {
     const imports = [];
-    let newCode = this.code;
 
     this.imports.forEach((importData) => {
       const importCode = buildImportDeclarationCode(importData);
       imports.push(importCode);
-
-      if (importData.code) {
-        newCode = newCode.replace(importData.code, '');
-      }
     });
 
     const importsCode = imports.join(settings.endOfLine);
-    newCode = cleanUpCode(newCode);
-    let code = '';
-    code += importsCode;
-    code += settings.endOfLine;
-
-    if (newCode.trim().length > 0) {
-      if (!newCode.startsWith(settings.doubleEndOfLine)) {
-        code += settings.endOfLine;
-      }
-      if (!newCode.startsWith(settings.endOfLine)) {
-        code += settings.endOfLine;
-      }
-      code += settings.endOfLine;
-      code += newCode;
-    }
-
-    return cleanUpCode(code);
+    return cleanUpCode(importsCode);
   }
 
   findImportIndex(module) {
@@ -55,7 +34,6 @@ class Imports {
 
   sort() {
     this.imports = sortImports(this.imports);
-    return this;
   }
 
   updateImportAtIndex(index, updatedImport) {
@@ -84,8 +62,6 @@ class Imports {
     } else {
       this.imports.push({ module, identifier, subImports });
     }
-
-    return this;
   }
 
   removeDefault({ module, removeImportIfEmpty }) {
@@ -106,8 +82,6 @@ class Imports {
     } else {
       this.updateImportAtIndex(existingImportIndex, updatedImport);
     }
-
-    return this;
   }
 
   removeNamespace(/* { module } */) {
@@ -137,8 +111,6 @@ class Imports {
       }, {})
     };
     this.updateImportAtIndex(existingImportIndex, updatedImport);
-
-    return this;
   }
 
   removeImport(index) {
@@ -148,8 +120,7 @@ class Imports {
       ...this.imports.slice(0, index),
       ...this.imports.slice(index + 1)
     ];
-    return this;
   }
 }
 
-module.exports = Imports;
+module.exports = Group;

@@ -7,7 +7,11 @@ const createImport = (code, node) => ({
   code: code.substring(node.start, node.end),
   identifier: getIdentifier(node),
   module: getModule(node),
-  subImports: getSubImports(node)
+  subImports: getSubImports(node),
+  start: node.start,
+  startLine: node.loc.start.line,
+  end: node.end,
+  endLine: node.loc.end.line
 });
 
 const getIdentifier = (node) => {
@@ -27,6 +31,30 @@ const extractImports = (code, ast) => {
   });
 
   return imports;
+};
+
+const extractGroups = (code, ast) => groupImports(extractImports(code, ast));
+
+const groupImports = (imports) => {
+  const groups = [];
+  let group = [];
+  let previousImport = null;
+
+  for (const importData of imports) {
+    if (!previousImport || importData.startLine === previousImport.endLine + 1) {
+      group.push(importData);
+    } else {
+      groups.push(group);
+      group = [ importData ];
+    }
+    previousImport = importData;
+  }
+
+  if (group.length > 0 && groups.indexOf(group) === -1) {
+    groups.push(group);
+  }
+
+  return groups;
 };
 
 const isEmptyImport = ({ identifier, subImports }) => !identifier && Object.keys(subImports).length === 0;
@@ -105,9 +133,21 @@ const buildImportDeclarationCode = (importData) => {
   return code;
 };
 
+const extractOriginalCode = (code, imports) => {
+  if (imports.length === 0) {
+    return '';
+  }
+
+  const firstImport = imports[0];
+  const lastImport = imports[imports.length - 1];
+  return code.substring(firstImport.start, lastImport.end);
+};
+
 module.exports = {
   buildImportDeclarationCode,
+  extractGroups,
   extractImports,
+  extractOriginalCode,
   isEmptyImport,
   sortImports
 };
