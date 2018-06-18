@@ -53,7 +53,7 @@ class AddClassnameCommand(BaseCommand):
 
 class ConnectComponent(BaseCommand):
   def __init__(self, arg):
-    super(AddClassnameCommand, self).__init__(arg)
+    super(ConnectComponent, self).__init__(arg)
     self.refactoring_name = 'connect-component'
 
 
