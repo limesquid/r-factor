@@ -1,3 +1,4 @@
+coverage/**/*
+dist/**/*
 src/__tests__/data/**/*.js
 src/__tests__/transformations/data/**/*.js
-coverage/**/*

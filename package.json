@@ -10,12 +10,29 @@
   },
   "license": "CC BY-NC-ND 4.0",
   "scripts": {
+    "analyze-bundle": "better-npm-run analyze-bundle",
+    "build": "better-npm-run build",
     "lint": "eslint config . --ext .js",
     "lint:fix": "eslint config . --ext .js --fix",
     "test": "jest --no-cache --coverage",
     "test:debug": "node --inspect-brk node_modules/jest/bin/jest.js --runInBand --no-cache --watch",
     "test:debug:windows": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --no-cache --watch",
     "test:watch": "jest --no-cache --watch"
+  },
+  "betterScripts": {
+    "analyze-bundle": {
+      "command": "webpack",
+      "env": {
+        "ANALYZE_BUNDLE": "true",
+        "NODE_ENV": "production"
+      }
+    },
+    "build": {
+      "command": "webpack",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
   },
   "jest": {
     "moduleFileExtensions": [
@@ -30,13 +47,13 @@
     ]
   },
   "dependencies": {
-    "@babel/generator": "7.0.0-beta.49",
-    "@babel/parser": "7.0.0-beta.48",
-    "@babel/template": "7.0.0-beta.49",
-    "@babel/traverse": "7.0.0-beta.49",
-    "@babel/types": "7.0.0-beta.49",
+    "@babel/generator": "7.0.0-beta.51",
+    "@babel/parser": "7.0.0-beta.51",
+    "@babel/traverse": "7.0.0-beta.51",
+    "@babel/types": "7.0.0-beta.51",
+    "babel-eslint": "8.2.3",
     "eslint": "^4.19.1",
-    "eslint-plugin-react": "^7.8.2",
+    "eslint-plugin-react": "^7.9.1",
     "get-stdin": "6.0.0",
     "lodash.difference": "4.5.0",
     "recast": "^0.15.0",
@@ -44,7 +61,10 @@
     "yargs": "11.1.0"
   },
   "devDependencies": {
-    "babel-eslint": "8.2.3",
-    "jest": "23.1.0"
+    "better-npm-run": "^0.1.0",
+    "jest": "23.1.0",
+    "webpack": "^4.12.0",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^3.0.8"
   }
 }
