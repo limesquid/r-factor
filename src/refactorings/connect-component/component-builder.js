@@ -17,7 +17,9 @@ class ComponentBuilder extends Builder {
   }
 
   build() {
-    if (this.componentExportPath) {
+    const isExported = Boolean(this.componentExportPath);
+
+    if (isExported) {
       this.removeExportStatement();
     }
 
@@ -25,9 +27,9 @@ class ComponentBuilder extends Builder {
       this.renameComponent();
     }
 
-    this.appendConnect();
+    this.appendConnect(isExported);
 
-    return parser.print(this.ast);
+    return parser.print(this.ast) + (isExported ? settings.endOfLine : '');
   }
 
   buildConnectAst(isExported) {
@@ -54,8 +56,7 @@ class ComponentBuilder extends Builder {
     ].filter(Boolean);
   }
 
-  appendConnect() {
-    const isExported = Boolean(this.componentExportPath);
+  appendConnect(isExported) {
     const connectAst = this.buildConnectAst(isExported);
     const componentPath = this.functionalComponentPath || this.classComponentPath || this.componentExportPath;
     const componentScopeBodyNode = componentPath.findParent(
