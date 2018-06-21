@@ -6,11 +6,11 @@ import styles from './styles.scss';
 class Button extends Component {
   static propTypes = {
     children: PropTypes.node,
-    className: PropTypes.any,
+    className: PropTypes.string,
     ozet: PropTypes.any,
-    onClick: PropTypes.any,
+    onClick: PropTypes.func,
     onMouseEnter: PropTypes.func,
-    onMouseLeave: PropTypes.any
+    onMouseLeave: PropTypes.func
   };
 
   render() {

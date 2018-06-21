@@ -99,10 +99,32 @@ const getUnusedProps = (code) => {
   return unusedProps;
 };
 
+const isCallbackProp = (name, prefix = 'on') => {
+  if (!name.startsWith(prefix) || name === prefix) {
+    return false;
+  }
+
+  return name[prefix.length].toUpperCase() === name[prefix.length];
+};
+
+const getPropType = (name) => {
+  if (name === 'className') {
+    return 'PropTypes.string';
+  }
+  if (name === 'children') {
+    return 'PropTypes.node';
+  }
+  if (isCallbackProp(name)) {
+    return 'PropTypes.func';
+  }
+  return 'PropTypes.any';
+};
+
 module.exports = {
-  getProps,
   getClassComponentProps,
   getFunctionalComponentProps,
+  getProps,
   getPropsFromPropsVariable,
+  getPropType,
   getUnusedProps
 };

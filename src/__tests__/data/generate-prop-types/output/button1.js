@@ -8,6 +8,6 @@ const Button = ({ children, onClick }) => (
 );
 
 Button.propTypes = {
-  children: PropTypes.any,
-  onClick: PropTypes.any
+  children: PropTypes.node,
+  onClick: PropTypes.func
 };
