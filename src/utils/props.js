@@ -99,10 +99,38 @@ const getUnusedProps = (code) => {
   return unusedProps;
 };
 
+const getPropType = (name) => {
+  if (name === 'className') {
+    return 'PropTypes.string';
+  }
+  if (name === 'children') {
+    return 'PropTypes.node';
+  }
+  if (name === 'style') {
+    return 'PropTypes.object';
+  }
+  if (isPrefixedWith(name, 'on')) {
+    return 'PropTypes.func';
+  }
+  if ([ 'is', 'has' ].some((prefix) => isPrefixedWith(name, prefix))) {
+    return 'PropTypes.bool';
+  }
+  return 'PropTypes.any';
+};
+
+const isPrefixedWith = (name, prefix) => {
+  if (!name.startsWith(prefix) || name === prefix) {
+    return false;
+  }
+
+  return name[prefix.length].toUpperCase() === name[prefix.length];
+};
+
 module.exports = {
-  getProps,
   getClassComponentProps,
   getFunctionalComponentProps,
+  getProps,
   getPropsFromPropsVariable,
+  getPropType,
   getUnusedProps
 };
