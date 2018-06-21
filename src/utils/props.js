@@ -114,6 +114,9 @@ const getPropType = (name) => {
   if (name === 'children') {
     return 'PropTypes.node';
   }
+  if (name === 'style') {
+    return 'PropTypes.object';
+  }
   if (isCallbackProp(name)) {
     return 'PropTypes.func';
   }
