@@ -6,7 +6,7 @@ import styles from './styles.scss';
 class Button extends Component {
   static propTypes = {
     children: PropTypes.node,
-    className: PropTypes.any,
+    className: PropTypes.string,
     defaultValue: PropTypes.any
   };
 
