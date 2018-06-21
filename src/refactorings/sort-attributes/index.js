@@ -1,6 +1,5 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const traverse = require('@babel/traverse').default;
-const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const CodeBuilder = require('./code-builder');
 
@@ -13,7 +12,7 @@ class SortAttributes extends Refactoring {
   }
 
   canApply(code) {
-    const ast = babylon.parse(code, babylonOptions);
+    const ast = parser.parse(code, parser);
     let hasObjects = false;
 
     traverse(ast, {
@@ -34,7 +33,7 @@ class SortAttributes extends Refactoring {
     refactored = this.refactorCode(code, ast);
     while (refactored !== lastCode) {
       lastCode = refactored;
-      const newAst = babylon.parse(refactored, babylonOptions);
+      const newAst = parser.parse(refactored);
       refactored = this.refactorCode(refactored, newAst);
     }
     return refactored;

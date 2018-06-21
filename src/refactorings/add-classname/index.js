@@ -1,6 +1,5 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const traverse = require('@babel/traverse').default;
-const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const {
   addImportDeclaration,
@@ -28,7 +27,7 @@ class AddClassname extends Refactoring {
   }
 
   canApply(code) {
-    const ast = babylon.parse(code, babylonOptions);
+    const ast = parser.parse(code);
     let jsxNode = null;
 
     traverse(ast, {

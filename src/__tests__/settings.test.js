@@ -1,6 +1,5 @@
-const babylon = require('@babel/parser');
 const { readFile } = require('./test-utils');
-const { babylonOptions } = require('../options');
+const parser = require('../utils/parser');
 const settings = require('../settings');
 const addImportDeclaration = require('../transformations/add-import-declaration');
 
@@ -10,7 +9,7 @@ describe('settings', () => {
       settings.set({ quotes });
       const input = readFile(`settings/input/quotes-${quotes}.js`);
       const output = readFile(`settings/output/quotes-${quotes}.js`);
-      const ast = babylon.parse(input, babylonOptions);
+      const ast = parser.parse(input);
       const result = addImportDeclaration(input, ast, {
         module: 'react',
         subImports: {
@@ -27,7 +26,7 @@ describe('settings', () => {
       settings.set({ semicolons });
       const input = readFile(`settings/input/semicolons-${semicolons}.js`);
       const output = readFile(`settings/output/semicolons-${semicolons}.js`);
-      const ast = babylon.parse(input, babylonOptions);
+      const ast = parser.parse(input);
       const result = addImportDeclaration(input, ast, {
         module: 'react',
         subImports: {

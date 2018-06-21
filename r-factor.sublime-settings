@@ -1,5 +1,6 @@
 {
   "component-superclass": "Component",
+  "connected-component-name-pattern": "${name}Component",
   "end-of-line": "\n",
   "indent": 2,
   "modules-order": [
@@ -21,6 +22,5 @@
     "react-hot-loader"
   ],
   "quotes": "single",
-  "semicolons": true,
-  "connected-component-name-pattern": "${name}Component",
+  "semicolons": true
 }

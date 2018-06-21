@@ -1,7 +1,6 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const traverse = require('@babel/traverse').default;
 const { isStaticPropertyDeclaration } = require('../../utils/ast');
-const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const ClassBuilder = require('./class-builder');
 
@@ -17,7 +16,7 @@ class MoveStaticFieldOutOfClass extends Refactoring {
 
   canApply(code) {
     const { isClassDeclaration, staticFieldName } = this;
-    const ast = babylon.parse(code, babylonOptions);
+    const ast = parser.parse(code);
     let hasStaticField = false;
     let isComponent = false;
 

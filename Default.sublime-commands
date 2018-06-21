@@ -4,7 +4,7 @@
     "command": "add_classname"
   },
   {
-    "caption": "R-factor: Connect component with mapState + mapDispatch",
+    "caption": "R-factor: Connect component with mapStateToProps & mapDispatchToProps",
     "command": "connect_component"
   },
   {

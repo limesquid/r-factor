@@ -1,11 +1,10 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const traverse = require('@babel/traverse').default;
-const { babylonOptions } = require('../../options');
 const CodeBuilder = require('./code-builder');
 
 const addRootJsxProps = (code, ast, props) => Object.keys(props).reduce(
   (refactoredCode, key) => {
-    const nextAst = code === refactoredCode ? ast : babylon.parse(refactoredCode, babylonOptions);
+    const nextAst = code === refactoredCode ? ast : parser.parse(refactoredCode);
     const builder = new CodeBuilder(refactoredCode, nextAst);
     let jsxNode = null;
 

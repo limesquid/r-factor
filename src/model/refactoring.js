@@ -1,5 +1,4 @@
-const babylon = require('@babel/parser');
-const { babylonOptions } = require('../options');
+const parser = require('../utils/parser');
 
 class Refactoring {
   constructor(transformations = []) {
@@ -16,7 +15,7 @@ class Refactoring {
         try {
           return transformation(
             nextCode,
-            babylon.parse(nextCode, babylonOptions)
+            parser.parse(nextCode)
           );
         } catch (error) {
           return [

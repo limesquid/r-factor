@@ -1,11 +1,10 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const traverse = require('@babel/traverse').default;
 const {
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration,
   isReactImport
 } = require('../../utils/ast');
-const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const MoveDefaultPropsToClass = require('../move-default-props-to-class');
 const MovePropTypesToClass = require('../move-prop-types-to-class');
@@ -26,7 +25,7 @@ class ConvertToComponent extends Refactoring {
   }
 
   canApply(code) {
-    const ast = babylon.parse(code, babylonOptions);
+    const ast = parser.parse(code);
     let hasReactImport = false;
     let isFunctionalComponent = false;
 

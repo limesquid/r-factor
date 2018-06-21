@@ -1,12 +1,11 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const { readTransformationsFile } = require('../test-utils');
-const { babylonOptions } = require('../../options');
 const removeImportDeclaration = require('../../transformations/remove-import-declaration');
 
 const OUTPUT_PATH = 'remove-import-declaration/output/';
 
 const code = readTransformationsFile('remove-import-declaration/input/common.js');
-const ast = babylon.parse(code, babylonOptions);
+const ast = parser.parse(code);
 
 describe('transformation:remove-import-declaration', () => {
   it('should just sort when module is not found', () => {

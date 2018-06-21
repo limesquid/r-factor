@@ -40,12 +40,12 @@ class BaseCommand(sublime_plugin.TextCommand):
   def get_settings(self):
     return {
       'component-superclass': self.get_setting('component-superclass'),
+      'connected-component-name-pattern': self.get_setting('connected-component-name-pattern'),
       'end-of-line': self.get_setting('end-of-line'),
       'indent': self.get_setting('indent'),
       'modules-order': self.get_setting('modules-order'),
       'quotes': self.get_setting('quotes'),
-      'semicolons': self.get_setting('semicolons'),
-      'connected-component-name-pattern': self.get_setting('connected-component-name-pattern')
+      'semicolons': self.get_setting('semicolons')
     }
 
   def get_setting(self, key):

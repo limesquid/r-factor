@@ -1,10 +1,9 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const { readTransformationsFile } = require('../test-utils');
-const { babylonOptions } = require('../../options');
 const addImportDeclaration = require('../../transformations/add-import-declaration');
 
 const code = readTransformationsFile('add-import-declaration/input/common.js');
-const ast = babylon.parse(code, babylonOptions);
+const ast = parser.parse(code);
 
 describe('transformation:add-import-declaration', () => {
   it('should add sub import to existing module import', () => {
