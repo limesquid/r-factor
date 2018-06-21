@@ -99,14 +99,6 @@ const getUnusedProps = (code) => {
   return unusedProps;
 };
 
-const isCallbackProp = (name, prefix = 'on') => {
-  if (!name.startsWith(prefix) || name === prefix) {
-    return false;
-  }
-
-  return name[prefix.length].toUpperCase() === name[prefix.length];
-};
-
 const getPropType = (name) => {
   if (name === 'className') {
     return 'PropTypes.string';
@@ -117,10 +109,21 @@ const getPropType = (name) => {
   if (name === 'style') {
     return 'PropTypes.object';
   }
-  if (isCallbackProp(name)) {
+  if (isPrefixedWith(name, 'on')) {
     return 'PropTypes.func';
   }
+  if ([ 'is', 'has' ].some((prefix) => isPrefixedWith(name, prefix))) {
+    return 'PropTypes.bool';
+  }
   return 'PropTypes.any';
+};
+
+const isPrefixedWith = (name, prefix) => {
+  if (!name.startsWith(prefix) || name === prefix) {
+    return false;
+  }
+
+  return name[prefix.length].toUpperCase() === name[prefix.length];
 };
 
 module.exports = {
