@@ -6,18 +6,27 @@ import styles from './styles.scss';
 class Button extends Component {
   static propTypes = {
     children: PropTypes.node,
-    className: PropTypes.any,
+    className: PropTypes.string,
+    hasOutline: PropTypes.bool,
+    isDisabled: PropTypes.bool,
     ozet: PropTypes.any,
-    onClick: PropTypes.any,
+    onClick: PropTypes.func,
     onMouseEnter: PropTypes.func,
-    onMouseLeave: PropTypes.any
+    onMouseLeave: PropTypes.func
   };
 
   render() {
-    const { className, onClick, onMouseEnter, ...props } = this.props;
+    const { className, hasOutline, isDisabled, onClick, onMouseEnter, ...props } = this.props;
     return (
       <div
-        className={classNames(styles.button, className)}
+        className={classNames(
+          styles.button,
+          {
+            [styles.disabled]: isDisabled,
+            [styles.outline]: hasOutline
+          },
+          className
+        )}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={this.props.onMouseLeave}
