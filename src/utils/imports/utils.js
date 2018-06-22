@@ -126,7 +126,7 @@ const buildImportDeclarationCode = (importData) => {
   }
   if (sortedSubImportStrings.length > 0) {
     if (isMultiline) {
-      code += `{${settings.endOfLine}`
+      code += `{${settings.endOfLine}`;
       code += indentCode(sortedSubImportStrings.join(`,${settings.endOfLine}`), settings.indent);
       code += `${settings.endOfLine}}`;
     } else {
