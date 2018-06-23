@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 export default (hoc) => {
   class Button extends Component {
     static propTypes = {
-      a: PropTypes.string
+      name: PropTypes.string
     };
 
     render() {
-      const { a } = this.props;
+      const { name } = this.props;
 
       return (
-        <div>{hoc}{a}</div>
+        <div>{hoc}{name}</div>
       );
     }
   }

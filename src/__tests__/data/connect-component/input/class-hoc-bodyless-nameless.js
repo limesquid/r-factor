@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export class Button extends Component {
+export default (hoc) => class extends Component {
+  static propTypes = {
+    name: PropTypes.string
+  };
+
   render() {
     const { name } = this.props;
 
     return (
-      <div>{name}</div>
+      <div>{hoc}{name}</div>
     );
   }
-}
-
-Button.propTypes = {
-  name: PropTypes.string
 };

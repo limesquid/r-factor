@@ -1,14 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const ButtonComponent = (props) => (
-  <div>Button {prop.name}</div>
-);
-
-ButtonComponent.propTypes = {
-  name: PropTypes.string
-};
+const ButtonComponent = () => (<span>123</span>);
 
 const mapStateToProps = (state) => ({});
 

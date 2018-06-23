@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import withRouter from 'react-router';
 
-class ButtonComponent extends Component {
+class Button extends Component {
   render() {
-    const { name } = this.props;
+    const { name, match } = this.props;
+    console.log(match);
 
     return (
       <div>{name}</div>
@@ -12,7 +13,7 @@ class ButtonComponent extends Component {
   }
 }
 
-ButtonComponent.propTypes = {
+Button.propTypes = {
   name: PropTypes.string
 };
 
@@ -20,4 +21,4 @@ const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = {};
 
-export const Button = connect(mapStateToProps, mapDispatchToProps)(ButtonComponent);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Button));

@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 export default (hoc) => {
-  const Button = ({ a }) => (
-    <div>{hoc}{a}</div>
+  const Button = ({ name }) => (
+    <div>{hoc}{name}</div>
   );
 
   Button.propTypes = {
-    a: PropTypes.string
+    name: PropTypes.string
   };
 
   return Button;

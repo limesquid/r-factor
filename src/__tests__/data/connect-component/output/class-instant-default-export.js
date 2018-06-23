@@ -12,7 +12,7 @@ class Button extends Component {
 
   render() {
     const { className, children, ...props } = this.props;
-    const a = 2;
+    const age = 2;
 
     return (
       <div className={classNames(styles.button, className)} {...props}>

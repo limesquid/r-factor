@@ -5,16 +5,16 @@ import { connect } from 'react-redux';
 export default (hoc) => {
   class Button extends Component {
     render() {
-      const { a } = this.props;
+      const { name } = this.props;
 
       return (
-        <div>{hoc}{a}</div>
+        <div>{hoc}{name}</div>
       );
     }
   }
 
   Button.propTypes = {
-    a: PropTypes.string
+    name: PropTypes.string
   };
 
   const mapStateToProps = (state) => ({});

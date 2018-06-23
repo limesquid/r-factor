@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import withRouter from 'react-router';
 
-export class Button extends Component {
+class Button extends Component {
   render() {
-    const { name } = this.props;
+    const { name, match } = this.props;
+    console.log(match);
 
     return (
       <div>{name}</div>
@@ -14,3 +16,5 @@ export class Button extends Component {
 Button.propTypes = {
   name: PropTypes.string
 };
+
+export default withRouter(Button);

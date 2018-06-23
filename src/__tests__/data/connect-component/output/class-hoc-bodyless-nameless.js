@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 export default (hoc) => {
-  class Button extends Component {
+  class Component extends PureComponent {
     static propTypes = {
       name: PropTypes.string
     };
@@ -21,5 +21,5 @@ export default (hoc) => {
 
   const mapDispatchToProps = {};
 
-  return connect(mapStateToProps, mapDispatchToProps)(Button);
+  return connect(mapStateToProps, mapDispatchToProps)(Component);
 };
