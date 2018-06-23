@@ -6,11 +6,13 @@ const addImportDeclaration = require('../transformations/add-import-declaration'
 const AddClassname = require('../refactorings/add-classname');
 
 describe('settings', () => {
+  const addClassname = new AddClassname();
+
   [ 'double', 'backtick' ].forEach((quotes) => {
-    it(`quotes:${quotes}`, () => {
+    it(`quotes:add-import-declaration:${quotes}`, () => {
       settings.set({ quotes });
-      const input = readFile(`settings/input/quotes-${quotes}.js`);
-      const output = readFile(`settings/output/quotes-${quotes}.js`);
+      const input = readFile(`settings/input/quotes-add-import-declaration-${quotes}.js`);
+      const output = readFile(`settings/output/quotes-add-import-declaration-${quotes}.js`);
       const ast = babylon.parse(input, babylonOptions);
       const result = addImportDeclaration(input, ast, {
         module: 'react',
@@ -18,8 +20,20 @@ describe('settings', () => {
           PureComponent: 'PurestComponent'
         }
       });
-      expect(result).toEqual(output);
       settings.revert();
+      expect(result).toEqual(output);
+    });
+  });
+
+  [ 'backtick' ].forEach((quotes) => {
+    it(`quotes:add-classname:${quotes}`, () => {
+      settings.set({ quotes });
+      const input = readFile(`settings/input/quotes-add-classname-${quotes}.js`);
+      const output = readFile(`settings/output/quotes-add-classname-${quotes}.js`);
+      const ast = babylon.parse(input, babylonOptions);
+      const result = addClassname.refactor(input, ast);
+      settings.revert();
+      expect(result).toEqual(output);
     });
   });
 
@@ -35,8 +49,8 @@ describe('settings', () => {
           PureComponent: 'PurestComponent'
         }
       });
-      expect(result).toEqual(output);
       settings.revert();
+      expect(result).toEqual(output);
     });
   });
 
@@ -44,13 +58,12 @@ describe('settings', () => {
   Object.keys(endOfLines).forEach((endOfLine) => {
     it(`end-of-line:${endOfLine}`, () => {
       settings.set({ 'end-of-line': endOfLines[endOfLine] });
-      const addClassname = new AddClassname();
       const input = readFile(`settings/input/end-of-line-${endOfLine}.js`);
       const output = readFile(`settings/output/end-of-line-${endOfLine}.js`);
       const ast = babylon.parse(input, babylonOptions);
       const result = addClassname.refactor(input, ast);
-      expect(result).toEqual(output);
       settings.revert();
+      expect(result).toEqual(output);
     });
   });
 });

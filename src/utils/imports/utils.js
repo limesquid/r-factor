@@ -126,9 +126,8 @@ const buildImportDeclarationCode = (importData) => {
   }
   if (sortedSubImportStrings.length > 0) {
     if (isMultiline) {
-      code += `{${settings.endOfLine}`;
-      code += indentCode(sortedSubImportStrings.join(`,${settings.endOfLine}`), settings.indent);
-      code += `${settings.endOfLine}}`;
+      const indentedSubImports = indentCode(sortedSubImportStrings.join(`,${settings.endOfLine}`), settings.indent);
+      code += `{${settings.endOfLine}${indentedSubImports}${settings.endOfLine}}`;
     } else {
       code += `{ ${sortedSubImportStrings.join(', ')} }`;
     }
@@ -136,7 +135,8 @@ const buildImportDeclarationCode = (importData) => {
   if (identifier || sortedSubImportStrings.length > 0) {
     code += ' from ';
   }
-  code += `${settings.quote}${module}${settings.quote}${settings.semicolon}`;
+  const quote = settings.quote === '`' ? '\'' : settings.quote;
+  code += `${quote}${module}${quote}${settings.semicolon}`;
 
   return code;
 };
