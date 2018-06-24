@@ -1,11 +1,11 @@
 const { range, readFile } = require('./test-utils');
-const ConvertToFunctionalArrowComponent = require('../refactorings/convert-to-functional-arrow-component');
+const ConvertToFunctionalFunctionComponent = require('../refactorings/convert-to-functional-function-component');
 
-const types = [ 'class', 'functional-function' ];
+const types = [ 'class', 'functional-arrow' ];
 const files = range(1, 14).map((n) => `button${n}`);
 
-describe('convert-to-functional-arrow-component:canApply', () => {
-  const refactoring = new ConvertToFunctionalArrowComponent();
+describe('convert-to-functional-function-component:canApply', () => {
+  const refactoring = new ConvertToFunctionalFunctionComponent();
   const tests = files.map((file) => ({
     name: `class/${file}.js`,
     input: readFile(`class/${file}.js`),
@@ -23,8 +23,8 @@ describe('convert-to-functional-arrow-component:canApply', () => {
   });
 });
 
-describe('convert-to-functional-arrow-component:refactor:react-imports', () => {
-  const refactoring = new ConvertToFunctionalArrowComponent();
+describe('convert-to-functional-function-component:refactor:react-imports', () => {
+  const refactoring = new ConvertToFunctionalFunctionComponent();
   const tests = [
     {
       input: 'import React, { Component } from \'react\';',
@@ -47,12 +47,12 @@ describe('convert-to-functional-arrow-component:refactor:react-imports', () => {
 });
 
 types.forEach((type) => {
-  describe(`convert-to-functional-arrow-component:${type}:refactor`, () => {
-    const refactoring = new ConvertToFunctionalArrowComponent();
+  describe(`convert-to-functional-function-component:${type}:refactor`, () => {
+    const refactoring = new ConvertToFunctionalFunctionComponent();
     const tests = files.map((file) => ({
-      name: `${type}/${file}.js -> functional-arrow/${file}.js`,
+      name: `${type}/${file}.js -> functional-function/${file}.js`,
       input: readFile(`${type}/${file}.js`),
-      output: readFile(`functional-arrow/${file}.js`)
+      output: readFile(`functional-function/${file}.js`)
     }));
     tests.forEach(({ name, input, output }) => {
       it(`refactor "${name}"`, () => {

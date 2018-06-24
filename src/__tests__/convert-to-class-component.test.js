@@ -1,6 +1,7 @@
 const { range, readFile } = require('./test-utils');
 const ConvertToComponent = require('../refactorings/convert-to-class-component');
 
+const types = [ 'functional-arrow', 'functional-function' ];
 const files = [ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`);
 
 describe('convert-to-class-component:canApply', () => {
@@ -40,16 +41,18 @@ describe('convert-to-class-component:refactor:react-imports', () => {
   });
 });
 
-describe('convert-to-class-component:refactor', () => {
-  const refactoring = new ConvertToComponent();
-  const tests = files.map((file) => ({
-    name: `functional-arrow/${file}.js -> class/${file}.js`,
-    input: readFile(`functional-arrow/${file}.js`),
-    output: readFile(`class/${file}.js`)
-  }));
-  tests.forEach(({ name, input, output }) => {
-    it(`refactor "${name}"`, () => {
-      expect(refactoring.refactor(input)).toBe(output);
+types.forEach((type) => {
+  describe(`convert-to-class-component:${type}:refactor`, () => {
+    const refactoring = new ConvertToComponent();
+    const tests = files.map((file) => ({
+      name: `${type}/${file}.js -> class/${file}.js`,
+      input: readFile(`${type}/${file}.js`),
+      output: readFile(`class/${file}.js`)
+    }));
+    tests.forEach(({ name, input, output }) => {
+      it(`refactor "${name}"`, () => {
+        expect(refactoring.refactor(input)).toBe(output);
+      });
     });
   });
 });
