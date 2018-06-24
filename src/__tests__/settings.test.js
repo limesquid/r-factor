@@ -54,6 +54,18 @@ describe('settings', () => {
     });
   });
 
+  [ 'tab' ].forEach((indent) => {
+    it(`indent:${indent}`, () => {
+      settings.set({ indent });
+      const input = readFile(`settings/input/indent-${indent}.js`);
+      const output = readFile(`settings/output/indent-${indent}.js`);
+      const ast = babylon.parse(input, babylonOptions);
+      const result = addClassname.refactor(input, ast);
+      settings.revert();
+      expect(result).toEqual(output);
+    });
+  });
+
   const endOfLines = { windows: '\r\n' };
   Object.keys(endOfLines).forEach((endOfLine) => {
     it(`end-of-line:${endOfLine}`, () => {
