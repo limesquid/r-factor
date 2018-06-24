@@ -48,9 +48,9 @@ describe('convert-to-functional-arrow-component:refactor:react-imports', () => {
 describe('convert-to-functional-arrow-component:refactor', () => {
   const refactoring = new ConvertToFunctionalComponent();
   const tests = files.map((file) => ({
-    name: `class/${file}.js -> functional/${file}.js`,
+    name: `class/${file}.js -> functional-arrow/${file}.js`,
     input: readFile(`class/${file}.js`),
-    output: readFile(`functional/${file}.js`)
+    output: readFile(`functional-arrow/${file}.js`)
   }));
   tests.forEach(({ name, input, output }) => {
     it(`refactor "${name}"`, () => {

@@ -6,8 +6,8 @@ const files = [ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`);
 describe('convert-to-class-component:canApply', () => {
   const refactoring = new ConvertToComponent();
   const tests = files.map((file) => ({
-    name: `functional/${file}.js`,
-    input: readFile(`functional/${file}.js`),
+    name: `functional-arrow/${file}.js`,
+    input: readFile(`functional-arrow/${file}.js`),
     output: true
   }));
   tests.forEach(({ name, input, output }) => {
@@ -43,8 +43,8 @@ describe('convert-to-class-component:refactor:react-imports', () => {
 describe('convert-to-class-component:refactor', () => {
   const refactoring = new ConvertToComponent();
   const tests = files.map((file) => ({
-    name: `functional/${file}.js -> class/${file}.js`,
-    input: readFile(`functional/${file}.js`),
+    name: `functional-arrow/${file}.js -> class/${file}.js`,
+    input: readFile(`functional-arrow/${file}.js`),
     output: readFile(`class/${file}.js`)
   }));
   tests.forEach(({ name, input, output }) => {
