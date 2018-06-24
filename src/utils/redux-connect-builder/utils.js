@@ -19,16 +19,21 @@ const checkMapDispatchToProps = (connectArguments) =>
   && !isNullLiteral(connectArguments[1])
   && !isUndefinedIdentifier(connectArguments[1]);
 
+const checkMergeProps = (connectArguments) => connectArguments.length > 2;
+
 const getDetails = (ast) => {
   const objectsDeclarationsMap = {};
   const functionsDeclarationsMap = {};
   let connectCallExpressionPath = null;
   let hasMapStateToProps = false;
   let hasMapDispatchToProps = false;
+  let hasMergePropsToProps = false;
   let hasMapStateToPropsDefinition = false;
   let hasMapDispatchToPropsDefinition = false;
+  let hasMergePropsToPropsDefinition = false;
   let mapStateToPropsName = null;
   let mapDispatchToPropsName = null;
+  let mergePropsName = null;
 
   traverse(ast, {
     FunctionDeclaration(path) {
@@ -63,6 +68,10 @@ const getDetails = (ast) => {
         hasMapDispatchToPropsDefinition = Boolean(
           mapDispatchToPropsName && path.scope.hasBinding(mapDispatchToPropsName)
         );
+
+        hasMergeProps = checkMergeProps(connectArguments);
+        mergePropsName = hasMergeProps ? connectArguments[2].name : undefined;
+        hasMergePropsDefinition = Boolean(hasMergeProps && path.scope.hasBinding(mergePropsName));
       }
     }
   });
@@ -72,9 +81,11 @@ const getDetails = (ast) => {
     ? getFurthestAncestorInScope(connectCallExpressionPath)
     : null;
   const connectArguments = isConnected && connectCallExpressionPath.node.arguments;
+  const mapStateToPropsDefinitionPath = mapStateToPropsName && functionsDeclarationsMap[mapStateToPropsName];
   const mapDispatchToPropsDefinitionPath = mapDispatchToPropsName && (
     functionsDeclarationsMap[mapDispatchToPropsName] || objectsDeclarationsMap[mapDispatchToPropsName]
   );
+  const mergePropDefinitionPath = mergePropsName && functionsDeclarationsMap[mergePropsName];
 
   return {
     connectArguments,
@@ -85,10 +96,13 @@ const getDetails = (ast) => {
     hasMapDispatchToPropsDefinition,
     hasMapStateToProps,
     hasMapStateToPropsDefinition,
-    hasMergeProps: false,
+    hasMergeProps,
+    hasMergePropsDefinition,
+    mapStateToPropsDefinitionPath,
     mapStateToPropsName,
     mapDispatchToPropsName,
-    mapDispatchToPropsDefinitionPath
+    mapDispatchToPropsDefinitionPath,
+    mergePropDefinitionPath
   };
 };
 
@@ -110,19 +124,26 @@ const createMapDispatchToPropsFunctionAst = (functionName) => {
   return parser.parse(code).program.body;
 };
 
-const insertNodeBeforeFirstExistingPath = (node, paths) => {
-  const pathToInsertBefore = paths.find(Boolean);
-  if (!pathToInsertBefore) {
-    return false;
+const insertNodeAfterOrBefore = (node, afterPaths, beforePaths) => {
+  const pathToInsertAfter = afterPaths.find(Boolean);
+  const pathToInsertBefore = beforePaths.find(Boolean);
+
+  if (pathToInsertAfter) {
+    pathToInsertAfter.insertAfter(node);
+    return true;
   }
 
-  pathToInsertBefore.insertBefore(node);
-  return true;
+  if (pathToInsertBefore) {
+    pathToInsertBefore.insertBefore(node);
+    return true;
+  }
+
+  return false;
 };
 
 module.exports = {
   createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
   getDetails,
-  insertNodeBeforeFirstExistingPath
+  insertNodeAfterOrBefore
 };

@@ -4,18 +4,22 @@ const {
   createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
   getDetails,
-  insertNodeBeforeFirstExistingPath
+  insertNodeAfterOrBefore
 } = require('./utils');
 
 class ReduxConnectBuilder {
   constructor(code, ast) {
-    this.code = code;
     this.ast = ast || parser.parse(ast);
+    this.details = getDetails(this.ast);
+  }
+
+  refresh() {
     this.details = getDetails(this.ast);
   }
 
   connect() {
     this.connectState();
+    this.refresh();
     this.connectDispatch();
   }
 
@@ -31,7 +35,7 @@ class ReduxConnectBuilder {
 
     if (!hasMapStateToPropsDefinition) {
       const mapStateToPropsAst = createMapStateToPropsFunctionAst(mapStateToPropsName);
-      insertNodeBeforeFirstExistingPath(mapStateToPropsAst, [
+      insertNodeAfterOrBefore(mapStateToPropsAst, [], [
         mapDispatchToPropsDefinitionPath,
         furthestConnectAncestorPath
       ]);
@@ -49,14 +53,18 @@ class ReduxConnectBuilder {
       hasMapDispatchToPropsDefinition,
       hasMapDispatchToProps,
       isConnected,
-      mapDispatchToPropsName = 'mapDispatchToProps'
+      mapDispatchToPropsName = 'mapDispatchToProps',
+      mapStateToPropsDefinitionPath,
+      mergePropDefinitionPath
     } = this.details;
 
     if (!hasMapDispatchToPropsDefinition) {
       const mapDispatchToPropsAst = createMapDispatchToPropsFunctionAst(mapDispatchToPropsName);
-      const isInserted = insertNodeBeforeFirstExistingPath(mapDispatchToPropsAst, [
-        furthestConnectAncestorPath
-      ]);
+      const isInserted = insertNodeAfterOrBefore(
+        mapDispatchToPropsAst,
+        [ mapStateToPropsDefinitionPath ],
+        [ mergePropDefinitionPath, furthestConnectAncestorPath ]
+      );
     }
 
     if (isConnected) {
@@ -65,7 +73,11 @@ class ReduxConnectBuilder {
   }
 
   connectMergeProps() {
+    const {
+      connectArguments,
+      mergePropDefinitionPath
 
+    } = this.details;
   }
 
   disconnectState() {
