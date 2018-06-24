@@ -4,7 +4,7 @@
 Add className prop to a component.
 ### convert-to-class-component
 Converts functional component to a class component.
-### convert-to-functional-component
+### convert-to-functional-arrow-component
 Converts class component to a functional component.
 ### generate-prop-types
 Generates propTypes for component based on used props.

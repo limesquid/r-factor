@@ -1,9 +1,9 @@
 const { range, readFile } = require('./test-utils');
-const ConvertToFunctionalComponent = require('../refactorings/convert-to-functional-component');
+const ConvertToFunctionalComponent = require('../refactorings/convert-to-functional-arrow-component');
 
 const files = range(1, 14).map((n) => `button${n}`);
 
-describe('convert-to-functional-component:canApply', () => {
+describe('convert-to-functional-arrow-component:canApply', () => {
   const refactoring = new ConvertToFunctionalComponent();
   const tests = files.map((file) => ({
     name: `class/${file}.js`,
@@ -22,7 +22,7 @@ describe('convert-to-functional-component:canApply', () => {
   });
 });
 
-describe('convert-to-functional-component:refactor:react-imports', () => {
+describe('convert-to-functional-arrow-component:refactor:react-imports', () => {
   const refactoring = new ConvertToFunctionalComponent();
   const tests = [
     {
@@ -45,7 +45,7 @@ describe('convert-to-functional-component:refactor:react-imports', () => {
   });
 });
 
-describe('convert-to-functional-component:refactor', () => {
+describe('convert-to-functional-arrow-component:refactor', () => {
   const refactoring = new ConvertToFunctionalComponent();
   const tests = files.map((file) => ({
     name: `class/${file}.js -> functional/${file}.js`,

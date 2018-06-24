@@ -5,7 +5,7 @@ const settings = require('./src/settings');
 const refactorings = {
   'add-classname': require('./src/refactorings/add-classname'),
   'convert-to-class-component': require('./src/refactorings/convert-to-class-component'),
-  'convert-to-functional-component': require('./src/refactorings/convert-to-functional-component'),
+  'convert-to-functional-arrow-component': require('./src/refactorings/convert-to-functional-arrow-component'),
   'generate-prop-types': require('./src/refactorings/generate-prop-types'),
   'move-default-props-out-of-class': require('./src/refactorings/move-default-props-out-of-class'),
   'move-default-props-to-class': require('./src/refactorings/move-default-props-to-class'),
