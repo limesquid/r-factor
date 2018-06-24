@@ -1,7 +1,5 @@
-const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
 const settings = require('../../settings');
-const { babelGeneratorOptions } = require('../../options');
 const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
 const {
   getClassMethod,

@@ -2,7 +2,7 @@ const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const {
   isExportDefaultFunctionalComponentDeclaration,
-  isFunctionalComponentDeclaration,
+  isArrowComponentDeclaration,
   isReactImport
 } = require('../../utils/ast');
 const { babylonOptions } = require('../../options');
@@ -42,7 +42,7 @@ class ConvertToClassComponent extends Refactoring {
         }
       },
       VariableDeclaration({ node }) {
-        if (isFunctionalComponentDeclaration(node)) {
+        if (isArrowComponentDeclaration(node)) {
           isFunctionalComponent = true;
         }
       }
@@ -61,7 +61,7 @@ class ConvertToClassComponent extends Refactoring {
         }
       },
       VariableDeclaration({ node }) {
-        if (isFunctionalComponentDeclaration(node)) {
+        if (isArrowComponentDeclaration(node)) {
           builder.setNode(node);
         }
       }

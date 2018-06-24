@@ -7,7 +7,7 @@ const {
   getFunctionalComponentPropVariableName,
   getVariableDestructuringPropertyNames,
   isClassDeclaration,
-  isFunctionalComponentDeclaration,
+  isArrowComponentDeclaration,
   isObjectKeyAccessing,
   isPropertyDestructuring,
   isThisPropsDestructuring,
@@ -28,7 +28,7 @@ const getProps = (code, ast) => {
         componentType = COMPONENT_TYPE.Class;
       }
 
-      if (isFunctionalComponentDeclaration(node)) {
+      if (isArrowComponentDeclaration(node)) {
         componentNodePath = path;
         componentType = COMPONENT_TYPE.Functional;
       }

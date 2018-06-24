@@ -1,4 +1,3 @@
-const traverse = require('@babel/traverse').default;
 const { isImportSpecifier } = require('@babel/types');
 
 const classExtendsSomething = (node) => Boolean(node.superClass);
@@ -47,8 +46,7 @@ const isExportDefaultFunctionalComponentDeclaration = (node) => node.type === 'E
   && node.declaration.type === 'ArrowFunctionExpression'
   && isFunctionalComponentBody(node.declaration);
 
-//TODO: rename
-const isFunctionalComponentDeclaration = (node) => {
+const isArrowComponentDeclaration = (node) => {
   if (!isArrowFunctionDeclaration(node)) {
     return false;
   }
@@ -56,7 +54,7 @@ const isFunctionalComponentDeclaration = (node) => {
   return isFunctionalComponentBody(node.declarations[0].init);
 };
 
-const isFunctionalFunctionComponentDeclaration = (node) => {
+const isFunctionComponentDeclaration = (node) => {
   if (!isFunctionDeclaration(node)) {
     return false;
   }
@@ -130,8 +128,8 @@ module.exports = {
   isClassDeclaration,
   isComponentDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
-  isFunctionalComponentDeclaration,
-  isFunctionalFunctionComponentDeclaration,
+  isArrowComponentDeclaration,
+  isFunctionComponentDeclaration,
   isMemberDeclaration,
   isMemberOfDeclaration,
   isPropsDeclaration,

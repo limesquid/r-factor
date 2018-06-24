@@ -3,7 +3,7 @@ const traverse = require('@babel/traverse').default;
 const { babylonOptions } = require('../../options');
 const {
   isClassDeclaration,
-  isFunctionalComponentDeclaration
+  isArrowComponentDeclaration
 } = require('../../utils/ast');
 const { addPropTypes } = require('../../transformations');
 const { getPropType, getUnusedProps } = require('../../utils/props');
@@ -27,7 +27,7 @@ class GeneratePropTypes extends Refactoring {
           isComponent = true;
         }
 
-        if (isFunctionalComponentDeclaration(node)) {
+        if (isArrowComponentDeclaration(node)) {
           isComponent = true;
         }
       }
