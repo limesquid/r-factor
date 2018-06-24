@@ -4,7 +4,7 @@ const settings = require('../settings');
 const composeReversed = (firstFunction, ...restFunctions) => (...args) => restFunctions
   .reduce((result, fn) => fn(result), firstFunction(...args));
 const compose = (...functions) => composeReversed(...functions.reverse());
-const generateIndent = (length) => Array.from({ length }, () => ' ').join('');
+const generateIndent = (length) => Array.from({ length }, () => settings.indentCharacter).join('');
 const indentLines = (lines, size) => lines.map((line) => indentLine(line, size));
 const indentLine = (line, size) => {
   if (!size) {
