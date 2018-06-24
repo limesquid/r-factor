@@ -6,6 +6,7 @@ const {
   isObjectDeclaration,
   isUndefinedIdentifier
 } = require('../ast');
+const { indentCode } = require('../index');
 const parser = require('../parser');
 const settings = require('../../settings');
 
@@ -85,7 +86,7 @@ const getDetails = (ast) => {
   const mapDispatchToPropsDefinitionPath = mapDispatchToPropsName && (
     functionsDeclarationsMap[mapDispatchToPropsName] || objectsDeclarationsMap[mapDispatchToPropsName]
   );
-  const mergePropDefinitionPath = mergePropsName && functionsDeclarationsMap[mergePropsName];
+  const mergePropsDefinitionPath = mergePropsName && functionsDeclarationsMap[mergePropsName];
 
   return {
     connectArguments,
@@ -102,7 +103,8 @@ const getDetails = (ast) => {
     mapStateToPropsName,
     mapDispatchToPropsName,
     mapDispatchToPropsDefinitionPath,
-    mergePropDefinitionPath
+    mergePropsDefinitionPath,
+    mergePropsName
   };
 };
 
@@ -121,6 +123,22 @@ const createMapDispatchToPropsFunctionAst = (functionName) => {
   let code = '';
   code += doubleEndOfLine;
   code += `const ${mapDispatchToPropsFunctionName} = {}${semicolon}`;
+  return parser.parse(code).program.body;
+};
+
+const createMergePropsFunctionAst = (functionName) => {
+  const { doubleEndOfLine, endOfLine, indent, semicolon, mergePropsName } = settings;
+  const mergePropsFunctionName = functionName || mergePropsName || 'mergeProps';
+  let code = '';
+  code += `const ${mergePropsFunctionName} = (stateProps, dispatchProps, ownProps) => ({` + endOfLine;
+  code += indentCode([
+    '...stateProps,',
+    '...dispatchProps,',
+    '...ownProps',
+  ].join(endOfLine), indent);
+  code += endOfLine;
+  code += '});';
+
   return parser.parse(code).program.body;
 };
 
@@ -144,6 +162,7 @@ const insertNodeAfterOrBefore = (node, afterPaths, beforePaths) => {
 module.exports = {
   createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
+  createMergePropsFunctionAst,
   getDetails,
   insertNodeAfterOrBefore
 };

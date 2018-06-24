@@ -1,8 +1,9 @@
-const { identifier } = require('@babel/types');
+const { identifier, nullLiteral } = require('@babel/types');
 const parser = require('../parser');
 const {
   createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
+  createMergePropsFunctionAst,
   getDetails,
   insertNodeAfterOrBefore
 } = require('./utils');
@@ -10,7 +11,6 @@ const {
 class ReduxConnectBuilder {
   constructor(code, ast) {
     this.ast = ast || parser.parse(ast);
-    this.details = getDetails(this.ast);
   }
 
   refresh() {
@@ -19,24 +19,26 @@ class ReduxConnectBuilder {
 
   connect() {
     this.connectState();
-    this.refresh();
     this.connectDispatch();
   }
 
   connectState() {
+    this.refresh();
     const {
       connectArguments,
       furthestConnectAncestorPath,
       hasMapStateToPropsDefinition,
       isConnected,
       mapDispatchToPropsDefinitionPath,
-      mapStateToPropsName = 'mapStateToProps'
+      mapStateToPropsName = 'mapStateToProps',
+      mergePropsDefinitionPath
     } = this.details;
 
     if (!hasMapStateToPropsDefinition) {
       const mapStateToPropsAst = createMapStateToPropsFunctionAst(mapStateToPropsName);
       insertNodeAfterOrBefore(mapStateToPropsAst, [], [
         mapDispatchToPropsDefinitionPath,
+        mergePropsDefinitionPath,
         furthestConnectAncestorPath
       ]);
     }
@@ -47,6 +49,7 @@ class ReduxConnectBuilder {
   }
 
   connectDispatch() {
+    this.refresh();
     const {
       connectArguments,
       furthestConnectAncestorPath,
@@ -55,15 +58,15 @@ class ReduxConnectBuilder {
       isConnected,
       mapDispatchToPropsName = 'mapDispatchToProps',
       mapStateToPropsDefinitionPath,
-      mergePropDefinitionPath
+      mergePropsDefinitionPath
     } = this.details;
 
     if (!hasMapDispatchToPropsDefinition) {
       const mapDispatchToPropsAst = createMapDispatchToPropsFunctionAst(mapDispatchToPropsName);
-      const isInserted = insertNodeAfterOrBefore(
+      insertNodeAfterOrBefore(
         mapDispatchToPropsAst,
         [ mapStateToPropsDefinitionPath ],
-        [ mergePropDefinitionPath, furthestConnectAncestorPath ]
+        [ mergePropsDefinitionPath, furthestConnectAncestorPath ]
       );
     }
 
@@ -73,11 +76,33 @@ class ReduxConnectBuilder {
   }
 
   connectMergeProps() {
+    this.refresh();
     const {
       connectArguments,
-      mergePropDefinitionPath
-
+      furthestConnectAncestorPath,
+      isConnected,
+      mapStateToPropsDefinitionPath,
+      mapDispatchToPropsDefinitionPath,
+      mergePropsDefinitionPath,
+      mergePropsName = 'mergeProps'
     } = this.details;
+
+    if (!hasMergePropsDefinition) {
+      const mergePropsDefinitionAst = createMergePropsFunctionAst(mergePropsName);
+      insertNodeAfterOrBefore(
+        mergePropsDefinitionAst,
+        [ mapDispatchToPropsDefinitionPath, mapStateToPropsDefinitionPath ],
+        [ furthestConnectAncestorPath ]
+      );
+    }
+
+    if (isConnected) {
+      while(connectArguments.length < 2) {
+        connectArguments.push(nullLiteral());
+      }
+      connectArguments[2] = identifier(mergePropsName);
+      console.log(connectArguments);
+    }
   }
 
   disconnectState() {

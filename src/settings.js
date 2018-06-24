@@ -68,7 +68,12 @@ class Settings {
   }
 
   get indent() {
-    return this.get('indent');
+    const indent = this.get('indent');
+    return indent === 'tab' ? 1 : indent;
+  }
+
+  get indentCharacter() {
+    return this.get('indent') === 'tab' ? '\t' : ' ';
   }
 
   get isModulesOrderAlphabetic() {

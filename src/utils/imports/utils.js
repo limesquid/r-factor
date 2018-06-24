@@ -1,6 +1,7 @@
 const traverse = require('@babel/traverse').default;
 const stable = require('stable');
 const settings = require('../../settings');
+const { indentCode } = require('../index');
 const { getSubImports } = require('../ast');
 
 const createImport = (code, node) => ({
@@ -105,7 +106,8 @@ const sortImportsCustom = (imports) => {
 };
 
 const buildImportDeclarationCode = (importData) => {
-  const { identifier, module, subImports } = importData;
+  const { identifier, module, subImports, startLine, endLine } = importData;
+  const isMultiline = startLine !== endLine;
   const subImportStrings = Object.keys(subImports).map((subImportImportedName) => {
     const subImportLocalName = subImports[subImportImportedName];
     return subImportImportedName === subImportLocalName
@@ -123,12 +125,18 @@ const buildImportDeclarationCode = (importData) => {
     code += ', ';
   }
   if (sortedSubImportStrings.length > 0) {
-    code += `{ ${sortedSubImportStrings.join(', ')} }`;
+    if (isMultiline) {
+      const indentedSubImports = indentCode(sortedSubImportStrings.join(`,${settings.endOfLine}`), settings.indent);
+      code += `{${settings.endOfLine}${indentedSubImports}${settings.endOfLine}}`;
+    } else {
+      code += `{ ${sortedSubImportStrings.join(', ')} }`;
+    }
   }
   if (identifier || sortedSubImportStrings.length > 0) {
     code += ' from ';
   }
-  code += `${settings.quote}${module}${settings.quote}${settings.semicolon}`;
+  const quote = settings.quote === '`' ? '\'' : settings.quote;
+  code += `${quote}${module}${quote}${settings.semicolon}`;
 
   return code;
 };
