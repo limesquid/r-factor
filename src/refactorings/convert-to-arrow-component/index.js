@@ -9,14 +9,15 @@ const MovePropTypesOutOfClass = require('../move-prop-types-out-of-class');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 
+const moveDefaultPropsOutOfClass = new MoveDefaultPropsOutOfClass();
+const movePropTypesOutOfClass = new MovePropTypesOutOfClass();
+
 class ConvertToArrowComponent extends Refactoring {
   constructor() {
     super();
-    this.moveDefaultPropsOutOfClass = new MoveDefaultPropsOutOfClass();
-    this.movePropTypesOutOfClass = new MovePropTypesOutOfClass();
     this.transformations = [
-      (code) => this.moveDefaultPropsOutOfClass.refactor(code),
-      (code) => this.movePropTypesOutOfClass.refactor(code),
+      (code) => moveDefaultPropsOutOfClass.refactor(code),
+      (code) => movePropTypesOutOfClass.refactor(code),
       (code, ast) => this.refactorReactImport(code, ast),
       (code, ast) => this.refactorComponent(code, ast)
     ];
@@ -42,8 +43,8 @@ class ConvertToArrowComponent extends Refactoring {
 
     return hasReactImport
       || isComponent
-      || this.moveDefaultPropsOutOfClass.canApply(code)
-      || this.movePropTypesOutOfClass.canApply(code);
+      || moveDefaultPropsOutOfClass.canApply(code)
+      || movePropTypesOutOfClass.canApply(code);
   }
 
   getSuperClass(code, ast) {

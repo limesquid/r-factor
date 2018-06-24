@@ -12,16 +12,17 @@ const MovePropTypesToClass = require('../move-prop-types-to-class');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 
+const moveDefaultPropsToClass = new MoveDefaultPropsToClass();
+const movePropTypesToClass = new MovePropTypesToClass();
+
 class ConvertToClassComponent extends Refactoring {
   constructor() {
     super();
-    this.moveDefaultPropsToClass = new MoveDefaultPropsToClass();
-    this.movePropTypesToClass = new MovePropTypesToClass();
     this.transformations = [
       (code, ast) => this.refactorComponent(code, ast),
       (code, ast) => this.refactorReactImport(code, ast),
-      (code) => this.moveDefaultPropsToClass.refactor(code),
-      (code) => this.movePropTypesToClass.refactor(code)
+      (code) => moveDefaultPropsToClass.refactor(code),
+      (code) => movePropTypesToClass.refactor(code)
     ];
   }
 
