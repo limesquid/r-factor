@@ -1,4 +1,8 @@
-const { isImportSpecifier } = require('@babel/types');
+const {
+  isIdentifier,
+  isImportSpecifier,
+  isObjectExpression
+} = require('@babel/types');
 
 const classExtendsSomething = (node) => Boolean(node.superClass);
 
@@ -12,6 +16,10 @@ const isArrowFunctionDeclaration = (node) => node.type === 'VariableDeclaration'
   && node.declarations.length === 1
   && node.declarations[0].init.type === 'ArrowFunctionExpression'
   && node.declarations[0].init.generator === false;
+
+const isObjectDeclaration = (node) => node.type === 'VariableDeclaration'
+  && node.declarations.length === 1
+  && isObjectExpression(node.declarations[0].init);
 
 const isClassDeclaration = (node) => node.type === 'ClassDeclaration';
 
@@ -75,6 +83,8 @@ const isStaticPropertyDeclaration = (node, name) => node.type === 'ClassProperty
   && node.key.type === 'Identifier'
   && node.key.name === name;
 
+const isUndefinedIdentifier = (node) => isIdentifier(node) && node.name === 'undefined';
+
 const getNodeIndent = (node) => node.loc.start.column;
 
 const getFunctionalComponentName = (node) => node.declarations[0].id.name;
@@ -98,16 +108,19 @@ module.exports = {
   getNodeIndent,
   getReturnStatement,
   getSubImports,
+  isArrowFunctionDeclaration,
   isClassDeclaration,
   isComponentDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration,
   isMemberDeclaration,
   isMemberOfDeclaration,
+  isObjectDeclaration,
   isPropsDeclaration,
   isPropTypesDeclaration,
   isReactImport,
   isSingleLine,
   isStaticPropTypesDeclaration,
-  isStaticPropertyDeclaration
+  isStaticPropertyDeclaration,
+  isUndefinedIdentifier
 };

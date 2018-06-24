@@ -3,6 +3,6 @@ import { connect } from 'react-redux';
 
 const Button = () => (<span>123</span>);
 
-const mapDispatchToprops = {};
+const mapDispatchToProps = {};
 
-export default connect(null, mapDispatchToprops)(Button);
+export default connect(null, mapDispatchToProps)(Button);
