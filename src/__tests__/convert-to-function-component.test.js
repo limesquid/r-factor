@@ -1,11 +1,11 @@
 const { range, readFile } = require('./test-utils');
-const ConvertToFunctionalFunctionComponent = require('../refactorings/convert-to-functional-function-component');
+const ConvertToFunctionComponent = require('../refactorings/convert-to-function-component');
 
 const types = [ 'class', 'functional-arrow' ];
 const files = range(1, 14).map((n) => `button${n}`);
 
-describe('convert-to-functional-function-component:canApply', () => {
-  const refactoring = new ConvertToFunctionalFunctionComponent();
+describe('convert-to-function-component:canApply', () => {
+  const refactoring = new ConvertToFunctionComponent();
   const tests = files.map((file) => ({
     name: `class/${file}.js`,
     input: readFile(`class/${file}.js`),
@@ -23,8 +23,8 @@ describe('convert-to-functional-function-component:canApply', () => {
   });
 });
 
-describe('convert-to-functional-function-component:refactor:react-imports', () => {
-  const refactoring = new ConvertToFunctionalFunctionComponent();
+describe('convert-to-function-component:refactor:react-imports', () => {
+  const refactoring = new ConvertToFunctionComponent();
   const tests = [
     {
       input: 'import React, { Component } from \'react\';',
@@ -47,8 +47,8 @@ describe('convert-to-functional-function-component:refactor:react-imports', () =
 });
 
 types.forEach((type) => {
-  describe(`convert-to-functional-function-component:${type}:refactor`, () => {
-    const refactoring = new ConvertToFunctionalFunctionComponent();
+  describe(`convert-to-function-component:${type}:refactor`, () => {
+    const refactoring = new ConvertToFunctionComponent();
     const tests = files.map((file) => ({
       name: `${type}/${file}.js -> functional-function/${file}.js`,
       input: readFile(`${type}/${file}.js`),

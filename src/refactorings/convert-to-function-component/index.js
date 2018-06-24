@@ -8,12 +8,12 @@ const {
 const { babylonOptions } = require('../../options');
 const settings = require('../../settings');
 const { Refactoring } = require('../../model');
-const ConvertToArrowComponent = require('../convert-to-functional-arrow-component');
+const ConvertToArrowComponent = require('../convert-to-arrow-component');
 const ComponentBuilder = require('./component-builder');
 
 const convertToArrowComponent = new ConvertToArrowComponent();
 
-class ConvertToFunctionalFunctionComponent extends Refactoring {
+class ConvertToFunctionComponent extends Refactoring {
   constructor() {
     super();
     this.transformations = [
@@ -92,4 +92,4 @@ class ConvertToFunctionalFunctionComponent extends Refactoring {
   }
 }
 
-module.exports = ConvertToFunctionalFunctionComponent;
+module.exports = ConvertToFunctionComponent;

@@ -9,7 +9,7 @@ const MovePropTypesOutOfClass = require('../move-prop-types-out-of-class');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 
-class ConvertToFunctionalArrowComponent extends Refactoring {
+class ConvertToArrowComponent extends Refactoring {
   constructor() {
     super();
     this.moveDefaultPropsOutOfClass = new MoveDefaultPropsOutOfClass();
@@ -89,4 +89,4 @@ class ConvertToFunctionalArrowComponent extends Refactoring {
   }
 }
 
-module.exports = ConvertToFunctionalArrowComponent;
+module.exports = ConvertToArrowComponent;

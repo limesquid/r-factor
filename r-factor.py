@@ -65,10 +65,16 @@ class ConvertToClassComponentCommand(BaseCommand):
     self.refactoring_name = 'convert-to-class-component'
 
 
-class ConvertToFunctionalComponentCommand(BaseCommand):
+class ConvertToArrowComponentCommand(BaseCommand):
   def __init__(self, arg):
-    super(ConvertToFunctionalComponentCommand, self).__init__(arg)
-    self.refactoring_name = 'convert-to-functional-arrow-component'
+    super(ConvertToArrowComponentCommand, self).__init__(arg)
+    self.refactoring_name = 'convert-to-arrow-component'
+
+
+class ConvertToFunctionComponentCommand(BaseCommand):
+  def __init__(self, arg):
+    super(ConvertToFunctionComponentCommand, self).__init__(arg)
+    self.refactoring_name = 'convert-to-function-component'
 
 
 class GeneratePropTypesCommand(BaseCommand):
