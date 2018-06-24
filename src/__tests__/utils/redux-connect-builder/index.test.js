@@ -41,6 +41,10 @@ const tests = [
     actions: [ 'connectState' ]
   },
   {
+    filename: 'connect-state-named-not-defined',
+    actions: [ 'connectState' ]
+  },
+  {
     filename: 'connect-state-in-hoc',
     actions: [ 'connect', 'connectState' ]
   },
@@ -50,6 +54,10 @@ const tests = [
   },
   {
     filename: 'connect-state-wrapped',
+    actions: [ 'connectState' ]
+  },
+  {
+    filename: 'connect-state-wrapped2',
     actions: [ 'connectState' ]
   },
   {

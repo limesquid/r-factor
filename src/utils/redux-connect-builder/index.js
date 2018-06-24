@@ -2,7 +2,8 @@ const { identifier } = require('@babel/types');
 const parser = require('../parser');
 const {
   createMapStateToPropsFunctionAst,
-  getDetails
+  getDetails,
+  insertNodeBeforeFirstExistingPath
 } = require('./utils');
 
 class ReduxConnectBuilder {
@@ -18,20 +19,23 @@ class ReduxConnectBuilder {
 
   connectState() {
     const {
-      connectCallExpressionPath,
       connectArguments,
+      furthestConnectAncestorPath,
       isConnected,
       mapDispatchToPropsDefinitionPath,
-      mapStateToPropsName
+      mapStateToPropsName = 'mapStateToProps'
     } = this.details;
 
-    if (isConnected && !mapStateToPropsName) {
-      connectArguments[0] = identifier('mapStateToProps');
+    if (isConnected) {
+      connectArguments[0] = identifier(mapStateToPropsName);
     }
 
     if (!this.details.hasMapStateToPropsDefinition) {
       const mapStateToPropsAst = createMapStateToPropsFunctionAst(mapStateToPropsName);
-      mapDispatchToPropsDefinitionPath.insertBefore(mapStateToPropsAst);
+      insertNodeBeforeFirstExistingPath(mapStateToPropsAst, [
+        mapDispatchToPropsDefinitionPath,
+        furthestConnectAncestorPath
+      ]);
     }
   }
 

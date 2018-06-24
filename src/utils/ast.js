@@ -1,7 +1,9 @@
 const {
+  isBlockStatement,
   isIdentifier,
   isImportSpecifier,
-  isObjectExpression
+  isObjectExpression,
+  isProgram
 } = require('@babel/types');
 
 const classExtendsSomething = (node) => Boolean(node.superClass);
@@ -101,10 +103,19 @@ const getSubImports = ({ specifiers }) => specifiers
     {}
   );
 
+const getFurthestAncestorInScope = (path) => {
+  if (isProgram(path.parent) || isBlockStatement(path.parent)) {
+    return path;
+  }
+
+  return getFurthestAncestorInScope(path.parentPath);
+}
+
 module.exports = {
   getClassComponentName,
   getClassMethod,
   getFunctionalComponentName,
+  getFurthestAncestorInScope,
   getNodeIndent,
   getReturnStatement,
   getSubImports,

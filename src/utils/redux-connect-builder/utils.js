@@ -1,6 +1,7 @@
 const { isNullLiteral } = require('@babel/types');
 const traverse = require('@babel/traverse').default;
 const {
+  getFurthestAncestorInScope,
   isArrowFunctionDeclaration,
   isObjectDeclaration,
   isUndefinedIdentifier
@@ -67,9 +68,10 @@ const getDetails = (ast) => {
   });
 
   const isConnected = Boolean(connectCallExpressionPath);
+  const furthestConnectAncestorPath = isConnected
+    ? getFurthestAncestorInScope(connectCallExpressionPath)
+    : null;
   const connectArguments = isConnected && connectCallExpressionPath.node.arguments;
-  const hasMergeProps = isConnected && connectArguments > 2;
-
   const mapDispatchToPropsDefinitionPath = mapDispatchToPropsName && (
     functionsDeclarationsMap[mapDispatchToPropsName] || objectsDeclarationsMap[mapDispatchToPropsName]
   );
@@ -77,28 +79,32 @@ const getDetails = (ast) => {
   return {
     connectArguments,
     connectCallExpressionPath,
+    furthestConnectAncestorPath,
     isConnected,
     hasMapDispatchToProps,
     hasMapStateToPropsDefinition,
     hasMapStateToProps,
     hasMapStateToPropsDefinition,
-    hasMergeProps,
+    hasMergeProps: false,
     mapStateToPropsName,
     mapDispatchToPropsName,
     mapDispatchToPropsDefinitionPath
   };
 };
 
-const createMapStateToPropsFunctionAst = (functionName = 'mapStateToProps') => {
-  const { semicolon, doubleEndOfLine } = settings;
+const createMapStateToPropsFunctionAst = (functionName) => {
+  const { semicolon, doubleEndOfLine, mapStateToPropsName } = settings;
+  const mapStateToPropsFunctionName = functionName || mapStateToPropsName || 'mapStateToProps';
   let code = '';
   code += doubleEndOfLine;
-  code += `const ${functionName} = (state) => ({})${semicolon}`;
-  console.log(code);
+  code += `const ${mapStateToPropsFunctionName} = (state) => ({})${semicolon}`;
   return parser.parse(code).program.body;
 };
 
+const insertNodeBeforeFirstExistingPath = (node, paths) => paths.find(Boolean).insertBefore(node);
+
 module.exports = {
   createMapStateToPropsFunctionAst,
-  getDetails
+  getDetails,
+  insertNodeBeforeFirstExistingPath
 };
