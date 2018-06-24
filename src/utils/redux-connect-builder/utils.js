@@ -82,7 +82,7 @@ const getDetails = (ast) => {
     furthestConnectAncestorPath,
     isConnected,
     hasMapDispatchToProps,
-    hasMapStateToPropsDefinition,
+    hasMapDispatchToPropsDefinition,
     hasMapStateToProps,
     hasMapStateToPropsDefinition,
     hasMergeProps: false,
@@ -101,9 +101,27 @@ const createMapStateToPropsFunctionAst = (functionName) => {
   return parser.parse(code).program.body;
 };
 
-const insertNodeBeforeFirstExistingPath = (node, paths) => paths.find(Boolean).insertBefore(node);
+const createMapDispatchToPropsFunctionAst = (functionName) => {
+  const { semicolon, doubleEndOfLine, mapDispatchToPropsName } = settings;
+  const mapDispatchToPropsFunctionName = functionName || mapDispatchToPropsName || 'mapStateToProps';
+  let code = '';
+  code += doubleEndOfLine;
+  code += `const ${mapDispatchToPropsFunctionName} = {}${semicolon}`;
+  return parser.parse(code).program.body;
+};
+
+const insertNodeBeforeFirstExistingPath = (node, paths) => {
+  const pathToInsertBefore = paths.find(Boolean);
+  if (!pathToInsertBefore) {
+    return false;
+  }
+
+  pathToInsertBefore.insertBefore(node);
+  return true;
+};
 
 module.exports = {
+  createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
   getDetails,
   insertNodeBeforeFirstExistingPath
