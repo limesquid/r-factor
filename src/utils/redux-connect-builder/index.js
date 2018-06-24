@@ -17,6 +17,10 @@ class ReduxConnectBuilder {
     this.details = getDetails(this.ast);
   }
 
+  wrapWithConnectHoC() {
+
+  }
+
   connect() {
     this.connectState();
     this.connectDispatch();
@@ -71,6 +75,9 @@ class ReduxConnectBuilder {
     }
 
     if (isConnected) {
+      if (connectArguments.length < 1) {
+        connectArguments.push(nullLiteral());
+      }
       connectArguments[1] = identifier(mapDispatchToPropsName);
     }
   }
@@ -97,7 +104,7 @@ class ReduxConnectBuilder {
     }
 
     if (isConnected) {
-      while(connectArguments.length < 2) {
+      while (connectArguments.length < 2) {
         connectArguments.push(nullLiteral());
       }
       connectArguments[2] = identifier(mergePropsName);
