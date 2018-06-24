@@ -1,71 +1,74 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const { isComponentDeclaration, isReactImport } = require('../../utils/ast');
+const {
+  isExportDefaultFunctionalComponentDeclaration,
+  isFunctionalComponentDeclaration,
+  isReactImport
+} = require('../../utils/ast');
 const { babylonOptions } = require('../../options');
 const settings = require('../../settings');
 const { Refactoring } = require('../../model');
-const MoveDefaultPropsOutOfClass = require('../move-default-props-out-of-class');
-const MovePropTypesOutOfClass = require('../move-prop-types-out-of-class');
+const ConvertToArrowComponent = require('../convert-to-functional-arrow-component');
 const ComponentBuilder = require('./component-builder');
-const ReactImportBuilder = require('../convert-to-functional-arrow-component/react-import-builder');
+
+const convertToArrowComponent = new ConvertToArrowComponent();
 
 class ConvertToFunctionalFunctionComponent extends Refactoring {
   constructor() {
     super();
-    this.moveDefaultPropsOutOfClass = new MoveDefaultPropsOutOfClass();
-    this.movePropTypesOutOfClass = new MovePropTypesOutOfClass();
     this.transformations = [
-      (code) => this.moveDefaultPropsOutOfClass.refactor(code),
-      (code) => this.movePropTypesOutOfClass.refactor(code),
-      (code, ast) => this.refactorReactImport(code, ast),
+      (code, ast) => {
+        if (convertToArrowComponent.canApply(code)) {
+          return convertToArrowComponent.refactor(code, ast);
+        }
+        return code;
+      },
       (code, ast) => this.refactorComponent(code, ast)
     ];
   }
 
   canApply(code) {
     const ast = babylon.parse(code, babylonOptions);
+
+    if (convertToArrowComponent.canApply(code, ast)) {
+      return true;
+    }
+
     let hasReactImport = false;
-    let isComponent = false;
+    let isFunctionalComponent = false;
 
     traverse(ast, {
-      ClassDeclaration({ node }) {
-        if (isComponentDeclaration(node)) {
-          isComponent = true;
+      ExportDefaultDeclaration({ node }) {
+        if (isExportDefaultFunctionalComponentDeclaration(node)) {
+          isFunctionalComponent = true;
         }
       },
       ImportDeclaration({ node }) {
         if (isReactImport(node)) {
           hasReactImport = true;
         }
-      }
-    });
-
-    return hasReactImport
-      || isComponent
-      || this.moveDefaultPropsOutOfClass.canApply(code)
-      || this.movePropTypesOutOfClass.canApply(code);
-  }
-
-  getSuperClass(code, ast) {
-    let superClass = settings.componentSuperclass;
-
-    traverse(ast, {
-      ClassDeclaration({ node }) {
-        if (isComponentDeclaration(node)) {
-          superClass = node.superClass.name;
+      },
+      VariableDeclaration({ node }) {
+        if (isFunctionalComponentDeclaration(node)) {
+          isFunctionalComponent = true;
         }
       }
     });
 
-    return superClass;
+    return hasReactImport || isFunctionalComponent;
   }
 
   refactorComponent(code, ast) {
     const builder = new ComponentBuilder(code);
 
     traverse(ast, {
-      ClassDeclaration({ node }) {
-        if (isComponentDeclaration(node)) {
+      ExportDefaultDeclaration({ node }) {
+        if (isExportDefaultFunctionalComponentDeclaration(node)) {
+          builder.setNode(node);
+        }
+      },
+      VariableDeclaration({ node }) {
+        if (isFunctionalComponentDeclaration(node)) {
           builder.setNode(node);
         }
       }
@@ -85,7 +88,7 @@ class ConvertToFunctionalFunctionComponent extends Refactoring {
       }
     });
 
-    return builder.build(this.getSuperClass(code, ast));
+    return builder.build();
   }
 }
 

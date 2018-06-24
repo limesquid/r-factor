@@ -28,7 +28,7 @@ function Button({ children, className, isDisabled, redirect, onClick }) {
   }
 
   return button;
-};
+}
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,

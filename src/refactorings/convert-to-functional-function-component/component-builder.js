@@ -3,7 +3,12 @@ const { Builder } = require('../../model');
 const settings = require('../../settings');
 const { babelGeneratorOptions } = require('../../options');
 const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
-const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../../utils/ast');
+const {
+  getClassMethod,
+  getReturnStatement,
+  isExportDefaultFunctionalComponentDeclaration,
+  isPropsDeclaration
+} = require('../../utils/ast');
 
 class ComponentBuilder extends Builder {
   build() {
@@ -18,57 +23,40 @@ class ComponentBuilder extends Builder {
     code += settings.endOfLine;
     code += indentCode(this.buildBody(), indent);
     code += settings.endOfLine;
-    code += indentCode(this.isSingleReturnStatement() ? ')' : '}', indent);
-    code += settings.semicolon;
-    code += this.buildSuffix();
-    if (this.hasPropsDeclaration()) {
-      code = code.replace(`${this.getOldPropsDeclaration()}${settings.doubleEndOfLine}`, '');
-      code = code.replace(`${this.getOldPropsDeclaration()}${settings.endOfLine}`, '');
+    code += indentCode('}', indent);
+    if (isExportDefaultFunctionalComponentDeclaration(this.node)) {
+      code += settings.semicolon;
     }
-    code = this.ensureProperExport(code);
+    code += this.buildSuffix();
     code = cleanUpCode(code);
     return code;
   }
 
   buildBody() {
     const indent = this.getIndent();
+    const body = this.getDeclarationInit().body;
 
-    if (this.isSingleReturnStatement()) {
-      return squeezeCode(this.buildJsx(), settings.indent, -settings.doubleIndent - indent);
+    if (this.returnsJsxImmediately()) {
+      const bodyCode = squeezeCode(this.code.substring(body.start, body.end), settings.indent, -indent);
+      const returnStatement = `return (${settings.endOfLine}${bodyCode}${settings.endOfLine})${settings.semicolon}`;
+      return indentCode(returnStatement, settings.indent);
     }
 
-    const returnStatementValue = this.getReturnStatementValue();
-    const returnsJsx = [ 'JSXElement', 'JSXFragment' ].includes(returnStatementValue.type);
-    const returnsMultiline = returnStatementValue.loc.start.line !== returnStatementValue.loc.end.line;
-    let code = this.buildBodyNonReturnStatements();
-    code += settings.doubleEndOfLine;
-    code += indentCode(`return ${returnsJsx ? '(' : ''}`, settings.indent);
-    if (returnsJsx) {
-      code += settings.endOfLine;
-    }
-    if (returnsMultiline) {
-      code += squeezeCode(this.buildJsx(), settings.doubleIndent, -settings.indent - indent);
-    } else {
-      code += this.buildJsx();
-    }
-    if (returnsJsx) {
-      code += settings.endOfLine;
-    }
-    code += indentCode(
-      `${returnsJsx ? ')' : ''}${settings.semicolon}`,
-      returnsMultiline ? settings.indent : 0
-    );
-    return code;
+    const firstNode = body.body[0];
+    const lastNode = body.body[body.body.length - 1];
+    return squeezeCode(this.code.substring(firstNode.start, lastNode.end), indent + settings.indent);
   }
 
   buildDeclaration() {
-    const openParen = this.isSingleReturnStatement() ? '(' : '{';
     const name = this.buildName();
-    const value = `(${this.buildProps()}) => ${openParen}`;
+    let declaration = `function(${this.buildProps()}) {`;
     if (name) {
-      return `const ${name} = ${value}`;
+      declaration = `function ${name}(${this.buildProps()}) {`;
     }
-    return value;
+    if (isExportDefaultFunctionalComponentDeclaration(this.node)) {
+      return `export default ${declaration}`;
+    }
+    return declaration;
   }
 
   buildBodyNonReturnStatements() {
@@ -87,16 +75,18 @@ class ComponentBuilder extends Builder {
   }
 
   buildName() {
-    const { id } = this.node;
-    return id && id.name;
+    if (this.getDeclaration()) {
+      return this.getDeclaration().id.name;
+    }
+    return '';
   }
 
   buildProps() {
-    if (this.hasPropsDeclaration()) {
-      const declaration = this.getPropsDeclaration();
-      return generate(declaration.id, babelGeneratorOptions).code;
+    const params = this.getDeclarationInit().params;
+    const propsNode = params[0];
+    if (params.length > 0) {
+      return this.code.substring(propsNode.start, propsNode.end);
     }
-
     return '';
   }
 
@@ -111,6 +101,21 @@ class ComponentBuilder extends Builder {
       newCode += settings.endOfLine;
     }
     return newCode;
+  }
+
+  getDeclaration() {
+    if (this.node.declarations) {
+      return this.node.declarations[0];
+    }
+    return null;
+  }
+
+  getDeclarationInit() {
+    const declaration = this.getDeclaration();
+    if (declaration && declaration.init) {
+      return declaration.init;
+    }
+    return this.node.declaration;
   }
 
   getOldPropsDeclaration() {
@@ -141,10 +146,12 @@ class ComponentBuilder extends Builder {
     return Boolean(this.getPropsNode() && this.getPropsDeclaration());
   }
 
-  isSingleReturnStatement() {
-    const render = getClassMethod(this.node, 'render');
-    const body = render.body.body;
-    return body.length === 1 || (body.length === 2 && this.hasPropsDeclaration());
+  returnsJsxImmediately() {
+    const init = this.getDeclarationInit();
+    if (init) {
+      return [ 'JSXElement', 'JSXFragment' ].includes(init.body.type);
+    }
+    return false;
   }
 }
 

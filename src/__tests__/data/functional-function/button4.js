@@ -11,7 +11,7 @@ function Button({ className, children, ...props }) {
       {children}
     </div>
   );
-};
+}
 
 Button.defaultProps = {
   children: 'a',

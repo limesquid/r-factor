@@ -1,6 +1,30 @@
+const traverse = require('@babel/traverse').default;
 const { isImportSpecifier } = require('@babel/types');
 
 const classExtendsSomething = (node) => Boolean(node.superClass);
+
+const containsNode = (ast, condition) => {
+  if (condition(ast)) {
+    return true;
+  }
+
+  return Object.keys(ast).reduce(
+    (result, key) => {
+      if (result) {
+        return result;
+      }
+      const value = ast[key];
+      if (Array.isArray(value)) {
+        return value.some((node) => containsNode(node, condition));
+      }
+      if (value && value.type) {
+        return containsNode(value, condition);
+      }
+      return result;
+    },
+    false
+  );
+};
 
 const getClassMethod = (node, name) => node.body
   && node.body.body
@@ -8,10 +32,11 @@ const getClassMethod = (node, name) => node.body
 
 const getReturnStatement = (node) => node.body.body.find(({ type }) => type === 'ReturnStatement');
 
+const isFunctionDeclaration = (node) => node.type === 'FunctionDeclaration';
+
 const isArrowFunctionDeclaration = (node) => node.type === 'VariableDeclaration'
   && node.declarations.length === 1
-  && node.declarations[0].init.type === 'ArrowFunctionExpression'
-  && node.declarations[0].init.generator === false;
+  && node.declarations[0].init.type === 'ArrowFunctionExpression';
 
 const isClassDeclaration = (node) => node.type === 'ClassDeclaration';
 
@@ -22,6 +47,7 @@ const isExportDefaultFunctionalComponentDeclaration = (node) => node.type === 'E
   && node.declaration.type === 'ArrowFunctionExpression'
   && isFunctionalComponentBody(node.declaration);
 
+//TODO: rename
 const isFunctionalComponentDeclaration = (node) => {
   if (!isArrowFunctionDeclaration(node)) {
     return false;
@@ -30,14 +56,17 @@ const isFunctionalComponentDeclaration = (node) => {
   return isFunctionalComponentBody(node.declarations[0].init);
 };
 
-const isFunctionalComponentBody = (node) => Boolean(
-  [ 'JSXElement', 'JSXFragment' ].includes(node.body.type)
-  ||
-  (
-    node.body.type === 'BlockStatement'
-    && node.body.body[node.body.body.length - 1].type === 'ReturnStatement'
-    && [ 'JSXElement', 'JSXFragment' ].includes(node.body.body[node.body.body.length - 1].argument.type)
-  )
+const isFunctionalFunctionComponentDeclaration = (node) => {
+  if (!isFunctionDeclaration(node)) {
+    return false;
+  }
+
+  return isFunctionalComponentBody(node.body);
+};
+
+const isFunctionalComponentBody = (node) => containsNode(
+  node,
+  ({ type }) => [ 'JSXElement', 'JSXFragment' ].includes(type)
 );
 
 const isMemberOfDeclaration = (node, objectName, name) => isMemberDeclaration(node, name)
@@ -102,6 +131,7 @@ module.exports = {
   isComponentDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration,
+  isFunctionalFunctionComponentDeclaration,
   isMemberDeclaration,
   isMemberOfDeclaration,
   isPropsDeclaration,
