@@ -29,6 +29,14 @@ const tests = [
     actions: [ 'connect', 'connectState' ]
   },
   {
+    filename: 'connect-state-function-identity',
+    actions: [ 'connectState' ]
+  },
+  {
+    filename: 'connect-state-function',
+    actions: [ 'connect', 'connectState' ]
+  },
+  {
     filename: 'connect-state-identity',
     actions: [ 'connectState' ]
   },
