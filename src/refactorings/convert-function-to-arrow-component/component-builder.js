@@ -4,10 +4,6 @@ const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
 
 class ComponentBuilder extends Builder {
   build() {
-    if (!this.node) {
-      return this.code;
-    }
-
     const indent = this.getIndent();
     let code = '';
     code += this.buildPrefix();

@@ -13,15 +13,22 @@ class Refactoring {
   refactor(code) {
     return this.transformations.reduce(
       (nextCode, transformation) => {
+        let ast = null;
+
         try {
-          return transformation(
-            nextCode,
-            babylon.parse(nextCode, babylonOptions)
-          );
+          ast = babylon.parse(nextCode, babylonOptions);
         } catch (error) {
           return [
-            'Exception occured while performing a transformation',
-            `Error: ${error}`,
+            'Parsing failure - syntax error'
+          ].join('\n');
+        }
+
+        try {
+          return transformation(nextCode, ast);
+        } catch (error) {
+          return [
+            'Exception occured while performing a transformation.',
+            `${error}`,
             `Code: ${nextCode}`
           ].join('\n');
         }

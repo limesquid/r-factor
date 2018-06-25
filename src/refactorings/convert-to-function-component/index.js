@@ -2,8 +2,7 @@ const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const {
   isExportDefaultArrowComponentDeclaration,
-  isArrowComponentDeclaration,
-  isReactImport
+  isArrowComponentDeclaration
 } = require('../../utils/ast');
 const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
@@ -33,18 +32,12 @@ class ConvertToFunctionComponent extends Refactoring {
       return true;
     }
 
-    let hasReactImport = false;
     let isFunctionalComponent = false;
 
     traverse(ast, {
       ExportDefaultDeclaration({ node }) {
         if (isExportDefaultArrowComponentDeclaration(node)) {
           isFunctionalComponent = true;
-        }
-      },
-      ImportDeclaration({ node }) {
-        if (isReactImport(node)) {
-          hasReactImport = true;
         }
       },
       VariableDeclaration({ node }) {
@@ -54,7 +47,7 @@ class ConvertToFunctionComponent extends Refactoring {
       }
     });
 
-    return hasReactImport || isFunctionalComponent;
+    return isFunctionalComponent;
   }
 
   refactorComponent(code, ast) {
