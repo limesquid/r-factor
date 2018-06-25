@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
+import { withAuth } from 'auth';
 
 const hoc = ({ name }) => {
   const Button = ({ surname }) => (
@@ -14,7 +15,7 @@ const hoc = ({ name }) => {
     surname: PropTypes.string
   };
 
-  return withRouter(Button);
+  return withAuth(withRouter(Button));
 };
 
 export default hoc;

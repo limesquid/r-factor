@@ -33,7 +33,7 @@ describe('ComponentHoCBuilder:wrap', () => {
       .wrap({
         name: 'withRouter',
         import: {
-          module: 'react-router',
+           v,
           subImports: { withRouter: 'withRouter' }
         }
       })
@@ -74,14 +74,14 @@ describe('ComponentHoCBuilder:wrap', () => {
     expect(result).toBe(output);
   });
 
-  it('should wrap already wrapped component with hoc invoked (innermost)', () => {
-    const input = readInputFile('button4');
-    const output = readOutputFile('button4');
+  it('should wrap component with hoc invoked with arguments', () => {
+    const input = readInputFile('button6');
+    const output = readOutputFile('button6');
     const componentWrapper = new ComponentWrapper(input);
     const result = componentWrapper
       .wrap({
         name: 'connect',
-        invoke: [],
+        invoke: [ 'mapStateToProps' ],
         import: {
           module: 'react-redux',
           subImports: { connect: 'connect' }
@@ -91,17 +91,50 @@ describe('ComponentHoCBuilder:wrap', () => {
     expect(result).toBe(output);
   });
 
-  it('should wrap component with hoc invoked with arguments', () => {
-    const input = readInputFile('button5');
-    const output = readOutputFile('button5');
+  it('should wrap component (outermost)', () => {
+    const input = readInputFile('button7');
+    const output = readOutputFile('button7');
     const componentWrapper = new ComponentWrapper(input);
     const result = componentWrapper
       .wrap({
-        name: 'connect',
-        invoke: [ 'mapStateToProps' ],
+        name: 'withRouter',
+        outermost: true,
         import: {
-          module: 'react-redux',
-          subImports: { connect: 'connect' }
+          module: 'react-router',
+          subImports: { withRouter: 'withRouter' }
+        }
+      })
+      .build();
+    expect(result).toBe(output);
+  });
+
+  it('should wrap component returned in hoc', () => {
+    const input = readInputFile('button8');
+    const output = readOutputFile('button8');
+    const componentWrapper = new ComponentWrapper(input);
+    const result = componentWrapper
+      .wrap({
+        name: 'withRouter',
+        import: {
+          module: 'react-router',
+          subImports: { withRouter: 'withRouter' }
+        }
+      })
+      .build();
+    expect(result).toBe(output);
+  });
+
+  it('should wrap already wrapped component returned in hoc (outermost)', () => {
+    const input = readInputFile('button9');
+    const output = readOutputFile('button9');
+    const componentWrapper = new ComponentWrapper(input);
+    const result = componentWrapper
+      .wrap({
+        name: 'withAuth',
+        outermost: true,
+        import: {
+          module: 'auth',
+          subImports: { withAuth: 'withAuth' }
         }
       })
       .build();
