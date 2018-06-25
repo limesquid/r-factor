@@ -10,25 +10,28 @@ class Refactoring {
     return false;
   }
 
+  getTransformations() {
+    return this.transformations;
+  }
+
   refactor(code) {
-    return this.transformations.reduce(
+    try {
+      babylon.parse(code, babylonOptions);
+    } catch (error) {
+      return [
+        'Parsing failure - syntax error'
+      ].join('\n');
+    }
+
+    return this.getTransformations(code).reduce(
       (nextCode, transformation) => {
-        let ast = null;
-
         try {
-          ast = babylon.parse(nextCode, babylonOptions);
-        } catch (error) {
-          return [
-            'Parsing failure - syntax error'
-          ].join('\n');
-        }
-
-        try {
+          const ast = babylon.parse(nextCode, babylonOptions);
           return transformation(nextCode, ast);
         } catch (error) {
           return [
             'Exception occured while performing a transformation.',
-            `${error}`,
+            error,
             `Code: ${nextCode}`
           ].join('\n');
         }

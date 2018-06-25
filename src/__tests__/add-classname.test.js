@@ -2,10 +2,10 @@ const { range, readFile } = require('./test-utils');
 const AddClassname = require('../refactorings/add-classname');
 
 const files = [
-  ...range(1, 22).map((n) => `functional/file${n}`),
+  ...range(1, 22).map((n) => `arrow/file${n}`),
   ...range(1, 22).map((n) => `class/file${n}`),
-  'functional/alerts',
-  'functional/deep-identifier'
+  'arrow/alerts',
+  'arrow/deep-identifier'
 ];
 
 describe('add-classname:canApply', () => {
@@ -23,7 +23,7 @@ describe('add-classname:canApply', () => {
     },
     {
       name: 'no-jsx',
-      input: readFile('add-classname/input/functional/no-jsx.js'),
+      input: readFile('add-classname/input/arrow/no-jsx.js'),
       output: false
     }
   );
@@ -41,6 +41,11 @@ describe('add-classname:refactor', () => {
     input: readFile(`add-classname/input/${file}.js`),
     output: readFile(`add-classname/output/${file}.js`)
   }));
+  tests.push({
+    name: 'add-classname/input/function/file1.js -> add-classname/output/function/file1.js',
+    input: readFile('add-classname/input/function/file1.js'),
+    output: readFile('add-classname/output/function/file1.js')
+  });
   tests.forEach(({ name, input, output }) => {
     it(`refactor "${name}"`, () => {
       expect(refactoring.refactor(input)).toBe(output);
