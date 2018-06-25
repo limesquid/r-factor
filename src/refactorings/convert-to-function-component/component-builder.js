@@ -85,10 +85,7 @@ class ComponentBuilder extends Builder {
 
   returnsJsxImmediately() {
     const init = this.getDeclarationInit();
-    if (init) {
-      return [ 'JSXElement', 'JSXFragment' ].includes(init.body.type);
-    }
-    return false;
+    return [ 'JSXElement', 'JSXFragment' ].includes(init.body.type);
   }
 }
 

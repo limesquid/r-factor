@@ -7,8 +7,8 @@ const files = range(1, 14).map((n) => `button${n}`);
 describe('convert-to-function-component:canApply', () => {
   const refactoring = new ConvertToFunctionComponent();
   const tests = files.map((file) => ({
-    name: `class/${file}.js`,
-    input: readFile(`class/${file}.js`),
+    name: `function/${file}.js`,
+    input: readFile(`function/${file}.js`),
     output: true
   }));
   tests.push({
