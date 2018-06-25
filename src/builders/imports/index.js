@@ -1,5 +1,5 @@
 const settings = require('../../settings');
-const { cleanUpCode } = require('../index');
+const { cleanUpCode } = require('../../utils');
 const { extractGroups } = require('./utils');
 const Group = require('./group');
 

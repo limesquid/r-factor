@@ -1,8 +1,8 @@
 const traverse = require('@babel/traverse').default;
 const stable = require('stable');
 const settings = require('../../settings');
-const { indentCode } = require('../index');
-const { getSubImports } = require('../ast');
+const { indentCode } = require('../../utils');
+const { getSubImports } = require('../../utils/ast');
 
 const createImport = (code, node) => ({
   code: code.substring(node.start, node.end),

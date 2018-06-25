@@ -1,5 +1,5 @@
 const { identifier, nullLiteral } = require('@babel/types');
-const parser = require('../parser');
+const parser = require('../../utils/parser');
 const {
   createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
@@ -75,7 +75,7 @@ class ReduxConnectBuilder {
     }
 
     if (isConnected) {
-      if (connectArguments.length < 1) {
+      if (!hasMapDispatchToProps) {
         connectArguments.push(nullLiteral());
       }
       connectArguments[1] = identifier(mapDispatchToPropsName);
@@ -87,10 +87,10 @@ class ReduxConnectBuilder {
     const {
       connectArguments,
       furthestConnectAncestorPath,
+      hasMergePropsDefinition,
       isConnected,
       mapStateToPropsDefinitionPath,
       mapDispatchToPropsDefinitionPath,
-      mergePropsDefinitionPath,
       mergePropsName = 'mergeProps'
     } = this.details;
 
@@ -108,7 +108,6 @@ class ReduxConnectBuilder {
         connectArguments.push(nullLiteral());
       }
       connectArguments[2] = identifier(mergePropsName);
-      console.log(connectArguments);
     }
   }
 

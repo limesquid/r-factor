@@ -5,9 +5,9 @@ const {
   isArrowFunctionDeclaration,
   isObjectDeclaration,
   isUndefinedIdentifier
-} = require('../ast');
-const { indentCode } = require('../index');
-const parser = require('../parser');
+} = require('../../utils/ast');
+const { indentCode } = require('../../utils');
+const parser = require('../../utils/parser');
 const settings = require('../../settings');
 
 const checkMapStateToProps = (connectArguments) =>
@@ -28,10 +28,10 @@ const getDetails = (ast) => {
   let connectCallExpressionPath = null;
   let hasMapStateToProps = false;
   let hasMapDispatchToProps = false;
-  let hasMergePropsToProps = false;
+  let hasMergeProps = false;
   let hasMapStateToPropsDefinition = false;
   let hasMapDispatchToPropsDefinition = false;
-  let hasMergePropsToPropsDefinition = false;
+  let hasMergePropsDefinition = false;
   let mapStateToPropsName = null;
   let mapDispatchToPropsName = null;
   let mergePropsName = null;
@@ -127,17 +127,18 @@ const createMapDispatchToPropsFunctionAst = (functionName) => {
 };
 
 const createMergePropsFunctionAst = (functionName) => {
-  const { doubleEndOfLine, endOfLine, indent, semicolon, mergePropsName } = settings;
+  const { endOfLine, indent, semicolon, mergePropsName } = settings;
   const mergePropsFunctionName = functionName || mergePropsName || 'mergeProps';
   let code = '';
-  code += `const ${mergePropsFunctionName} = (stateProps, dispatchProps, ownProps) => ({` + endOfLine;
+  code += `const ${mergePropsFunctionName} = (stateProps, dispatchProps, ownProps) => ({`;
+  code += endOfLine;
   code += indentCode([
     '...stateProps,',
     '...dispatchProps,',
-    '...ownProps',
+    '...ownProps'
   ].join(endOfLine), indent);
   code += endOfLine;
-  code += '});';
+  code += `})${semicolon}`;
 
   return parser.parse(code).program.body;
 };

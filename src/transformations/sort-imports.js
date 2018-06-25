@@ -1,4 +1,4 @@
-const Imports = require('../utils/imports');
+const Imports = require('../builders/imports');
 
 const sortImports = (source, ast) => {
   const imports = new Imports(source, ast);

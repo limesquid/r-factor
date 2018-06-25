@@ -5,7 +5,7 @@ const {
   isFunctionalComponentDeclaration
 } = require('../../utils/ast');
 const parser = require('../../utils/parser');
-const Imports = require('../../utils/imports');
+const Imports = require('../../builders/imports');
 const { Refactoring } = require('../../model');
 const ComponentBuilder = require('./component-builder');
 

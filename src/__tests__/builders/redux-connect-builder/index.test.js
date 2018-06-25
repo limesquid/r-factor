@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { readUtilsFile } = require('../../test-utils');
 const parser = require('../../../utils/parser');
-const ReduxConnectBuilder = require('../../../utils/redux-connect-builder');
+const ReduxConnectBuilder = require('../../../builders/redux-connect-builder');
 
 const tests = [
   {
