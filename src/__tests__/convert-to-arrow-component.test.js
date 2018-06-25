@@ -4,25 +4,6 @@ const ConvertToArrowComponent = require('../refactorings/convert-to-arrow-compon
 const types = [ 'class', 'function' ];
 const files = range(1, 14).map((n) => `button${n}`);
 
-describe('convert-to-arrow-component:canApply', () => {
-  const refactoring = new ConvertToArrowComponent();
-  const tests = files.map((file) => ({
-    name: `class/${file}.js`,
-    input: readFile(`class/${file}.js`),
-    output: true
-  }));
-  tests.push({
-    name: 'non component class',
-    input: 'class X {}',
-    output: false
-  });
-  tests.forEach(({ name, input, output }) => {
-    it(`canApply "${name}"`, () => {
-      expect(refactoring.canApply(input)).toBe(output);
-    });
-  });
-});
-
 describe('convert-to-arrow-component:refactor:react-imports', () => {
   const refactoring = new ConvertToArrowComponent();
   const tests = [
@@ -47,6 +28,26 @@ describe('convert-to-arrow-component:refactor:react-imports', () => {
 });
 
 types.forEach((type) => {
+  describe(`convert-to-arrow-component:${type}:canApply`, () => {
+    const refactoring = new ConvertToArrowComponent();
+    const tests = files.map((file) => ({
+      name: `${type}/${file}.js`,
+      input: readFile(`${type}/${file}.js`),
+      output: true
+    }));
+    if (type === 'class') {
+      tests.push({
+        name: 'non component class',
+        input: 'class X {}',
+        output: false
+      });
+    }
+    tests.forEach(({ name, input, output }) => {
+      it(`canApply "${name}"`, () => {
+        expect(refactoring.canApply(input)).toBe(output);
+      });
+    });
+  });
   describe(`convert-to-arrow-component:${type}:refactor`, () => {
     const refactoring = new ConvertToArrowComponent();
     const tests = files.map((file) => ({
