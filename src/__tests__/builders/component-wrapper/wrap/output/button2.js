@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ButtonComponent = ({ name }) => (
+const Button = ({ name }) => (
   <div>
     {name}
   </div>
 );
 
-ButtonComponent.propTypes = {
+Button.propTypes = {
   name: PropTypes.any
 };
 
-export const Button = withRouter(ButtonComponent);
+export default withRouter(Button);

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { readUtilsFile } = require('../../test-utils');
+const { readBuilderFile } = require('../../test-utils');
 const parser = require('../../../utils/parser');
 const ReduxConnectBuilder = require('../../../builders/redux-connect-builder');
 
@@ -154,8 +154,8 @@ const tests = [
   },
 ].map((test) => ({
   ...test,
-  input: readUtilsFile(`redux-connect-builder/input/${test.filename}.js`),
-  output: readUtilsFile(`redux-connect-builder/output/${test.filename}.js`)
+  input: readBuilderFile(`redux-connect-builder/input/${test.filename}.js`),
+  output: readBuilderFile(`redux-connect-builder/output/${test.filename}.js`)
 }));
 
 describe('ReduxConnectBuilder', () => {
@@ -168,7 +168,7 @@ describe('ReduxConnectBuilder', () => {
           const builder = new ReduxConnectBuilder(code, ast);
           builder[action]();
           expect(builder.build()).toBe(test.output);
-        })
+        });
       });
     });
   });
