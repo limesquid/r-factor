@@ -18,12 +18,7 @@ class ConvertToArrowComponent extends Refactoring {
   constructor() {
     super();
     this.transformations = [
-      (code, ast) => {
-        if (convertFunctionToArrowComponent.canApply(code)) {
-          return convertFunctionToArrowComponent.refactor(code, ast);
-        }
-        return code;
-      },
+      (code) => convertFunctionToArrowComponent.refactorIfPossible(code),
       (code) => moveDefaultPropsOutOfClass.refactor(code),
       (code) => movePropTypesOutOfClass.refactor(code),
       (code, ast) => this.refactorReactImport(code, ast),

@@ -36,6 +36,13 @@ class Refactoring {
       code
     );
   }
+
+  refactorIfPossible(code, ast) {
+    if (this.canApply(code, ast)) {
+      return this.refactor(code, ast);
+    }
+    return code;
+  }
 }
 
 module.exports = Refactoring;

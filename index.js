@@ -14,7 +14,7 @@ const refactorings = {
   'move-prop-types-to-class': require('./src/refactorings/move-prop-types-to-class'),
   'sort-attributes': require('./src/refactorings/sort-attributes'),
   'sort-imports': require('./src/refactorings/sort-imports'),
-  // 'toggle-component-type': require('./src/refactorings/toggle-component-type')
+  'toggle-component-type': require('./src/refactorings/toggle-component-type')
 };
 settings.set(JSON.parse(argv.settings));
 const refactoring = new refactorings[argv.refactoring]();
