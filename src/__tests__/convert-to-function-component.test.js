@@ -1,7 +1,7 @@
 const { range, readFile } = require('./test-utils');
 const ConvertToFunctionComponent = require('../refactorings/convert-to-function-component');
 
-const types = [ 'class', 'functional-arrow' ];
+const types = [ 'class', 'arrow' ];
 const files = range(1, 14).map((n) => `button${n}`);
 
 describe('convert-to-function-component:canApply', () => {
@@ -50,9 +50,9 @@ types.forEach((type) => {
   describe(`convert-to-function-component:${type}:refactor`, () => {
     const refactoring = new ConvertToFunctionComponent();
     const tests = files.map((file) => ({
-      name: `${type}/${file}.js -> functional-function/${file}.js`,
+      name: `${type}/${file}.js -> function/${file}.js`,
       input: readFile(`${type}/${file}.js`),
-      output: readFile(`functional-function/${file}.js`)
+      output: readFile(`function/${file}.js`)
     }));
     tests.forEach(({ name, input, output }) => {
       it(`refactor "${name}"`, () => {

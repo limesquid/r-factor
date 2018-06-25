@@ -1,7 +1,7 @@
 const { range, readFile } = require('./test-utils');
 const ConvertToArrowComponent = require('../refactorings/convert-to-arrow-component');
 
-const types = [ 'class', 'functional-function' ];
+const types = [ 'class', 'function' ];
 const files = range(1, 14).map((n) => `button${n}`);
 
 describe('convert-to-arrow-component:canApply', () => {
@@ -50,9 +50,9 @@ types.forEach((type) => {
   describe(`convert-to-arrow-component:${type}:refactor`, () => {
     const refactoring = new ConvertToArrowComponent();
     const tests = files.map((file) => ({
-      name: `${type}/${file}.js -> functional-arrow/${file}.js`,
+      name: `${type}/${file}.js -> arrow/${file}.js`,
       input: readFile(`${type}/${file}.js`),
-      output: readFile(`functional-arrow/${file}.js`)
+      output: readFile(`arrow/${file}.js`)
     }));
     tests.forEach(({ name, input, output }) => {
       it(`refactor "${name}"`, () => {

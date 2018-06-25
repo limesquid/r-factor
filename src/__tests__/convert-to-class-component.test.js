@@ -1,14 +1,14 @@
 const { range, readFile } = require('./test-utils');
 const ConvertToClassComponent = require('../refactorings/convert-to-class-component');
 
-const types = [ 'functional-arrow', 'functional-function' ];
+const types = [ 'arrow', 'function' ];
 const files = [ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`);
 
 describe('convert-to-class-component:canApply', () => {
   const refactoring = new ConvertToClassComponent();
   const tests = files.map((file) => ({
-    name: `functional-arrow/${file}.js`,
-    input: readFile(`functional-arrow/${file}.js`),
+    name: `arrow/${file}.js`,
+    input: readFile(`arrow/${file}.js`),
     output: true
   }));
   tests.forEach(({ name, input, output }) => {
