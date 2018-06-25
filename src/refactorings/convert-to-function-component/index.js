@@ -1,14 +1,13 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const {
-  isExportDefaultFunctionalComponentDeclaration,
+  isExportDefaultArrowComponentDeclaration,
   isArrowComponentDeclaration,
   isReactImport
 } = require('../../utils/ast');
 const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const ConvertToArrowComponent = require('../convert-to-arrow-component');
-const ReactImportBuilder = require('../convert-to-arrow-component/react-import-builder');
 const ComponentBuilder = require('./component-builder');
 
 const convertToArrowComponent = new ConvertToArrowComponent();
@@ -39,7 +38,7 @@ class ConvertToFunctionComponent extends Refactoring {
 
     traverse(ast, {
       ExportDefaultDeclaration({ node }) {
-        if (isExportDefaultFunctionalComponentDeclaration(node)) {
+        if (isExportDefaultArrowComponentDeclaration(node)) {
           isFunctionalComponent = true;
         }
       },
@@ -63,26 +62,12 @@ class ConvertToFunctionComponent extends Refactoring {
 
     traverse(ast, {
       ExportDefaultDeclaration({ node }) {
-        if (isExportDefaultFunctionalComponentDeclaration(node)) {
+        if (isExportDefaultArrowComponentDeclaration(node)) {
           builder.setNode(node);
         }
       },
       VariableDeclaration({ node }) {
         if (isArrowComponentDeclaration(node)) {
-          builder.setNode(node);
-        }
-      }
-    });
-
-    return builder.build();
-  }
-
-  refactorReactImport(code, ast) {
-    const builder = new ReactImportBuilder(code);
-
-    traverse(ast, {
-      ImportDeclaration({ node }) {
-        if (isReactImport(node)) {
           builder.setNode(node);
         }
       }

@@ -4,7 +4,7 @@ const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
 const {
   getClassMethod,
   getReturnStatement,
-  isExportDefaultFunctionalComponentDeclaration,
+  isExportDefaultArrowComponentDeclaration,
   isPropsDeclaration
 } = require('../../utils/ast');
 
@@ -22,7 +22,7 @@ class ComponentBuilder extends Builder {
     code += indentCode(this.buildBody(), indent);
     code += settings.endOfLine;
     code += indentCode('}', indent);
-    if (isExportDefaultFunctionalComponentDeclaration(this.node)) {
+    if (isExportDefaultArrowComponentDeclaration(this.node)) {
       code += settings.semicolon;
     }
     code += this.buildSuffix();
@@ -51,7 +51,7 @@ class ComponentBuilder extends Builder {
     if (name) {
       declaration = `function ${name}(${this.buildProps()}) {`;
     }
-    if (isExportDefaultFunctionalComponentDeclaration(this.node)) {
+    if (isExportDefaultArrowComponentDeclaration(this.node)) {
       return `export default ${declaration}`;
     }
     return declaration;

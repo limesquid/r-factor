@@ -42,9 +42,13 @@ const isClassDeclaration = (node) => node.type === 'ClassDeclaration';
 const isComponentDeclaration = (node) => isClassDeclaration(node)
   && classExtendsSomething(node);
 
-const isExportDefaultFunctionalComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
+const isExportDefaultArrowComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
   && node.declaration.type === 'ArrowFunctionExpression'
   && isFunctionalComponentBody(node.declaration);
+
+const isExportDefaultFunctionComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
+  && node.declaration.type === 'FunctionDeclaration'
+  && isFunctionalComponentBody(node.declaration.body);
 
 const isArrowComponentDeclaration = (node) => {
   if (!isArrowFunctionDeclaration(node)) {
@@ -125,10 +129,11 @@ module.exports = {
   getNodeIndent,
   getReturnStatement,
   getSubImports,
+  isArrowComponentDeclaration,
   isClassDeclaration,
   isComponentDeclaration,
-  isExportDefaultFunctionalComponentDeclaration,
-  isArrowComponentDeclaration,
+  isExportDefaultArrowComponentDeclaration,
+  isExportDefaultFunctionComponentDeclaration,
   isFunctionComponentDeclaration,
   isMemberDeclaration,
   isMemberOfDeclaration,
@@ -136,6 +141,6 @@ module.exports = {
   isPropTypesDeclaration,
   isReactImport,
   isSingleLine,
-  isStaticPropTypesDeclaration,
-  isStaticPropertyDeclaration
+  isStaticPropertyDeclaration,
+  isStaticPropTypesDeclaration
 };

@@ -2,7 +2,7 @@ const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
 const settings = require('../../settings');
 const { babelGeneratorOptions } = require('../../options');
-const { isExportDefaultFunctionalComponentDeclaration } = require('../../utils/ast');
+const { isExportDefaultArrowComponentDeclaration } = require('../../utils/ast');
 const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
 
 class ComponentBuilder extends Builder {
@@ -40,7 +40,7 @@ class ComponentBuilder extends Builder {
     if (name) {
       declaration = `class ${name} extends ${settings.componentSuperclass} {`;
     }
-    if (isExportDefaultFunctionalComponentDeclaration(this.node)) {
+    if (isExportDefaultArrowComponentDeclaration(this.node)) {
       return `export default ${declaration}`;
     }
     return declaration;

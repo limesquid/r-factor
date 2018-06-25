@@ -4,11 +4,13 @@ const { isComponentDeclaration, isReactImport } = require('../../utils/ast');
 const { babylonOptions } = require('../../options');
 const settings = require('../../settings');
 const { Refactoring } = require('../../model');
+const ConvertFunctionToArrowComponent = require('../convert-function-to-arrow-component');
 const MoveDefaultPropsOutOfClass = require('../move-default-props-out-of-class');
 const MovePropTypesOutOfClass = require('../move-prop-types-out-of-class');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 
+const convertFunctionToArrowComponent = new ConvertFunctionToArrowComponent();
 const moveDefaultPropsOutOfClass = new MoveDefaultPropsOutOfClass();
 const movePropTypesOutOfClass = new MovePropTypesOutOfClass();
 
@@ -16,6 +18,12 @@ class ConvertToArrowComponent extends Refactoring {
   constructor() {
     super();
     this.transformations = [
+      (code, ast) => {
+        if (convertFunctionToArrowComponent.canApply(code)) {
+          return convertFunctionToArrowComponent.refactor(code, ast);
+        }
+        return code;
+      },
       (code) => moveDefaultPropsOutOfClass.refactor(code),
       (code) => movePropTypesOutOfClass.refactor(code),
       (code, ast) => this.refactorReactImport(code, ast),
@@ -24,6 +32,10 @@ class ConvertToArrowComponent extends Refactoring {
   }
 
   canApply(code) {
+    if (convertFunctionToArrowComponent.canApply(code)) {
+      return true;
+    }
+
     const ast = babylon.parse(code, babylonOptions);
     let hasReactImport = false;
     let isComponent = false;
