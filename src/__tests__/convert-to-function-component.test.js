@@ -2,7 +2,10 @@ const { range, readFile } = require('./test-utils');
 const ConvertToFunctionComponent = require('../refactorings/convert-to-function-component');
 
 const types = [ 'class', 'arrow' ];
-const files = range(1, 14).map((n) => `button${n}`);
+const files = [
+  ...range(1, 14).map((n) => `button${n}`),
+  'contact-us'
+];
 
 describe('convert-to-function-component:refactor:react-imports', () => {
   const refactoring = new ConvertToFunctionComponent();

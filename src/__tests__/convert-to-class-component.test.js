@@ -2,7 +2,10 @@ const { range, readFile } = require('./test-utils');
 const ConvertToClassComponent = require('../refactorings/convert-to-class-component');
 
 const types = [ 'arrow', 'function' ];
-const files = [ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`);
+const files = [
+  ...[ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`),
+  'contact-us'
+];
 
 describe('convert-to-class-component:refactor:react-imports', () => {
   const refactoring = new ConvertToClassComponent();

@@ -4,7 +4,10 @@ const settings = require('../settings');
 
 const types = [ 'arrow', 'class', 'function' ];
 const functionalComponentTypes = [ 'arrow', 'function' ];
-const files = [ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`);
+const files = [
+  ...[ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`),
+  'contact-us'
+];
 
 types.forEach((type) => {
   describe(`toggle-component-type:${type}:canApply`, () => {

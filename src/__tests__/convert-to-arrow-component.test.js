@@ -2,7 +2,10 @@ const { range, readFile } = require('./test-utils');
 const ConvertToArrowComponent = require('../refactorings/convert-to-arrow-component');
 
 const types = [ 'class', 'function' ];
-const files = range(1, 14).map((n) => `button${n}`);
+const files = [
+  ...range(1, 14).map((n) => `button${n}`),
+  'contact-us'
+];
 
 describe('convert-to-arrow-component:refactor:react-imports', () => {
   const refactoring = new ConvertToArrowComponent();
