@@ -12,16 +12,22 @@ class ComponentBuilder extends Builder {
     }
 
     const indent = this.getIndent();
+    const hasPropsDeclaration = this.hasPropsDeclaration();
+    const isSingleReturnStatement = this.isSingleReturnStatement();
     let code = '';
     code += this.buildPrefix();
     code += this.buildDeclaration();
     code += settings.endOfLine;
-    code += indentCode(this.buildBody(), indent);
+    if (hasPropsDeclaration || isSingleReturnStatement) {
+      code += indentCode(this.buildBody(), indent);
+    } else {
+      code += squeezeCode(this.buildBody(), settings.indent + indent, indent);
+    }
     code += settings.endOfLine;
-    code += indentCode(this.isSingleReturnStatement() ? ')' : '}', indent);
+    code += indentCode(isSingleReturnStatement ? ')' : '}', indent);
     code += settings.semicolon;
     code += this.buildSuffix();
-    if (this.hasPropsDeclaration()) {
+    if (hasPropsDeclaration) {
       code = code.replace(`${this.getOldPropsDeclaration()}${settings.doubleEndOfLine}`, '');
       code = code.replace(`${this.getOldPropsDeclaration()}${settings.endOfLine}`, '');
     }

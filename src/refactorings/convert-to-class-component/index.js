@@ -1,38 +1,51 @@
 const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const {
-  isExportDefaultFunctionalComponentDeclaration,
-  isFunctionalComponentDeclaration,
+  isExportDefaultArrowComponentDeclaration,
+  isArrowComponentDeclaration,
   isReactImport
 } = require('../../utils/ast');
 const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
+const ConvertFunctionToArrowComponent = require('../convert-function-to-arrow-component');
 const MoveDefaultPropsToClass = require('../move-default-props-to-class');
 const MovePropTypesToClass = require('../move-prop-types-to-class');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 
-class ConvertToComponent extends Refactoring {
+const convertFunctionToArrowComponent = new ConvertFunctionToArrowComponent();
+const moveDefaultPropsToClass = new MoveDefaultPropsToClass();
+const movePropTypesToClass = new MovePropTypesToClass();
+
+class ConvertToClassComponent extends Refactoring {
   constructor() {
     super();
-    this.moveDefaultPropsToClass = new MoveDefaultPropsToClass();
-    this.movePropTypesToClass = new MovePropTypesToClass();
     this.transformations = [
+      (code, ast) => {
+        if (convertFunctionToArrowComponent.canApply(code)) {
+          return convertFunctionToArrowComponent.refactor(code, ast);
+        }
+        return code;
+      },
       (code, ast) => this.refactorComponent(code, ast),
       (code, ast) => this.refactorReactImport(code, ast),
-      (code) => this.moveDefaultPropsToClass.refactor(code),
-      (code) => this.movePropTypesToClass.refactor(code)
+      (code) => moveDefaultPropsToClass.refactor(code),
+      (code) => movePropTypesToClass.refactor(code)
     ];
   }
 
   canApply(code) {
+    if (convertFunctionToArrowComponent.canApply(code)) {
+      return true;
+    }
+
     const ast = babylon.parse(code, babylonOptions);
     let hasReactImport = false;
     let isFunctionalComponent = false;
 
     traverse(ast, {
       ExportDefaultDeclaration({ node }) {
-        if (isExportDefaultFunctionalComponentDeclaration(node)) {
+        if (isExportDefaultArrowComponentDeclaration(node)) {
           isFunctionalComponent = true;
         }
       },
@@ -42,7 +55,7 @@ class ConvertToComponent extends Refactoring {
         }
       },
       VariableDeclaration({ node }) {
-        if (isFunctionalComponentDeclaration(node)) {
+        if (isArrowComponentDeclaration(node)) {
           isFunctionalComponent = true;
         }
       }
@@ -56,12 +69,12 @@ class ConvertToComponent extends Refactoring {
 
     traverse(ast, {
       ExportDefaultDeclaration({ node }) {
-        if (isExportDefaultFunctionalComponentDeclaration(node)) {
+        if (isExportDefaultArrowComponentDeclaration(node)) {
           builder.setNode(node);
         }
       },
       VariableDeclaration({ node }) {
-        if (isFunctionalComponentDeclaration(node)) {
+        if (isArrowComponentDeclaration(node)) {
           builder.setNode(node);
         }
       }
@@ -85,4 +98,4 @@ class ConvertToComponent extends Refactoring {
   }
 }
 
-module.exports = ConvertToComponent;
+module.exports = ConvertToClassComponent;

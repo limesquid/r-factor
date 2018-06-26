@@ -3,6 +3,7 @@ const SETTINGS = Symbol('settings');
 const DEFAULT_SETTINGS = {
   'component-superclass': 'Component',
   'end-of-line': '\n',
+  'functional-component-type': 'arrow',
   indent: 2,
   'modules-order': [ 'react', 'prop-types', 'classnames' ],
   quotes: 'single',
@@ -43,6 +44,10 @@ class Settings {
 
   get endOfLine() {
     return this.get('end-of-line');
+  }
+
+  get functionalComponentType() {
+    return this.get('functional-component-type');
   }
 
   get indent() {

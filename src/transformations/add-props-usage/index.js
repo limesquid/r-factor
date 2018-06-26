@@ -1,7 +1,7 @@
 const traverse = require('@babel/traverse').default;
 const {
   isClassDeclaration,
-  isFunctionalComponentDeclaration
+  isArrowComponentDeclaration
 } = require('../../utils/ast');
 const ComponentBuilder = require('./component-builder');
 const FunctionalComponentBuilder = require('./functional-component-builder');
@@ -16,7 +16,7 @@ const addPropsUsage = (code, ast, props) => {
         builder.setNode(node);
       }
 
-      if (isFunctionalComponentDeclaration(node)) {
+      if (isArrowComponentDeclaration(node)) {
         builder = new FunctionalComponentBuilder(code, ast);
         builder.setNode(node);
       }

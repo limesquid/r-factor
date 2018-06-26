@@ -4,12 +4,16 @@
     "command": "add_classname"
   },
   {
+    "caption": "R-factor: Convert to arrow component",
+    "command": "convert_to_arrow_component"
+  },
+  {
     "caption": "R-factor: Convert to class component",
     "command": "convert_to_class_component"
   },
   {
-    "caption": "R-factor: Convert to functional component",
-    "command": "convert_to_functional_component"
+    "caption": "R-factor: Convert to function component",
+    "command": "convert_to_function_component"
   },
   {
     "caption": "R-factor: Generate propTypes",
@@ -38,5 +42,9 @@
   {
     "caption": "R-factor: Sort imports",
     "command": "sort_imports"
+  },
+  {
+    "caption": "R-factor: Toggle component type",
+    "command": "toggle_component_type"
   }
 ]

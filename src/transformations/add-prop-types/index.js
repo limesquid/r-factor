@@ -3,7 +3,7 @@ const {
   getClassComponentName,
   getFunctionalComponentName,
   isClassDeclaration,
-  isFunctionalComponentDeclaration,
+  isArrowComponentDeclaration,
   isPropTypesDeclaration,
   isStaticPropTypesDeclaration
 } = require('../../utils/ast');
@@ -45,7 +45,7 @@ const addPropTypes = (code, ast, propTypes) => {
         builder.setComponentType(COMPONENT_TYPE.Class);
       }
 
-      if (isFunctionalComponentDeclaration(node)) {
+      if (isArrowComponentDeclaration(node)) {
         builder.setComponentName(getFunctionalComponentName(node));
         builder.setComponentNode(node);
         builder.setComponentType(COMPONENT_TYPE.Functional);
