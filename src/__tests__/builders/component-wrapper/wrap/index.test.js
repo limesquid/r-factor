@@ -33,7 +33,7 @@ describe('ComponentHoCBuilder:wrap', () => {
       .wrap({
         name: 'withRouter',
         import: {
-           v,
+          module: 'react-router',
           subImports: { withRouter: 'withRouter' }
         }
       })
