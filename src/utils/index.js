@@ -17,7 +17,7 @@ const indentLine = (line, size) => {
   return line.replace(new RegExp(`^${indent}`, 'i'), '');
 };
 const indentCode = (code, size) => code && indentLines(code.split(settings.endOfLine), size).join(settings.endOfLine);
-const removeDoubleSemicolons = (code) => code.replace(/;;/g, ';');
+const removeMultipleSemicolons = (code) => code.replace(/;{2,}/g, ';');
 const removeDoubleNewlines = (code) => code
   .replace(
     new RegExp(`${settings.endOfLine}${settings.endOfLine}${settings.endOfLine}`, 'g'),
@@ -38,7 +38,7 @@ const removeTrailingWhitespace = (code) => code.replace(
   new RegExp(`[ ]+${settings.endOfLine}`, 'g'),
   settings.endOfLine
 );
-const cleanUpCode = compose(removeDoubleNewlines, removeTrailingWhitespace, removeDoubleSemicolons);
+const cleanUpCode = compose(removeDoubleNewlines, removeTrailingWhitespace, removeMultipleSemicolons);
 const sortPropTypes = (propTypesLines) => stable(
   stable(propTypesLines),
   (prop1, prop2) => prop1.startsWith('on') && !prop2.startsWith('on') ? 1 : 0

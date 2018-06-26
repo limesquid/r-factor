@@ -7,22 +7,16 @@ const containsNode = (ast, condition) => {
     return true;
   }
 
-  return Object.keys(ast).reduce(
-    (result, key) => {
-      if (result) {
-        return result;
-      }
-      const value = ast[key];
-      if (Array.isArray(value)) {
-        return value.some((node) => containsNode(node, condition));
-      }
-      if (value && value.type) {
-        return containsNode(value, condition);
-      }
-      return result;
-    },
-    false
-  );
+  return Object.keys(ast).some((key) => {
+    const value = ast[key];
+    if (Array.isArray(value)) {
+      return value.some((node) => containsNode(node, condition));
+    }
+    if (value && value.type) {
+      return containsNode(value, condition);
+    }
+    return false;
+  });
 };
 
 const getClassMethod = (node, name) => node.body
