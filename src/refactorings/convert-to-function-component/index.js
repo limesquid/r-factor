@@ -15,12 +15,7 @@ class ConvertToFunctionComponent extends Refactoring {
   constructor() {
     super();
     this.transformations = [
-      (code, ast) => {
-        if (convertToArrowComponent.canApply(code)) {
-          return convertToArrowComponent.refactor(code, ast);
-        }
-        return code;
-      },
+      (code, ast) => convertToArrowComponent.refactorIfPossible(code, ast),
       (code, ast) => this.refactorComponent(code, ast)
     ];
   }

@@ -59,7 +59,9 @@ const isArrowComponentDeclaration = (node) => {
 };
 
 const isFunctionComponentDeclaration = (node) => isFunctionDeclaration(node)
-  && isFunctionalComponentBody(node.body);
+  && isFunctionalComponentBody(node.body)
+  && !containsNode(node.body, isArrowFunctionDeclaration)
+  && !containsNode(node.body, isFunctionComponentDeclaration);
 
 const isFunctionalComponentBody = (node) => containsNode(
   node,

@@ -23,21 +23,23 @@ class Refactoring {
       ].join('\n');
     }
 
-    return this.getTransformations(code).reduce(
-      (nextCode, transformation) => {
-        try {
-          const ast = babylon.parse(nextCode, babylonOptions);
-          return transformation(nextCode, ast);
-        } catch (error) {
-          return [
-            'Exception occured while performing a transformation.',
-            error,
-            `Code: ${nextCode}`
-          ].join('\n');
-        }
-      },
-      code
-    );
+    const transformations = this.getTransformations(code);
+    let nextCode = code;
+
+    for (const transformation of transformations) {
+      try {
+        const ast = babylon.parse(nextCode, babylonOptions);
+        nextCode = transformation(nextCode, ast);
+      } catch (error) {
+        return [
+          'Exception occured while performing a transformation.',
+          error,
+          `Code: ${nextCode}`
+        ].join('\n');
+      }
+    }
+
+    return nextCode;
   }
 
   refactorIfPossible(code, ast) {
