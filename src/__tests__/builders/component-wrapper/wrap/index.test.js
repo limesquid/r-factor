@@ -140,4 +140,36 @@ describe('ComponentHoCBuilder:wrap', () => {
       .build();
     expect(result).toBe(output);
   });
+
+  it('should add body to hoc and wrap inner component (default export)', () => {
+    const input = readInputFile('button10');
+    const output = readOutputFile('button10');
+    const componentWrapper = new ComponentWrapper(input);
+    const result = componentWrapper
+      .wrap({
+        name: 'withRouter',
+        import: {
+          module: 'react-router',
+          subImports: { withRouter: 'withRouter' }
+        }
+      })
+      .build();
+    expect(result).toBe(output);
+  });
+
+  it('should add body to hoc and wrap inner component (named export)', () => {
+    const input = readInputFile('button11');
+    const output = readOutputFile('button11');
+    const componentWrapper = new ComponentWrapper(input);
+    const result = componentWrapper
+      .wrap({
+        name: 'withRouter',
+        import: {
+          module: 'react-router',
+          subImports: { withRouter: 'withRouter' }
+        }
+      })
+      .build();
+    expect(result).toBe(output);
+  });
 });
