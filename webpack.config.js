@@ -15,6 +15,29 @@ const webpackConfig = {
     filename: BUNDLE_DIST
   },
   entry: ENTRY_FILE,
+  module: {
+    rules: [
+      {
+        test: /\.js?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              [
+                '@babel/preset-env',
+                {
+                  targets: {
+                    node: '4.0.0'
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      }
+    ]
+  },
   externals: fs.readdirSync('node_modules')
     .filter((directory) => directory !== '.bin')
     .reduce(
