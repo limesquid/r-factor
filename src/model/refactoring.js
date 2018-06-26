@@ -31,11 +31,14 @@ class Refactoring {
         const ast = babylon.parse(nextCode, babylonOptions);
         nextCode = transformation(nextCode, ast);
       } catch (error) {
+        if (process.env.NODE_ENV === 'production') {
+          return 'Exception occured while performing a transformation.';
+        }
         return [
           'Exception occured while performing a transformation.',
-          error,
+          error.stack,
           `Code: ${nextCode}`
-        ].join('\n');
+        ].join('\n\n');
       }
     }
 

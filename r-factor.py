@@ -41,6 +41,7 @@ class BaseCommand(sublime_plugin.TextCommand):
     return {
       'component-superclass': self.get_setting('component-superclass'),
       'end-of-line': self.get_setting('end-of-line'),
+      'functional-component-type': self.get_setting('functional-component-type'),
       'indent': self.get_setting('indent'),
       'modules-order': self.get_setting('modules-order'),
       'quotes': self.get_setting('quotes'),
@@ -117,3 +118,9 @@ class SortImportsCommand(BaseCommand):
   def __init__(self, arg):
     super(SortImportsCommand, self).__init__(arg)
     self.refactoring_name = 'sort-imports'
+
+
+class ToggleComponentType(BaseCommand):
+  def __init__(self, arg):
+    super(ToggleComponentType, self).__init__(arg)
+    self.refactoring_name = 'toggle-component-type'

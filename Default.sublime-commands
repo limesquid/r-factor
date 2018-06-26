@@ -42,5 +42,9 @@
   {
     "caption": "R-factor: Sort imports",
     "command": "sort_imports"
+  },
+  {
+    "caption": "R-factor: Toggle component type",
+    "command": "toggle_component_type"
   }
 ]
