@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import Section from 'components/section';
 
-class ContactUs extends PureComponent {
+class ContactUs extends Component {
   render() {
     const { name, email, subject, message } = this.state;
 

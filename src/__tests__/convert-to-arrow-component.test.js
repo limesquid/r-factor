@@ -51,6 +51,7 @@ types.forEach((type) => {
       });
     });
   });
+
   describe(`convert-to-arrow-component:${type}:refactor`, () => {
     const refactoring = new ConvertToArrowComponent();
     const tests = files.map((file) => ({
