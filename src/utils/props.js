@@ -100,11 +100,14 @@ const getUnusedProps = (code) => {
 };
 
 const getPropType = (name) => {
+  if (name === 'children') {
+    return 'PropTypes.node';
+  }
   if (name === 'className') {
     return 'PropTypes.string';
   }
-  if (name === 'children') {
-    return 'PropTypes.node';
+  if (name === 'disabled') {
+    return 'PropTypes.bool';
   }
   if (name === 'style') {
     return 'PropTypes.object';
