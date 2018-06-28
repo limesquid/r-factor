@@ -1,10 +1,15 @@
 const SETTINGS = Symbol('settings');
 
 const DEFAULT_SETTINGS = {
+  'component-name-collision-pattern': '${name}Component',
   'component-superclass': 'Component',
-  'connected-component-name-pattern': '${name}Component',
   'end-of-line': '\n',
   indent: 2,
+  'map-dispatch-to-props-name': 'mapDispatchToProps',
+  'map-state-to-props-name': 'mapStateToProps',
+  'map-to-props-prefer-one-line': false,
+  'map-to-state-prefer-one-line': false,
+  'merge-props-name': 'mergeProps',
   'modules-order': [
     'react',
     'react-dom',
@@ -51,8 +56,8 @@ class Settings {
     return this.get('component-superclass');
   }
 
-  get connectedComponentNamePattern() {
-    return this.get('connected-component-name-pattern');
+  get componentNameCollisionPattern() {
+    return this.get('component-name-collision-pattern');
   }
 
   get doubleEndOfLine() {
@@ -79,6 +84,27 @@ class Settings {
   get isModulesOrderAlphabetic() {
     return this.get('modules-order') === 'alphabetic';
   }
+
+  get mapDispatchToPropsName() {
+    return this.get('map-dispatch-to-props-name');
+  }
+
+  get mapStateToPropsName() {
+    return this.get('map-state-to-props-name');
+  }
+
+  get mapToPropsPreferOneLine() {
+    return this.get('map-to-props-prefer-one-line');
+  }
+
+  get mapToStatePreferOneLine() {
+    return this.get('map-to-state-prefer-one-line');
+  }
+
+  get mergePropsName() {
+    return this.get('merge-props-name');
+  }
+
 
   get modulesOrder() {
     return this.get('modules-order');

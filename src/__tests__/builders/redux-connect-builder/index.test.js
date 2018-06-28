@@ -1,4 +1,3 @@
-const fs = require('fs');
 const { readBuilderFile } = require('../../test-utils');
 const parser = require('../../../utils/parser');
 const ReduxConnectBuilder = require('../../../builders/redux-connect-builder');
@@ -151,7 +150,7 @@ const tests = [
   {
     filename: 'connect-mergeprops3',
     actions: [ 'connectMergeProps' ]
-  },
+  }
 ].map((test) => ({
   ...test,
   input: readBuilderFile(`redux-connect-builder/input/${test.filename}.js`),
