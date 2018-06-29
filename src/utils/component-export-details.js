@@ -9,6 +9,7 @@ const {
 const getComponentExportDetails = (ast) => {
   let isDefaultExport = false;
   let isInstantExport = false;
+  let exportedComponentName = null;
   let originalComponentName = null;
   let componentExportPath = null;
   let classComponentPath = null;
@@ -42,6 +43,7 @@ const getComponentExportDetails = (ast) => {
     ExportNamedDeclaration(path) {
       if (originalComponentName) {
         componentExportPath = path;
+        exportedComponentName = path.node.declaration.declarations[0].id.name;
         return;
       }
       const variableDeclaration = path.node.declaration;
@@ -88,6 +90,7 @@ const getComponentExportDetails = (ast) => {
   return {
     isDefaultExport,
     isInstantExport,
+    exportedComponentName: exportedComponentName || originalComponentName,
     originalComponentName,
     componentExportPath,
     componentIdentifierInHoC,

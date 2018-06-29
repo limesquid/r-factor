@@ -1,5 +1,7 @@
 const {
   callExpression,
+  exportDefaultDeclaration,
+  exportNamedDeclaration,
   identifier,
   variableDeclaration,
   variableDeclarator
@@ -13,8 +15,7 @@ const settings = require('../../settings');
 const wrapComponent = (source, ast = parser.parse(source),  options) => {
   const { import: importDetails, invoke, name, outermost = false } = options;
   const details = getComponentExportDetails(ast);
-
-  const { isInstantExport, isDefaultExport, originalComponentName } = details;
+  const { componentExportPath, isInstantExport, isDefaultExport, originalComponentName } = details;
   const componentScope = getComponentScope(details);
   const newComponentName = getNewComponentName(details, componentScope);
 
@@ -23,7 +24,7 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
   }
 
   if (isInstantExport && isDefaultExport) {
-    renameComponent(componentScope, originalComponentName, newComponentName);
+    componentScope.rename(originalComponentName, newComponentName);
     removeExport(details);
   }
 
@@ -32,9 +33,15 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
     componentScope.rename(originalComponentName, newComponentName);
   }
 
-  wrapComponentInHoc(ast, details, { invoke, name, outermost });
+  const wrappedComponentAst = createComponentWrappersAst(ast, details, newComponentName, { invoke, name, outermost });
+  const exportAst = createExportAst(details, wrappedComponentAst);
+  let codeWithoutImports;
 
-  const codeWithoutImports = parser.print(ast);
+  if (!isInstantExport) {
+    componentExportPath.replaceWith(exportAst);
+    codeWithoutImports = parser.print(ast);
+    console.log(codeWithoutImports);
+  }
 
   return addImportDeclaration(codeWithoutImports, ast, importDetails);
 };
@@ -48,8 +55,9 @@ const getNewComponentName = (details, componentScope) => {
 
   if (!details.closestHoCPath) {
     return [
-      originalComponentName && componentNameCollisionPattern.replace('${name}', originalComponentName || defaultComponentName),
+      componentNameCollisionPattern.replace('${name}', originalComponentName),
       defaultComponentName,
+      componentNameCollisionPattern.replace('${name}', defaultComponentName),
       componentScope.generateUidIdentifier(originalComponentName || defaultComponentName)
     ]
       .filter(Boolean)
@@ -58,6 +66,24 @@ const getNewComponentName = (details, componentScope) => {
 
   return originalComponentName;
 };
+
+const createExportAst = (details, wrappedComponentAst) => {
+  if (details.isDefaultExport) {
+    return exportDefaultDeclaration(wrappedComponentAst);
+  }
+
+  return exportNamedDeclaration(
+    variableDeclaration(
+      'const', [
+        variableDeclarator(
+            identifier(details.exportedComponentName),
+          wrappedComponentAst
+        )
+      ]
+    ),
+    []
+  );
+}
 
 const removeExport = ({ componentExportPath, functionalComponentPath, classComponentPath }) =>
   componentExportPath.replaceWith(functionalComponentPath || classComponentPath);
@@ -77,10 +103,6 @@ const removeExportAndSetComponentName = (source, details, newComponentName) => {
   componentExportPath.replaceWith(newComponentDeclaration);
 };
 
-const renameComponent = (details, originalComponentName, newComponentName) => {
-
-};
-
 const buildWraperAst = (name, invoke, componentIdentifier) => {
   let callee = identifier(name);
 
@@ -94,82 +116,24 @@ const buildWraperAst = (name, invoke, componentIdentifier) => {
   return callExpression(callee, [ componentIdentifier ]);
 };
 
-const wrapComponentInHoc = (ast, details, { invoke, name, outermost }) => {
+const createComponentWrappersAst = (ast, details, newComponentName, { invoke, name, outermost }) => {
   const { closestHoCPath, componentIdentifierInHoC } = details;
   const isAlreadyWrapped = Boolean(closestHoCPath);
 
-  if (isAlreadyWrapped) {
-    if (!outermost) {
-      closestHoCPath.node.arguments = closestHoCPath.node.arguments.map(
-        (argument) => argument === componentIdentifierInHoC
-          ? buildWraperAst(name, invoke, componentIdentifierInHoC)
-          : argument
-      );
-    } else {
-      const outerMostHoCPath = getOutermostCallExpressionPath(closestHoCPath);
-      closestHoCPath.replaceWith(
-        
-      );
-    }
-  }
-};
-
-const refactorExport = (code, ast, details) => {
-  const { componentNameCollisionPattern, defaultComponentName } = settings;
-  const {
-    classComponentPath,
-    componentExportPath,
-    functionalComponentPath,
-    isDefaultExport,
-    isInstantExport,
-    originalComponentName
-  } = details;
-
-  const componentScope = (classComponentPath || functionalComponentPath).scope;
-  const componentDeclaration = componentExportPath.node.declaration;
-  let newComponentName = originalComponentName;
-
-  if (!originalComponentName || !isDefaultExport) {
-    newComponentName = [
-      originalComponentName && componentNameCollisionPattern.replace('${name}', originalComponentName || defaultComponentName),
-      defaultComponentName,
-      componentScope.generateUidIdentifier(originalComponentName || defaultComponentName)
-    ]
-      .filter(Boolean)
-      .find((potentialName) => !componentScope.hasBinding(potentialName));
+  if (outermost && isAlreadyWrapped) {
+    return buildWraperAst(name, invoke, getOutermostCallExpressionPath(closestHoCPath).node);
   }
 
-
-  if (!isInstantExport && isDefaultExport) {
-    componentDeclaration.id = identifier(newComponentName);
+  if (!outermost && isAlreadyWrapped) {
+    closestHoCPath.node.arguments = closestHoCPath.node.arguments.map(
+      (argument) => argument === componentIdentifierInHoC
+        ? buildWraperAst(name, invoke, componentIdentifierInHoC)
+        : argument
+    );
+    return getOutermostCallExpressionPath(closestHoCPath); 
   }
 
-  if (originalComponentName) {
-    componentScope.rename(originalComponentName, newComponentName);
-  }
-
-  if (!isInstantExport) {
-    return;
-  }
-
-  if (functionalComponentPath) {
-    const componentCode = `const ${newComponentName} = ${code.slice(componentDeclaration.start, componentDeclaration.end)}`;
-    const newComponentDeclaration = parser.parse(componentCode).program.body[0];
-    componentExportPath.replaceWith(newComponentDeclaration);
-  } else {
-    // classComponentPath.declaration.id = newComponentName;
-    // classComponentPath.replaceWith(classComponentPath.declaration);
-  }
-
-  // if (originalComponentName) {
-  //   // componentExportPath.replaceWith(
-  //     // 
-  //   // );
-  // } else {
-  //   const newComponentDeclaration = variableDeclaration('const', [
-  //     variableDeclarator(identifier(newComponentName), componentDeclaration)
-  //   ]);
-  // }
+  return buildWraperAst(name, invoke, identifier(newComponentName));
 };
 
 module.exports = wrapComponent;
