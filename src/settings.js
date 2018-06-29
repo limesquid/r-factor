@@ -3,6 +3,7 @@ const SETTINGS = Symbol('settings');
 const DEFAULT_SETTINGS = {
   'component-name-collision-pattern': '${name}Component',
   'component-superclass': 'Component',
+  'default-component-name': 'Component',
   'end-of-line': '\n',
   indent: 2,
   'map-dispatch-to-props-name': 'mapDispatchToProps',
@@ -58,6 +59,10 @@ class Settings {
 
   get componentNameCollisionPattern() {
     return this.get('component-name-collision-pattern');
+  }
+
+  get defaultComponentName() {
+    return this.get('default-component-name');
   }
 
   get doubleEndOfLine() {

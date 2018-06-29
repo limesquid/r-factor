@@ -32,6 +32,12 @@ const getComponentExportDetails = (ast) => {
         isInstantExport = true;
         componentExportPath = path;
       }
+
+      if (isComponent) {
+        classComponentPath = path.get('declaration');
+      } else if (isExportedFunctionalComponent) {
+        functionalComponentPath = path.get('declaration');
+      } 
     },
     ExportNamedDeclaration(path) {
       if (originalComponentName) {
@@ -42,11 +48,13 @@ const getComponentExportDetails = (ast) => {
       if (isFunctionalComponentDeclaration(variableDeclaration)) {
         isInstantExport = true;
         componentExportPath = path;
+        functionalComponentPath = path.get('declaration');
       }
 
       if (isComponentDeclaration(variableDeclaration)) {
         isInstantExport = true;
         componentExportPath = path;
+        classComponentPath = path.get('declaration');
       }
     },
     VariableDeclaration(path) {

@@ -1,5 +1,6 @@
 const {
   isBlockStatement,
+  isCallExpression,
   isIdentifier,
   isImportSpecifier,
   isObjectExpression,
@@ -109,7 +110,15 @@ const getFurthestAncestorInScope = (path) => {
   }
 
   return getFurthestAncestorInScope(path.parentPath);
-}
+};
+
+const getOutermostCallExpressionPath = (path) => {
+  if(!isCallExpression(path.parent)) {
+    return path;
+  }
+
+  return getOutermostCallExpressionPath(path.parentPath);
+};
 
 module.exports = {
   getClassComponentName,
@@ -117,6 +126,7 @@ module.exports = {
   getFunctionalComponentName,
   getFurthestAncestorInScope,
   getNodeIndent,
+  getOutermostCallExpressionPath,
   getReturnStatement,
   getSubImports,
   isArrowFunctionDeclaration,

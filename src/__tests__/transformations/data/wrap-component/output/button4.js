@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withAuth } from 'auth';
 import { withRouter } from 'react-router';
+import { withAuth } from 'auth';
 
 const ButtonComponent = ({ name }) => (
   <div>
