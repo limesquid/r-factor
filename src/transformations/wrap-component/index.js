@@ -5,6 +5,7 @@ const {
   identifier,
   isBlockStatement,
   isProgram,
+  returnStatement,
   variableDeclaration,
   variableDeclarator
 } = require('@babel/types');
@@ -17,7 +18,14 @@ const settings = require('../../settings');
 const wrapComponent = (source, ast = parser.parse(source),  options) => {
   const { import: importDetails, invoke, name, outermost = false } = options;
   const details = getComponentExportDetails(ast);
-  const { componentExportPath, isInstantExport, isDefaultExport, originalComponentName } = details;
+  const {
+    componentExportPath,
+    componentReturnPath,
+    isDefaultExport,
+    isExported,
+    isInstantExport,
+    originalComponentName
+  } = details;
   const componentScope = getComponentScope(details);
   const newComponentName = getNewComponentName(details, componentScope);
 
@@ -30,18 +38,32 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
     componentScope.rename(originalComponentName, newComponentName);
   }
 
-  const wrappedComponentAst = createComponentWrappersAst(ast, details, newComponentName, { invoke, name, outermost });
-  const exportAst = createExportAst(details, wrappedComponentAst);
-  let codeWithoutImports;
+  const wrappedComponentAst = createComponentWrappersAst(
+    ast,
+    details,
+    newComponentName,
+    { invoke, name, outermost }
+  );
 
-  if (!isInstantExport) {
+  if (isExported && !isInstantExport) {
+    const exportAst = createExportAst(details, wrappedComponentAst);
     componentExportPath.replaceWith(exportAst);
-  } else {
+  }
+
+  if (isExported && isInstantExport) {
+    const exportAst = createExportAst(details, wrappedComponentAst);
     const componentScopeBodyNode = findComponentScopePath(details);
 
     // This is a hack. We need to append exportAst to body, but there is no empty line before it.
     const exportAstWithEmptyLine = parser.parse('\n\n' + parser.print(exportAst)).program.body[0];
     appendNode(componentScopeBodyNode, exportAstWithEmptyLine);
+  }
+
+  if (!isExported) {
+    const returnAst = returnStatement(wrappedComponentAst);
+    const componentScopeBodyNode = findComponentScopePath(details);
+    componentReturnPath.replaceWith(returnAst);
+    console.log(newComponentName);
   }
 
   const codeWithComponentWrapped = parser.print(ast);
@@ -67,10 +89,14 @@ const getComponentScope = ({ classComponentPath, functionalComponentPath }) =>
 
 const getNewComponentName = (details, componentScope) => {
   const { componentNameCollisionPattern, defaultComponentName } = settings;
-  const { isDefaultExport, isInstantExport, originalComponentName, exportedComponentName } = details;
+  const { isDefaultExport, isHoC, isInstantExport, originalComponentName, exportedComponentName } = details;
   const findNameFromPotential = (names) => names
     .filter(Boolean)
     .find((potentialName) => !componentScope.hasBinding(potentialName));
+
+  if (isHoC && originalComponentName) {
+    return originalComponentName;
+  }
 
   if (isDefaultExport && isInstantExport) {
     return findNameFromPotential([

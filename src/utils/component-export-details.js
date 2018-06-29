@@ -4,7 +4,7 @@ const {
   isComponentDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration,
-  isIdentifierUsed
+  isIdentifierInside
 } = require('./ast');
 
 const getComponentExportDetails = (ast) => {
@@ -13,6 +13,7 @@ const getComponentExportDetails = (ast) => {
   let exportedComponentName = null;
   let originalComponentName = null;
   let componentExportPath = null;
+  let componentReturnPath = null;
   let classComponentPath = null;
   let functionalComponentPath = null;
   let closestHoCPath = null;
@@ -21,7 +22,7 @@ const getComponentExportDetails = (ast) => {
   traverse(ast, {
     ExportDefaultDeclaration(path) {
       const { node } = path;
-      if (originalComponentName && isIdentifierUsed(path, originalComponentName)) {
+      if (originalComponentName && isIdentifierInside(path, originalComponentName)) {
         isDefaultExport = true;
         isInstantExport = false;
         componentExportPath = path;
@@ -42,7 +43,7 @@ const getComponentExportDetails = (ast) => {
       } 
     },
     ExportNamedDeclaration(path) {
-      if (originalComponentName && isIdentifierUsed(path, originalComponentName)) {
+      if (originalComponentName && isIdentifierInside(path, originalComponentName)) {
         componentExportPath = path;
         exportedComponentName = path.node.declaration.declarations[0].id.name;
         return;
@@ -85,14 +86,25 @@ const getComponentExportDetails = (ast) => {
         closestHoCPath = path;
         componentIdentifierInHoC = componentIdentifier;
       }
+    },
+    ReturnStatement(path) {
+      if (!originalComponentName || closestHoCPath) {
+        return;
+      }
+
+      if (isIdentifierInside(path, originalComponentName)) {
+        componentReturnPath = path;
+      }
     }
   });
 
   return {
     isDefaultExport,
     isExported: Boolean(componentExportPath),
+    isHoC: Boolean(componentReturnPath),
     isInstantExport,
     exportedComponentName: exportedComponentName || originalComponentName,
+    componentReturnPath,
     originalComponentName,
     componentExportPath,
     componentIdentifierInHoC,

@@ -120,7 +120,7 @@ const getOutermostCallExpressionPath = (path) => {
   return getOutermostCallExpressionPath(path.parentPath);
 };
 
-const isIdentifierUsed = (path, identifierName) => {
+const isIdentifierInside = (path, identifierName) => {
   let isUsed = false;
 
   path.traverse({
@@ -149,7 +149,7 @@ module.exports = {
   isComponentDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
   isFunctionalComponentDeclaration,
-  isIdentifierUsed,
+  isIdentifierInside,
   isMemberDeclaration,
   isMemberOfDeclaration,
   isObjectDeclaration,
