@@ -8,7 +8,7 @@ const Button = ({ name }) => (
 );
 
 Button.propTypes = {
-  name: PropTypes.any
+  name: PropTypes.string
 };
 
 export default withRouter(Button);

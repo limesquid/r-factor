@@ -1,5 +1,6 @@
 const { readTransformationsFile } = require('../test-utils');
 const wrapComponent = require('../../transformations/wrap-component');
+const settings = require('../../settings');
 
 const readInputFile = (filename) => readTransformationsFile(`wrap-component/input/${filename}.js`);
 const readOutputFile = (filename) => readTransformationsFile(`wrap-component/output/${filename}.js`);
@@ -12,25 +13,25 @@ describe('transformation:wrap-component', () => {
     expect(result).toBe(output);
   });
 
-  // it('should wrap default export (without importing a module)', () => {
-  //   const input = readInputFile('button2');
-  //   const output = readOutputFile('button2');
-  //   const result = wrapComponent(input, undefined, { name: 'withRouter' });
-  //   expect(result).toBe(output);
-  // });
+  it('should wrap default export (without importing a module)', () => {
+    const input = readInputFile('button2');
+    const output = readOutputFile('button2');
+    const result = wrapComponent(input, undefined, { name: 'withRouter' });
+    expect(result).toBe(output);
+  });
 
-  // it('should remove old and add new export statement with component wrapped', () => {
-  //   const input = readInputFile('button3');
-  //   const output = readOutputFile('button3');
-  //   const result = wrapComponent(input, undefined, {
-  //     name: 'withRouter',
-  //     import: {
-  //       module: 'react-router',
-  //       subImports: { withRouter: 'withRouter' }
-  //     }
-  //   });
-  //   expect(result).toBe(output);
-  // });
+  it('should remove old and add new export statement with component wrapped', () => {
+    const input = readInputFile('button3');
+    const output = readOutputFile('button3');
+    const result = wrapComponent(input, undefined, {
+      name: 'withRouter',
+      import: {
+        module: 'react-router',
+        subImports: { withRouter: 'withRouter' }
+      }
+    });
+    expect(result).toBe(output);
+  });
 
   it('should wrap already wrapped component (innermost)', () => {
     const input = readInputFile('button4');
@@ -140,16 +141,19 @@ describe('transformation:wrap-component', () => {
   //   expect(result).toBe(output);
   // });
 
-  // it('should name nameless class component and wrap properly', () => {
-  //   const input = readInputFile('button12');
-  //   const output = readOutputFile('button12');
-  //   const result = wrapComponent(input, undefined, {
-  //     name: 'withRouter',
-  //     import: {
-  //       module: 'react-router',
-  //       subImports: { withRouter: 'withRouter' }
-  //     }
-  //   });
-  //   expect(result).toBe(output);
-  // });
+  it('should name nameless class component and wrap properly', () => {
+    settings.set({ 'component-name-collision-pattern': 'Suffix${name}Prefix' });
+    console.log(settings.componentNameCollisionPattern);
+    const input = readInputFile('button12');
+    const output = readOutputFile('button12');
+    const result = wrapComponent(input, undefined, {
+      name: 'withRouter',
+      import: {
+        module: 'react-router',
+        subImports: { withRouter: 'withRouter' }
+      }
+    });
+    expect(result).toBe(output);
+    settings.revert();
+  });
 });

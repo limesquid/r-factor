@@ -71,25 +71,34 @@ const getComponentScope = ({ classComponentPath, functionalComponentPath }) =>
 
 const getNewComponentName = (details, componentScope) => {
   const { componentNameCollisionPattern, defaultComponentName } = settings;
-  const { isDefaultExport, originalComponentName, exportedComponentName } = details;
+  const { isDefaultExport, isInstantExport, originalComponentName, exportedComponentName } = details;
+  const findNameFromPotential = (names) => names
+    .filter(Boolean)
+    .find((potentialName) => !componentScope.hasBinding(potentialName));
 
-  if (isDefaultExport) {
-    return defaultComponentName;
+  if (isDefaultExport && isInstantExport) {
+    return findNameFromPotential([
+      defaultComponentName,
+      componentNameCollisionPattern.replace('${name}', defaultComponentName)
+    ]);
   }
 
+  if (isDefaultExport && !isInstantExport) {
+    return originalComponentName;
+  }
+
+  console.log(exportedComponentName, originalComponentName);
   if (exportedComponentName !== originalComponentName) {
     return originalComponentName;
   }
 
   if (!details.closestHoCPath) {
-    return [
+    return findNameFromPotential([
       componentNameCollisionPattern.replace('${name}', originalComponentName),
       defaultComponentName,
       componentNameCollisionPattern.replace('${name}', defaultComponentName),
       componentScope.generateUidIdentifier(originalComponentName || defaultComponentName)
-    ]
-      .filter(Boolean)
-      .find((potentialName) => !componentScope.hasBinding(potentialName));
+    ]);
   }
 
   return originalComponentName;
@@ -161,7 +170,6 @@ const createComponentWrappersAst = (ast, details, newComponentName, { invoke, na
     return getOutermostCallExpressionPath(closestHoCPath).node; 
   }
 
-  console.log(123, newComponentName);
   return buildWraperAst(name, invoke, identifier(newComponentName));
 };
 
