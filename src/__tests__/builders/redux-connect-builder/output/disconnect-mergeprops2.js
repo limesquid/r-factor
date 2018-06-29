@@ -5,4 +5,4 @@ const Button = () => (<span>123</span>);
 
 const mapStateToProps = (state) => ({});
 
-export default conenct(mapStateToProps)(Button);
+export default connect(mapStateToProps)(Button);

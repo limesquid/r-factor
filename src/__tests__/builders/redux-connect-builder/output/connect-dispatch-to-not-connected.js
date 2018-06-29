@@ -5,4 +5,4 @@ const Component = () => (<span>123</span>);
 
 const mapDispatchToProps = {};
 
-export default connect(null, mapStateToProps)(Component);
+export default connect(null, mapDispatchToProps)(Component);

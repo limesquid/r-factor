@@ -22,6 +22,7 @@ const DEFAULT_SETTINGS = {
     'redux-saga',
     'redux-saga/effects',
     'react-redux',
+    'react-router',
     'react-router-redux',
     'redux-actions',
     'reselect',

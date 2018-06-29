@@ -1,6 +1,8 @@
 const { identifier, nullLiteral } = require('@babel/types');
 const parser = require('../../utils/parser');
+const wrapComponent = require('../../transformations/wrap-component');
 const {
+  checkIsConnected,
   createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
   createMergePropsFunctionAst,
@@ -11,14 +13,26 @@ const {
 class ReduxConnectBuilder {
   constructor(code, ast) {
     this.ast = ast || parser.parse(ast);
+    this.wrapWithConnectHoCIfNeeded();
   }
 
   refresh() {
     this.details = getDetails(this.ast);
   }
 
-  wrapWithConnectHoC() {
-
+  wrapWithConnectHoCIfNeeded(code, ast) {
+    if (!checkIsConnected(this.ast)) {
+      this.code = wrapComponent(this.code, this.ast, {
+        name: 'connect',
+        invoke: [],
+        import: {
+          module: 'react-redux',
+          subImports: { connect: 'connect' }
+        }
+      });
+      this.ast = parser.parse(this.code);
+      this.refresh();
+    }
   }
 
   connect() {

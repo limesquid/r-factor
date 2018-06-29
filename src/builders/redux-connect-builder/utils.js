@@ -22,7 +22,21 @@ const checkMapDispatchToProps = (connectArguments) =>
 
 const checkMergeProps = (connectArguments) => connectArguments.length > 2;
 
+const checkIsConnected = (ast) => {
+  let isConnected = false;
+  traverse(ast, {
+    CallExpression(path) {
+      if (path.node.callee.name === 'connect') {
+        isConnected = true;
+        path.stop();
+      }
+    }
+  });
+  return isConnected;
+}
+
 const getDetails = (ast) => {
+  console.log(settings.modulesOrder);
   const objectsDeclarationsMap = {};
   const functionsDeclarationsMap = {};
   let connectCallExpressionPath = null;
@@ -161,6 +175,7 @@ const insertNodeAfterOrBefore = (node, afterPaths, beforePaths) => {
 };
 
 module.exports = {
+  checkIsConnected,
   createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
   createMergePropsFunctionAst,

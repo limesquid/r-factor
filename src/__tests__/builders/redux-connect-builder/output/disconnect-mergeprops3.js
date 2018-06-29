@@ -5,4 +5,4 @@ const Button = () => (<span>123</span>);
 
 const mapDispatchToProps = {};
 
-export default conenct(null, mapDispatchToProps)(Button);
+export default connect(null, mapDispatchToProps)(Button);

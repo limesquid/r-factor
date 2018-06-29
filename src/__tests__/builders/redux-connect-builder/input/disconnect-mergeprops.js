@@ -9,4 +9,4 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps
 });
 
-export default conenct(null, null, mergeProps)(Button);
+export default connect(null, null, mergeProps)(Button);
