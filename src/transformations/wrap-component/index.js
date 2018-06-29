@@ -40,7 +40,6 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
   if (!isInstantExport) {
     componentExportPath.replaceWith(exportAst);
     codeWithoutImports = parser.print(ast);
-    console.log(codeWithoutImports);
   }
 
   return addImportDeclaration(codeWithoutImports, ast, importDetails);
@@ -51,7 +50,11 @@ const getComponentScope = ({ classComponentPath, functionalComponentPath }) =>
 
 const getNewComponentName = (details, componentScope) => {
   const { componentNameCollisionPattern, defaultComponentName, isDefaultExport } = settings;
-  const { originalComponentName } = details;
+  const { originalComponentName, exportedComponentName } = details;
+
+  if (exportedComponentName !== originalComponentName) {
+    return originalComponentName;
+  }
 
   if (!details.closestHoCPath) {
     return [
@@ -130,9 +133,10 @@ const createComponentWrappersAst = (ast, details, newComponentName, { invoke, na
         ? buildWraperAst(name, invoke, componentIdentifierInHoC)
         : argument
     );
-    return getOutermostCallExpressionPath(closestHoCPath); 
+    return getOutermostCallExpressionPath(closestHoCPath).node; 
   }
 
+  console.log(123, newComponentName);
   return buildWraperAst(name, invoke, identifier(newComponentName));
 };
 
