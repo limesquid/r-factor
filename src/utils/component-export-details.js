@@ -67,7 +67,7 @@ const getComponentExportDetails = (ast) => {
     },
     ClassDeclaration(path) {
       if (isComponentDeclaration(path.node)) {
-        originalComponentName = path.node.id.name;
+        originalComponentName = path.node.id && path.node.id.name;
         classComponentPath = path;
       }
     },

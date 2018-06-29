@@ -5,12 +5,12 @@ const readInputFile = (filename) => readTransformationsFile(`wrap-component/inpu
 const readOutputFile = (filename) => readTransformationsFile(`wrap-component/output/${filename}.js`);
 
 describe('transformation:wrap-component', () => {
-  // it('should rename and wrap a component (without importing a module)', () => {
-  //   const input = readInputFile('button1');
-  //   const output = readOutputFile('button1');
-  //   const result = wrapComponent(input, undefined, { name: 'withRouter' });
-  //   expect(result).toBe(output);
-  // });
+  it('should rename and wrap a component (without importing a module)', () => {
+    const input = readInputFile('button1');
+    const output = readOutputFile('button1');
+    const result = wrapComponent(input, undefined, { name: 'withRouter' });
+    expect(result).toBe(output);
+  });
 
   // it('should wrap default export (without importing a module)', () => {
   //   const input = readInputFile('button2');
@@ -130,6 +130,19 @@ describe('transformation:wrap-component', () => {
   // it('should add body to hoc and wrap inner component (named export)', () => {
   //   const input = readInputFile('button11');
   //   const output = readOutputFile('button11');
+  //   const result = wrapComponent(input, undefined, {
+  //     name: 'withRouter',
+  //     import: {
+  //       module: 'react-router',
+  //       subImports: { withRouter: 'withRouter' }
+  //     }
+  //   });
+  //   expect(result).toBe(output);
+  // });
+
+  // it('should name nameless class component and wrap properly', () => {
+  //   const input = readInputFile('button12');
+  //   const output = readOutputFile('button12');
   //   const result = wrapComponent(input, undefined, {
   //     name: 'withRouter',
   //     import: {

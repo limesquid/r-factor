@@ -3,6 +3,8 @@ const {
   exportDefaultDeclaration,
   exportNamedDeclaration,
   identifier,
+  isBlockStatement,
+  isProgram,
   variableDeclaration,
   variableDeclarator
 } = require('@babel/types');
@@ -19,14 +21,13 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
   const componentScope = getComponentScope(details);
   const newComponentName = getNewComponentName(details, componentScope);
 
-  if (!originalComponentName) {
+  if (!originalComponentName || (isInstantExport && isDefaultExport)) {
     removeExportAndSetComponentName(source, details, newComponentName);
   }
 
-  if (isInstantExport && isDefaultExport) {
-    componentScope.rename(originalComponentName, newComponentName);
-    removeExport(details);
-  }
+  // if (isInstantExport && isDefaultExport) {
+  //   removeExportAndSetComponentName(source, details, newComponentName);
+  // }
 
   if (isInstantExport && !isDefaultExport) {
     removeExport(details);
@@ -39,18 +40,42 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
 
   if (!isInstantExport) {
     componentExportPath.replaceWith(exportAst);
-    codeWithoutImports = parser.print(ast);
+  } else {
+    const componentScopeBodyNode = findComponentScopePath(details);
+
+    // This is a hack. We need to append exportAst to body, but there is no empty line before it.
+    const exportAstWithEmptyLine = parser.parse('\n\n' + parser.print(exportAst)).program.body[0];
+    appendNode(componentScopeBodyNode, exportAstWithEmptyLine);
   }
 
-  return addImportDeclaration(codeWithoutImports, ast, importDetails);
+  const codeWithComponentWrapped = parser.print(ast);
+
+  return importDetails
+    ? addImportDeclaration(codeWithComponentWrapped, ast, importDetails)
+    : codeWithComponentWrapped;
 };
+
+const findComponentScopePath = ({ functionalComponentPath, classComponentPath, componentExportPath }) => {
+  const componentPath = functionalComponentPath || classComponentPath || componentExportPath;
+  return componentPath.findParent(
+    ({ node }) => isBlockStatement(node) || isProgram(node)
+  ).node;
+};
+
+const appendNode = (componentScopePath, node) => {
+  componentScopePath.body.push(node);
+}
 
 const getComponentScope = ({ classComponentPath, functionalComponentPath }) =>
   (classComponentPath || functionalComponentPath).scope;
 
 const getNewComponentName = (details, componentScope) => {
-  const { componentNameCollisionPattern, defaultComponentName, isDefaultExport } = settings;
-  const { originalComponentName, exportedComponentName } = details;
+  const { componentNameCollisionPattern, defaultComponentName } = settings;
+  const { isDefaultExport, originalComponentName, exportedComponentName } = details;
+
+  if (isDefaultExport) {
+    return defaultComponentName;
+  }
 
   if (exportedComponentName !== originalComponentName) {
     return originalComponentName;
