@@ -6,7 +6,13 @@ const readInputFile = (filename) => readTransformationsFile(`wrap-component/inpu
 const readOutputFile = (filename) => readTransformationsFile(`wrap-component/output/${filename}.js`);
 
 describe('transformation:wrap-component', () => {
+
+  beforeEach(() => {
+    settings.revert();
+  })
+
   it('should rename and wrap a component (without importing a module)', () => {
+    settings.set({ 'default-component-name': 'MyComponent' });
     const input = readInputFile('button1');
     const output = readOutputFile('button1');
     const result = wrapComponent(input, undefined, { name: 'withRouter' });
@@ -88,18 +94,18 @@ describe('transformation:wrap-component', () => {
     expect(result).toBe(output);
   });
 
-  // it('should wrap component returned in hoc', () => {
-  //   const input = readInputFile('button8');
-  //   const output = readOutputFile('button8');
-  //   const result = wrapComponent(input, undefined, {
-  //     name: 'withRouter',
-  //     import: {
-  //       module: 'react-router',
-  //       subImports: { withRouter: 'withRouter' }
-  //     }
-  //   });
-  //   expect(result).toBe(output);
-  // });
+  it('should wrap component returned in hoc', () => {
+    const input = readInputFile('button8');
+    const output = readOutputFile('button8');
+    const result = wrapComponent(input, undefined, {
+      name: 'withRouter',
+      import: {
+        module: 'react-router',
+        subImports: { withRouter: 'withRouter' }
+      }
+    });
+    expect(result).toBe(output);
+  });
 
   // it('should wrap already wrapped component returned in hoc (outermost)', () => {
   //   const input = readInputFile('button9');
@@ -141,7 +147,7 @@ describe('transformation:wrap-component', () => {
   //   expect(result).toBe(output);
   // });
 
-  it('should name nameless class component and wrap properly', () => {
+  it('should name nameless class component (using setting) and wrap properly', () => {
     settings.set({ 'component-name-collision-pattern': 'Suffix${name}Prefix' });
     console.log(settings.componentNameCollisionPattern);
     const input = readInputFile('button12');
@@ -154,6 +160,18 @@ describe('transformation:wrap-component', () => {
       }
     });
     expect(result).toBe(output);
-    settings.revert();
+  });
+
+  it('should rename class (using setting) component wrap properly', () => {
+    const input = readInputFile('button13');
+    const output = readOutputFile('button13');
+    const result = wrapComponent(input, undefined, {
+      name: 'withRouter',
+      import: {
+        module: 'react-router',
+        subImports: { withRouter: 'withRouter' }
+      }
+    });
+    expect(result).toBe(output);
   });
 });

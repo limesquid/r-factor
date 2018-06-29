@@ -87,7 +87,6 @@ const getNewComponentName = (details, componentScope) => {
     return originalComponentName;
   }
 
-  console.log(exportedComponentName, originalComponentName);
   if (exportedComponentName !== originalComponentName) {
     return originalComponentName;
   }

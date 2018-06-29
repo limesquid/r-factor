@@ -1,7 +1,7 @@
-import React, { ComponentComponent } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-export default class extends PureComponent {
+export class Button extends PureComponent {
   static propTypes = {
     name: PropTypes.string
   };

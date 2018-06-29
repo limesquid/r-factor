@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Component = ({ name }) => (
+const MyComponent = ({ name }) => (
   <div>
     {name}
   </div>
 );
 
-export default withRouter(Component);
+export default withRouter(MyComponent);

@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 
-class Component extends PureComponent {
+class ButtonComponent extends PureComponent {
   static propTypes = {
     name: PropTypes.string
   };
@@ -17,4 +17,4 @@ class Component extends PureComponent {
   }
 }
 
-export default withRouter(Component);
+export const Button = withRouter(ButtonComponent);
