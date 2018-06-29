@@ -107,45 +107,45 @@ describe('transformation:wrap-component', () => {
     expect(result).toBe(output);
   });
 
-  // it('should wrap already wrapped component returned in hoc (outermost)', () => {
-  //   const input = readInputFile('button9');
-  //   const output = readOutputFile('button9');
-  //   const result = wrapComponent(input, undefined, {
-  //     name: 'withAuth',
-  //     outermost: true,
-  //     import: {
-  //       module: 'auth',
-  //       subImports: { withAuth: 'withAuth' }
-  //     }
-  //   });
-  //   expect(result).toBe(output);
-  // });
+  it('should wrap already wrapped component returned in hoc (outermost)', () => {
+    const input = readInputFile('button9');
+    const output = readOutputFile('button9');
+    const result = wrapComponent(input, undefined, {
+      name: 'withAuth',
+      outermost: true,
+      import: {
+        module: 'auth',
+        subImports: { withAuth: 'withAuth' }
+      }
+    });
+    expect(result).toBe(output);
+  });
 
-  // it('should add body to hoc and wrap inner component (default export)', () => {
-  //   const input = readInputFile('button10');
-  //   const output = readOutputFile('button10');
-  //   const result = wrapComponent(input, undefined, {
-  //     name: 'withRouter',
-  //     import: {
-  //       module: 'react-router',
-  //       subImports: { withRouter: 'withRouter' }
-  //     }
-  //   });
-  //   expect(result).toBe(output);
-  // });
+  it('should add body to hoc and wrap inner component (default export)', () => {
+    const input = readInputFile('button10');
+    const output = readOutputFile('button10');
+    const result = wrapComponent(input, undefined, {
+      name: 'withRouter',
+      import: {
+        module: 'react-router',
+        subImports: { withRouter: 'withRouter' }
+      }
+    });
+    expect(result).toBe(output);
+  });
 
-  // it('should add body to hoc and wrap inner component (named export)', () => {
-  //   const input = readInputFile('button11');
-  //   const output = readOutputFile('button11');
-  //   const result = wrapComponent(input, undefined, {
-  //     name: 'withRouter',
-  //     import: {
-  //       module: 'react-router',
-  //       subImports: { withRouter: 'withRouter' }
-  //     }
-  //   });
-  //   expect(result).toBe(output);
-  // });
+  it('should add body to hoc and wrap inner component (named export)', () => {
+    const input = readInputFile('button11');
+    const output = readOutputFile('button11');
+    const result = wrapComponent(input, undefined, {
+      name: 'withRouter',
+      import: {
+        module: 'react-router',
+        subImports: { withRouter: 'withRouter' }
+      }
+    });
+    expect(result).toBe(output);
+  });
 
   it('should name nameless class component (using setting) and wrap properly', () => {
     settings.set({ 'component-name-collision-pattern': 'Suffix${name}Prefix' });

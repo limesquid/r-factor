@@ -3,7 +3,8 @@ const { isIdentifier } = require('@babel/types');
 const {
   isComponentDeclaration,
   isExportDefaultFunctionalComponentDeclaration,
-  isFunctionalComponentDeclaration
+  isFunctionalComponentDeclaration,
+  isIdentifierUsed
 } = require('./ast');
 
 const getComponentExportDetails = (ast) => {
@@ -20,7 +21,7 @@ const getComponentExportDetails = (ast) => {
   traverse(ast, {
     ExportDefaultDeclaration(path) {
       const { node } = path;
-      if (originalComponentName) {
+      if (originalComponentName && isIdentifierUsed(path, originalComponentName)) {
         isDefaultExport = true;
         isInstantExport = false;
         componentExportPath = path;
@@ -41,7 +42,7 @@ const getComponentExportDetails = (ast) => {
       } 
     },
     ExportNamedDeclaration(path) {
-      if (originalComponentName) {
+      if (originalComponentName && isIdentifierUsed(path, originalComponentName)) {
         componentExportPath = path;
         exportedComponentName = path.node.declaration.declarations[0].id.name;
         return;
@@ -89,6 +90,7 @@ const getComponentExportDetails = (ast) => {
 
   return {
     isDefaultExport,
+    isExported: Boolean(componentExportPath),
     isInstantExport,
     exportedComponentName: exportedComponentName || originalComponentName,
     originalComponentName,
