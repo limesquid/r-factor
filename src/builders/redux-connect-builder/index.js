@@ -12,27 +12,31 @@ const {
 
 class ReduxConnectBuilder {
   constructor(code, ast) {
-    this.ast = ast || parser.parse(ast);
-    this.wrapWithConnectHoCIfNeeded();
+    this.code = code;
+    this.ast = ast || parser.parse(code);
+    this.isConnected = checkIsConnected(this.ast);
   }
 
   refresh() {
     this.details = getDetails(this.ast);
   }
 
-  wrapWithConnectHoCIfNeeded(code, ast) {
-    if (!checkIsConnected(this.ast)) {
-      this.code = wrapComponent(this.code, this.ast, {
-        name: 'connect',
-        invoke: [],
-        import: {
-          module: 'react-redux',
-          subImports: { connect: 'connect' }
-        }
-      });
-      this.ast = parser.parse(this.code);
-      this.refresh();
+  wrapWithConnectHoCIfNeeded() {
+    if (this.isConnected) {
+      return;
     }
+
+    this.code = wrapComponent(this.code, this.ast, {
+      name: 'connect',
+      invoke: [],
+      import: {
+        module: 'react-redux',
+        subImports: { connect: 'connect' }
+      }
+    });
+    this.ast = parser.parse(this.code);
+    this.isConnected = true;
+    this.refresh();
   }
 
   connect() {
@@ -41,6 +45,7 @@ class ReduxConnectBuilder {
   }
 
   connectState() {
+    this.wrapWithConnectHoCIfNeeded();
     this.refresh();
     const {
       connectArguments,
@@ -67,6 +72,7 @@ class ReduxConnectBuilder {
   }
 
   connectDispatch() {
+    this.wrapWithConnectHoCIfNeeded();
     this.refresh();
     const {
       connectArguments,
@@ -97,6 +103,7 @@ class ReduxConnectBuilder {
   }
 
   connectMergeProps() {
+    this.wrapWithConnectHoCIfNeeded();
     this.refresh();
     const {
       connectArguments,

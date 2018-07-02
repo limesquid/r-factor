@@ -36,7 +36,6 @@ const checkIsConnected = (ast) => {
 }
 
 const getDetails = (ast) => {
-  console.log(settings.modulesOrder);
   const objectsDeclarationsMap = {};
   const functionsDeclarationsMap = {};
   let connectCallExpressionPath = null;

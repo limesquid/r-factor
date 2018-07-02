@@ -149,7 +149,6 @@ describe('transformation:wrap-component', () => {
 
   it('should name nameless class component (using setting) and wrap properly', () => {
     settings.set({ 'component-name-collision-pattern': 'Suffix${name}Prefix' });
-    console.log(settings.componentNameCollisionPattern);
     const input = readInputFile('button12');
     const output = readOutputFile('button12');
     const result = wrapComponent(input, undefined, {

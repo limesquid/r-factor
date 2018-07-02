@@ -63,7 +63,6 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
     const returnAst = returnStatement(wrappedComponentAst);
     const componentScopeBodyNode = findComponentScopePath(details);
     componentReturnPath.replaceWith(returnAst);
-    console.log(newComponentName);
   }
 
   const codeWithComponentWrapped = parser.print(ast);
