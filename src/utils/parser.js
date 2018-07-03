@@ -2,9 +2,9 @@ const babylon = require('@babel/parser');
 const recast = require('recast');
 const { babylonOptions } = require('../options');
 
-const parse = (code) => recast.parse(code, {
+const parse = (code, options) => recast.parse(code, {
   parser: {
-    parse: (source) => babylon.parse(source, babylonOptions)
+    parse: (source) => babylon.parse(source, { ...babylonOptions, ...options })
   }
 });
 

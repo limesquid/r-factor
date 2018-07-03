@@ -4,8 +4,8 @@ const { cleanUpCode, indentCode, isString, sortPropTypes } = require('../../util
 const { getNodeIndent } = require('../../utils/ast');
 
 class CodeBuilder extends Builder {
-  constructor(code, node) {
-    super(code, node);
+  constructor(code) {
+    super(code);
     this.key = null;
     this.value = null;
   }
