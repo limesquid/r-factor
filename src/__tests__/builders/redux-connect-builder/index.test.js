@@ -75,58 +75,58 @@ const tests = [
     filename: 'connect-wrapped3',
     actions: [ 'connect' ]
   },
-  {
-    filename: 'disconnect-dispatch-wrapped',
-    actions: [ 'diconnectDispatch' ]
-  },
-  {
-    filename: 'disconnect-dispatch-wrapped2',
-    actions: [ 'disconnect', 'diconnectDispatch' ]
-  },
-  {
-    filename: 'disconnect-dispatch',
-    actions: [ 'diconnectDispatch' ]
-  },
-  {
-    filename: 'disconnect-dispatch2',
-    actions: [ 'disconnect', 'diconnectDispatch' ]
-  },
-  {
-    filename: 'disconnect-mergeprops',
-    actions: [ 'disconnect', 'disconnectMergeProps' ]
-  },
-  {
-    filename: 'disconnect-mergeprops2',
-    actions: [ 'disconnectMergeProps' ]
-  },
-  {
-    filename: 'disconnect-mergeprops3',
-    actions: [ 'disconnectMergeProps' ]
-  },
-  {
-    filename: 'disconnect-state-wrapped',
-    actions: [ 'disconnectState' ]
-  },
-  {
-    filename: 'disconnect-state-wrapped2',
-    actions: [ 'disconnect', 'disconnectState' ]
-  },
-  {
-    filename: 'disconnect-state',
-    actions: [ 'disconnectState' ]
-  },
-  {
-    filename: 'disconnect-wrapped',
-    actions: [ 'disconnect' ]
-  },
-  {
-    filename: 'disconnect',
-    actions: [ 'disconnect' ]
-  },
-  {
-    filename: 'disconnect2',
-    actions: [ 'disconnect' ]
-  },
+  // {
+  //   filename: 'disconnect-dispatch-wrapped',
+  //   actions: [ 'diconnectDispatch' ]
+  // },
+  // {
+  //   filename: 'disconnect-dispatch-wrapped2',
+  //   actions: [ 'disconnect', 'diconnectDispatch' ]
+  // },
+  // {
+  //   filename: 'disconnect-dispatch',
+  //   actions: [ 'diconnectDispatch' ]
+  // },
+  // {
+  //   filename: 'disconnect-dispatch2',
+  //   actions: [ 'disconnect', 'diconnectDispatch' ]
+  // },
+  // {
+  //   filename: 'disconnect-mergeprops',
+  //   actions: [ 'disconnect', 'disconnectMergeProps' ]
+  // },
+  // {
+  //   filename: 'disconnect-mergeprops2',
+  //   actions: [ 'disconnectMergeProps' ]
+  // },
+  // {
+  //   filename: 'disconnect-mergeprops3',
+  //   actions: [ 'disconnectMergeProps' ]
+  // },
+  // {
+  //   filename: 'disconnect-state-wrapped',
+  //   actions: [ 'disconnectState' ]
+  // },
+  // {
+  //   filename: 'disconnect-state-wrapped2',
+  //   actions: [ 'disconnect', 'disconnectState' ]
+  // },
+  // {
+  //   filename: 'disconnect-state',
+  //   actions: [ 'disconnectState' ]
+  // },
+  // {
+  //   filename: 'disconnect-wrapped',
+  //   actions: [ 'disconnect' ]
+  // },
+  // {
+  //   filename: 'disconnect',
+  //   actions: [ 'disconnect' ]
+  // },
+  // {
+  //   filename: 'disconnect2',
+  //   actions: [ 'disconnect' ]
+  // },
   {
     filename: 'connect-mergeprops-in-hoc',
     actions: [ 'connectMergeProps' ]

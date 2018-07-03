@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { withRouter } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import Nav from 'reactstrap/lib/Nav';

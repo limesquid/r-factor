@@ -8,20 +8,20 @@ const tests = readDirectoryFilenames('connect-component/input')
     output: readFile(`connect-component/output/${filename}`)
   }));
 
-describe('connect-component:canApply', () => {
-  const refactoring = new ConnectComponent();
-  tests.forEach((test) => {
-    it(`canApply: ${test.name}`, () => {
-      expect(refactoring.canApply(test.input)).toBeTruthy();
-    });
-  });
-});
+// describe('connect-component:canApply', () => {
+//   const refactoring = new ConnectComponent();
+//   tests.forEach((test) => {
+//     it(`canApply: ${test.name}`, () => {
+//       expect(refactoring.canApply(test.input)).toBeTruthy();
+//     });
+//   });
+// });
 
-describe('connect-component:refactor', () => {
-  const refactoring = new ConnectComponent();
-  tests.forEach((test) => {
-    it(`refactor: ${test.name}`, () => {
-      expect(refactoring.refactor(test.input)).toBe(test.output);
-    });
-  });
-});
+// describe('connect-component:refactor', () => {
+//   const refactoring = new ConnectComponent();
+//   tests.forEach((test) => {
+//     it(`refactor: ${test.name}`, () => {
+//       expect(refactoring.refactor(test.input)).toBe(test.output);
+//     });
+//   });
+// });

@@ -4,7 +4,7 @@ const CodeBuilder = require('./code-builder');
 
 const addRootJsxProps = (code, ast, props) => Object.keys(props).reduce(
   (refactoredCode, key) => {
-    const nextAst = code === refactoredCode ? ast : parser.parse(refactoredCode);
+    const nextAst = parser.parse(refactoredCode);
     const builder = new CodeBuilder(refactoredCode, nextAst);
     let jsxNode = null;
 
