@@ -15,4 +15,4 @@ function f() {
   };
 }
 
-export default Header;
+export default f;

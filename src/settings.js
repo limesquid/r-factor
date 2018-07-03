@@ -5,6 +5,7 @@ const DEFAULT_SETTINGS = {
   'component-superclass': 'Component',
   'default-component-name': 'Component',
   'end-of-line': '\n',
+  'functional-component-type': 'arrow',
   indent: 2,
   'map-dispatch-to-props-name': 'mapDispatchToProps',
   'map-state-to-props-name': 'mapStateToProps',
@@ -76,6 +77,10 @@ class Settings {
 
   get endOfLine() {
     return this.get('end-of-line');
+  }
+
+  get functionalComponentType() {
+    return this.get('functional-component-type');
   }
 
   get indent() {

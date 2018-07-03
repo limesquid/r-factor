@@ -3,25 +3,33 @@ const traverse = require('@babel/traverse').default;
 const { isComponentDeclaration, isReactImport } = require('../../utils/ast');
 const settings = require('../../settings');
 const { Refactoring } = require('../../model');
+const ConvertFunctionToArrowComponent = require('../convert-function-to-arrow-component');
 const MoveDefaultPropsOutOfClass = require('../move-default-props-out-of-class');
 const MovePropTypesOutOfClass = require('../move-prop-types-out-of-class');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 
-class ConvertToFunctionalComponent extends Refactoring {
+const convertFunctionToArrowComponent = new ConvertFunctionToArrowComponent();
+const moveDefaultPropsOutOfClass = new MoveDefaultPropsOutOfClass();
+const movePropTypesOutOfClass = new MovePropTypesOutOfClass();
+
+class ConvertToArrowComponent extends Refactoring {
   constructor() {
     super();
-    this.moveDefaultPropsOutOfClass = new MoveDefaultPropsOutOfClass();
-    this.movePropTypesOutOfClass = new MovePropTypesOutOfClass();
     this.transformations = [
-      (code) => this.moveDefaultPropsOutOfClass.refactor(code),
-      (code) => this.movePropTypesOutOfClass.refactor(code),
+      (code) => convertFunctionToArrowComponent.refactorIfPossible(code),
+      (code) => moveDefaultPropsOutOfClass.refactor(code),
+      (code) => movePropTypesOutOfClass.refactor(code),
       (code, ast) => this.refactorReactImport(code, ast),
       (code, ast) => this.refactorComponent(code, ast)
     ];
   }
 
   canApply(code) {
+    if (convertFunctionToArrowComponent.canApply(code)) {
+      return true;
+    }
+
     const ast = parser.parse(code);
     let hasReactImport = false;
     let isComponent = false;
@@ -41,8 +49,8 @@ class ConvertToFunctionalComponent extends Refactoring {
 
     return hasReactImport
       || isComponent
-      || this.moveDefaultPropsOutOfClass.canApply(code)
-      || this.movePropTypesOutOfClass.canApply(code);
+      || moveDefaultPropsOutOfClass.canApply(code)
+      || movePropTypesOutOfClass.canApply(code);
   }
 
   getSuperClass(code, ast) {
@@ -88,4 +96,4 @@ class ConvertToFunctionalComponent extends Refactoring {
   }
 }
 
-module.exports = ConvertToFunctionalComponent;
+module.exports = ConvertToArrowComponent;

@@ -2,8 +2,8 @@ const traverse = require('@babel/traverse').default;
 const { isIdentifier } = require('@babel/types');
 const {
   isComponentDeclaration,
-  isExportDefaultFunctionalComponentDeclaration,
-  isFunctionalComponentDeclaration,
+  isExportDefaultArrowComponentDeclaration,
+  isArrowComponentDeclaration,
   isIdentifierInside
 } = require('./ast');
 
@@ -29,8 +29,8 @@ const getComponentExportDetails = (ast) => {
       }
 
       const isComponent = isComponentDeclaration(node.declaration);
-      const isExportedFunctionalComponent = isExportDefaultFunctionalComponentDeclaration(node);
-      if (isComponent || isExportedFunctionalComponent) {
+      const isArrowComponent = isExportDefaultArrowComponentDeclaration(node);
+      if (isComponent || isArrowComponent) {
         isDefaultExport = true;
         isInstantExport = true;
         componentExportPath = path;
@@ -38,7 +38,7 @@ const getComponentExportDetails = (ast) => {
 
       if (isComponent) {
         classComponentPath = path.get('declaration');
-      } else if (isExportedFunctionalComponent) {
+      } else if (isArrowComponent) {
         functionalComponentPath = path.get('declaration');
       } 
     },
@@ -49,7 +49,7 @@ const getComponentExportDetails = (ast) => {
         return;
       }
       const variableDeclaration = path.node.declaration;
-      if (isFunctionalComponentDeclaration(variableDeclaration)) {
+      if (isArrowComponentDeclaration(variableDeclaration)) {
         isInstantExport = true;
         componentExportPath = path;
         functionalComponentPath = path.get('declaration');
@@ -62,7 +62,7 @@ const getComponentExportDetails = (ast) => {
       }
     },
     VariableDeclaration(path) {
-      if (isFunctionalComponentDeclaration(path.node)) {
+      if (isArrowComponentDeclaration(path.node)) {
         originalComponentName = path.node.declarations[0].id.name;
         functionalComponentPath = path;
       }

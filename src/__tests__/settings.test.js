@@ -1,5 +1,6 @@
+const babylon = require('@babel/parser');
 const { readFile } = require('./test-utils');
-const parser = require('../utils/parser');
+const { babylonOptions } = require('../options');
 const settings = require('../settings');
 const addImportDeclaration = require('../transformations/add-import-declaration');
 const AddClassname = require('../refactorings/add-classname');
@@ -10,8 +11,8 @@ describe('settings', () => {
   [ 'double', 'backtick' ].forEach((quotes) => {
     it(`quotes:add-import-declaration:${quotes}`, () => {
       settings.set({ quotes });
-      const input = readFile(`settings/input/quotes-${quotes}.js`);
-      const output = readFile(`settings/output/quotes-${quotes}.js`);
+      const input = readFile(`settings/input/quotes-add-import-declaration-${quotes}.js`);
+      const output = readFile(`settings/output/quotes-add-import-declaration-${quotes}.js`);
       const ast = babylon.parse(input, babylonOptions);
       const result = addImportDeclaration(input, ast, {
         module: 'react',
@@ -41,7 +42,7 @@ describe('settings', () => {
       settings.set({ semicolons });
       const input = readFile(`settings/input/semicolons-${semicolons}.js`);
       const output = readFile(`settings/output/semicolons-${semicolons}.js`);
-      const ast = parser.parse(input);
+      const ast = babylon.parse(input, babylonOptions);
       const result = addImportDeclaration(input, ast, {
         module: 'react',
         subImports: {

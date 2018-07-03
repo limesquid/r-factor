@@ -2,6 +2,7 @@
   "component-superclass": "Component",
   "connected-component-name-pattern": "${name}Component",
   "end-of-line": "\n",
+  "functional-component-type": "arrow",
   "indent": 2,
   "modules-order": [
     "react",

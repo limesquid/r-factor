@@ -2,11 +2,16 @@ const parser = require('../../utils/parser');
 const traverse = require('@babel/traverse').default;
 const {
   isClassDeclaration,
-  isFunctionalComponentDeclaration
+  isArrowComponentDeclaration
 } = require('../../utils/ast');
 const { addPropTypes } = require('../../transformations');
 const { getPropType, getUnusedProps } = require('../../utils/props');
 const { Refactoring } = require('../../model');
+const ConvertFunctionToArrowComponent = require('../convert-function-to-arrow-component');
+const ConvertToFunctionComponent = require('../convert-to-function-component');
+
+const convertFunctionToArrowComponent = new ConvertFunctionToArrowComponent();
+const convertToFunctionComponent = new ConvertToFunctionComponent();
 
 class GeneratePropTypes extends Refactoring {
   constructor() {
@@ -17,6 +22,10 @@ class GeneratePropTypes extends Refactoring {
   }
 
   canApply(code) {
+    if (convertFunctionToArrowComponent.canApply(code)) {
+      return true;
+    }
+
     const ast = parser.parse(code);
     let isComponent = false;
 
@@ -26,13 +35,24 @@ class GeneratePropTypes extends Refactoring {
           isComponent = true;
         }
 
-        if (isFunctionalComponentDeclaration(node)) {
+        if (isArrowComponentDeclaration(node)) {
           isComponent = true;
         }
       }
     });
 
     return isComponent;
+  }
+
+  getTransformations(initialCode) {
+    if (convertFunctionToArrowComponent.canApply(initialCode)) {
+      return [
+        (code, ast) => convertFunctionToArrowComponent.refactor(code, ast),
+        ...this.transformations,
+        (code, ast) => convertToFunctionComponent.refactor(code, ast)
+      ];
+    }
+    return this.transformations;
   }
 
   generatePropTypes(code, ast) {

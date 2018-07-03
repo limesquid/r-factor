@@ -84,14 +84,6 @@ class Group {
     }
   }
 
-  removeNamespace(/* { module } */) {
-    /* TODO */
-  }
-
-  removeGlobal(/* { module } */) {
-    /* TODO */
-  }
-
   removeSubImports({ module, subImports }) {
     const existingImportIndex = this.findImportIndex(module);
 

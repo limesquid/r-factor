@@ -5,3 +5,9 @@ export default class extends Component {
     );
   }
 }
+
+const x = 1;
+
+function dummy() {
+  return Math.PI;
+}

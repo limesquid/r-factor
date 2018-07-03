@@ -42,6 +42,7 @@ class BaseCommand(sublime_plugin.TextCommand):
       'component-superclass': self.get_setting('component-superclass'),
       'connected-component-name-pattern': self.get_setting('connected-component-name-pattern'),
       'end-of-line': self.get_setting('end-of-line'),
+      'functional-component-type': self.get_setting('functional-component-type'),
       'indent': self.get_setting('indent'),
       'modules-order': self.get_setting('modules-order'),
       'quotes': self.get_setting('quotes'),
@@ -72,10 +73,16 @@ class ConvertToClassComponentCommand(BaseCommand):
     self.refactoring_name = 'convert-to-class-component'
 
 
-class ConvertToFunctionalComponentCommand(BaseCommand):
+class ConvertToArrowComponentCommand(BaseCommand):
   def __init__(self, arg):
-    super(ConvertToFunctionalComponentCommand, self).__init__(arg)
-    self.refactoring_name = 'convert-to-functional-component'
+    super(ConvertToArrowComponentCommand, self).__init__(arg)
+    self.refactoring_name = 'convert-to-arrow-component'
+
+
+class ConvertToFunctionComponentCommand(BaseCommand):
+  def __init__(self, arg):
+    super(ConvertToFunctionComponentCommand, self).__init__(arg)
+    self.refactoring_name = 'convert-to-function-component'
 
 
 class GeneratePropTypesCommand(BaseCommand):
@@ -118,3 +125,9 @@ class SortImportsCommand(BaseCommand):
   def __init__(self, arg):
     super(SortImportsCommand, self).__init__(arg)
     self.refactoring_name = 'sort-imports'
+
+
+class ToggleComponentType(BaseCommand):
+  def __init__(self, arg):
+    super(ToggleComponentType, self).__init__(arg)
+    self.refactoring_name = 'toggle-component-type'

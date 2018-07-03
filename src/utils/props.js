@@ -7,7 +7,7 @@ const {
   getFunctionalComponentPropVariableName,
   getVariableDestructuringPropertyNames,
   isClassDeclaration,
-  isFunctionalComponentDeclaration,
+  isArrowComponentDeclaration,
   isObjectKeyAccessing,
   isPropertyDestructuring,
   isThisPropsDestructuring,
@@ -28,7 +28,7 @@ const getProps = (code, ast) => {
         componentType = COMPONENT_TYPE.Class;
       }
 
-      if (isFunctionalComponentDeclaration(node)) {
+      if (isArrowComponentDeclaration(node)) {
         componentNodePath = path;
         componentType = COMPONENT_TYPE.Functional;
       }
@@ -100,11 +100,14 @@ const getUnusedProps = (code) => {
 };
 
 const getPropType = (name) => {
+  if (name === 'children') {
+    return 'PropTypes.node';
+  }
   if (name === 'className') {
     return 'PropTypes.string';
   }
-  if (name === 'children') {
-    return 'PropTypes.node';
+  if (name === 'disabled') {
+    return 'PropTypes.bool';
   }
   if (name === 'style') {
     return 'PropTypes.object';

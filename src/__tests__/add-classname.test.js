@@ -2,10 +2,12 @@ const { range, readFile } = require('./test-utils');
 const AddClassname = require('../refactorings/add-classname');
 
 const files = [
-  ...range(1, 22).map((n) => `functional/file${n}`),
+  ...range(1, 22).map((n) => `arrow/file${n}`),
   ...range(1, 22).map((n) => `class/file${n}`),
-  'functional/alerts',
-  'functional/deep-identifier'
+  ...range(1, 1).map((n) => `function/file${n}`),
+  'arrow/alerts',
+  'arrow/deep-identifier',
+  'arrow/navigation'
 ];
 
 describe('add-classname:canApply', () => {
@@ -23,7 +25,7 @@ describe('add-classname:canApply', () => {
     },
     {
       name: 'no-jsx',
-      input: readFile('add-classname/input/functional/no-jsx.js'),
+      input: readFile('add-classname/input/arrow/no-jsx.js'),
       output: false
     }
   );
