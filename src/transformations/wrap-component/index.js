@@ -1,3 +1,4 @@
+const template = require('babel-template');
 const {
   callExpression,
   exportDefaultDeclaration,
@@ -19,17 +20,20 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
   const { import: importDetails, invoke, name, outermost = false } = options;
   const details = getComponentExportDetails(ast);
   const {
+    arrowComponentDeclaration,
+    arrowComponentExpressionPath,
     componentExportPath,
     componentReturnPath,
     isDefaultExport,
     isExported,
+    isHoc,
     isInstantExport,
     originalComponentName
   } = details;
   const componentScope = getComponentScope(details);
   const newComponentName = getNewComponentName(details, componentScope);
-
-  if (!originalComponentName || (isInstantExport && isDefaultExport)) {
+  // console.log(details);
+  if (!isHoc && !originalComponentName || (isInstantExport && isDefaultExport)) {
     removeExportAndSetComponentName(source, details, newComponentName);
   }
 
@@ -37,13 +41,10 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
     removeExport(details);
     componentScope.rename(originalComponentName, newComponentName);
   }
-
-  const wrappedComponentAst = createComponentWrappersAst(
-    ast,
-    details,
-    newComponentName,
-    { invoke, name, outermost }
-  );
+  const nodeToWrap = newComponentName
+    ? identifier(newComponentName)
+    : arrowComponentExpressionPath.node;
+  const wrappedComponentAst = createComponentWrappersAst(ast, details, nodeToWrap, { invoke, name, outermost });
 
   if (isExported && !isInstantExport) {
     const exportAst = createExportAst(details, wrappedComponentAst);
@@ -59,10 +60,14 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
     appendNode(componentScopeBodyNode, exportAstWithEmptyLine);
   }
 
-  if (!isExported) {
+  if (isHoc && componentReturnPath) {
     const returnAst = returnStatement(wrappedComponentAst);
     const componentScopeBodyNode = findComponentScopePath(details);
     componentReturnPath.replaceWith(returnAst);
+  }
+
+  if (isHoc && !componentReturnPath) {
+    arrowComponentExpressionPath.replaceWith(wrappedComponentAst);
   }
 
   const codeWithComponentWrapped = parser.print(ast);
@@ -72,8 +77,8 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
     : codeWithComponentWrapped;
 };
 
-const findComponentScopePath = ({ functionalComponentPath, classComponentPath, componentExportPath }) => {
-  const componentPath = functionalComponentPath || classComponentPath || componentExportPath;
+const findComponentScopePath = ({ arrowComponentDeclaration, classComponentPath, componentExportPath }) => {
+  const componentPath = arrowComponentDeclaration || classComponentPath || componentExportPath;
   return componentPath.findParent(
     ({ node }) => isBlockStatement(node) || isProgram(node)
   ).node;
@@ -83,17 +88,28 @@ const appendNode = (componentScopePath, node) => {
   componentScopePath.body.push(node);
 }
 
-const getComponentScope = ({ classComponentPath, functionalComponentPath }) =>
-  (classComponentPath || functionalComponentPath).scope;
+const getComponentScope = ({ classComponentPath, arrowComponentDeclaration, arrowComponentExpressionPath }) =>
+  (classComponentPath || arrowComponentDeclaration || arrowComponentExpressionPath).scope;
 
 const getNewComponentName = (details, componentScope) => {
   const { componentNameCollisionPattern, defaultComponentName } = settings;
-  const { isDefaultExport, isHoC, isInstantExport, originalComponentName, exportedComponentName } = details;
+  const {
+    componentReturnPath,
+    isDefaultExport,
+    isHoc,
+    isInstantExport,
+    originalComponentName,
+    exportedComponentName
+  } = details;
   const findNameFromPotential = (names) => names
     .filter(Boolean)
     .find((potentialName) => !componentScope.hasBinding(potentialName));
 
-  if (isHoC && originalComponentName) {
+  if (isHoc && !componentReturnPath) {
+    return null;
+  }
+
+  if (isHoc && originalComponentName) {
     return originalComponentName;
   }
 
@@ -112,7 +128,7 @@ const getNewComponentName = (details, componentScope) => {
     return originalComponentName;
   }
 
-  if (!details.closestHoCPath) {
+  if (!details.closestHocPath) {
     return findNameFromPotential([
       componentNameCollisionPattern.replace('${name}', originalComponentName),
       defaultComponentName,
@@ -142,8 +158,8 @@ const createExportAst = (details, wrappedComponentAst) => {
   );
 }
 
-const removeExport = ({ componentExportPath, functionalComponentPath, classComponentPath }) =>
-  componentExportPath.replaceWith(functionalComponentPath || classComponentPath);
+const removeExport = ({ componentExportPath, arrowComponentDeclaration, classComponentPath }) =>
+  componentExportPath.replaceWith(arrowComponentDeclaration || classComponentPath);
 
 const removeExportAndSetComponentName = (source, details, newComponentName) => {
   const { componentExportPath } = details;
@@ -160,7 +176,7 @@ const removeExportAndSetComponentName = (source, details, newComponentName) => {
   componentExportPath.replaceWith(newComponentDeclaration);
 };
 
-const buildWraperAst = (name, invoke, componentIdentifier) => {
+const buildWrapperAst = (name, invoke, componentIdentifier) => {
   let callee = identifier(name);
 
   if (invoke) {
@@ -170,27 +186,28 @@ const buildWraperAst = (name, invoke, componentIdentifier) => {
     );
   }
 
-  return callExpression(callee, [ componentIdentifier ]);
+  const wrapperCode = `${parser.print(callee)}(${parser.print(componentIdentifier)})`;
+  return parser.parse(wrapperCode).program.body[0].expression;
 };
 
-const createComponentWrappersAst = (ast, details, newComponentName, { invoke, name, outermost }) => {
-  const { closestHoCPath, componentIdentifierInHoC } = details;
-  const isAlreadyWrapped = Boolean(closestHoCPath);
+const createComponentWrappersAst = (ast, details, nodeToWrap, { invoke, name, outermost }) => {
+  const { closestHocPath, componentIdentifierInHoc } = details;
+  const isAlreadyWrapped = Boolean(closestHocPath);
 
   if (outermost && isAlreadyWrapped) {
-    return buildWraperAst(name, invoke, getOutermostCallExpressionPath(closestHoCPath).node);
+    return buildWrapperAst(name, invoke, getOutermostCallExpressionPath(closestHocPath).node);
   }
 
   if (!outermost && isAlreadyWrapped) {
-    closestHoCPath.node.arguments = closestHoCPath.node.arguments.map(
-      (argument) => argument === componentIdentifierInHoC
-        ? buildWraperAst(name, invoke, componentIdentifierInHoC)
+    closestHocPath.node.arguments = closestHocPath.node.arguments.map(
+      (argument) => argument === componentIdentifierInHoc
+        ? buildWrapperAst(name, invoke, componentIdentifierInHoc)
         : argument
     );
-    return getOutermostCallExpressionPath(closestHoCPath).node; 
+    return getOutermostCallExpressionPath(closestHocPath).node; 
   }
 
-  return buildWraperAst(name, invoke, identifier(newComponentName));
+  return buildWrapperAst(name, invoke, nodeToWrap);
 };
 
 module.exports = wrapComponent;

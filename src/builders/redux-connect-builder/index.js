@@ -21,7 +21,7 @@ class ReduxConnectBuilder {
     this.details = getDetails(this.ast);
   }
 
-  wrapWithConnectHoCIfNeeded() {
+  wrapWithConnectHocIfNeeded() {
     if (this.isConnected) {
       return;
     }
@@ -45,7 +45,7 @@ class ReduxConnectBuilder {
   }
 
   connectState() {
-    this.wrapWithConnectHoCIfNeeded();
+    this.wrapWithConnectHocIfNeeded();
     this.refresh();
     const {
       connectArguments,
@@ -72,7 +72,7 @@ class ReduxConnectBuilder {
   }
 
   connectDispatch() {
-    this.wrapWithConnectHoCIfNeeded();
+    this.wrapWithConnectHocIfNeeded();
     this.refresh();
     const {
       connectArguments,
@@ -103,7 +103,7 @@ class ReduxConnectBuilder {
   }
 
   connectMergeProps() {
-    this.wrapWithConnectHoCIfNeeded();
+    this.wrapWithConnectHocIfNeeded();
     this.refresh();
     const {
       connectArguments,

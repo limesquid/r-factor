@@ -1,4 +1,5 @@
 const {
+  isArrowFunctionExpression,
   isBlockStatement,
   isCallExpression,
   isIdentifier,
@@ -38,6 +39,15 @@ const isArrowFunctionDeclaration = (node) => node.type === 'VariableDeclaration'
   && node.declarations.length === 1
   && node.declarations[0].init.type === 'ArrowFunctionExpression';
 
+const isHocFunctionDeclaration = (node) =>
+  (isFunctionDeclaration(node) || isArrowFunctionDeclaration(node))
+  && (containsNode(node, isFunctionDeclaration) || containsNode(node, isArrowFunctionDeclaration));
+
+const isArrowComponentExpression = (node) => isArrowFunctionExpression(node)
+  && isFunctionalComponentBody(node.body)
+  && !containsNode(node.body, isArrowFunctionExpression)
+  && !containsNode(node.body, isFunctionComponentDeclaration);
+
 const isObjectDeclaration = (node) => node.type === 'VariableDeclaration'
   && node.declarations.length === 1
   && isObjectExpression(node.declarations[0].init);
@@ -49,7 +59,7 @@ const isComponentDeclaration = (node) => isClassDeclaration(node)
 
 const isExportDefaultArrowComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
   && node.declaration.type === 'ArrowFunctionExpression'
-  && isFunctionalComponentBody(node.declaration);
+  && isArrowComponentExpression(node.declaration);
 
 const isExportDefaultFunctionComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
   && node.declaration.type === 'FunctionDeclaration'
@@ -59,13 +69,15 @@ const isArrowComponentDeclaration = (node) => {
   if (!isArrowFunctionDeclaration(node)) {
     return false;
   }
-
-  return isFunctionalComponentBody(node.declarations[0].init);
+  const init = node.declarations[0].init;
+  return isFunctionalComponentBody(init)
+    && !containsNode(init.body, isArrowComponentExpression)
+    && !containsNode(init.body, isFunctionComponentDeclaration);
 };
 
 const isFunctionComponentDeclaration = (node) => isFunctionDeclaration(node)
   && isFunctionalComponentBody(node.body)
-  && !containsNode(node.body, isArrowFunctionDeclaration)
+  && !containsNode(node.body, isArrowComponentExpression)
   && !containsNode(node.body, isFunctionComponentDeclaration);
 
 const isFunctionalComponentBody = (node) => containsNode(
@@ -167,12 +179,14 @@ module.exports = {
   getReturnStatement,
   getSubImports,
   isArrowComponentDeclaration,
+  isArrowComponentExpression,
   isArrowFunctionDeclaration,
   isClassDeclaration,
   isComponentDeclaration,
   isExportDefaultArrowComponentDeclaration,
   isExportDefaultFunctionComponentDeclaration,
   isFunctionComponentDeclaration,
+  isHocFunctionDeclaration,
   isIdentifierInside,
   isMemberDeclaration,
   isMemberOfDeclaration,

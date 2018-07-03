@@ -1,23 +1,27 @@
 const traverse = require('@babel/traverse').default;
 const { isIdentifier } = require('@babel/types');
 const {
+  isArrowComponentDeclaration,
+  isArrowComponentExpression,
   isComponentDeclaration,
   isExportDefaultArrowComponentDeclaration,
-  isArrowComponentDeclaration,
+  isHocFunctionDeclaration,
   isIdentifierInside
 } = require('./ast');
 
 const getComponentExportDetails = (ast) => {
   let isDefaultExport = false;
   let isInstantExport = false;
+  let isHoc = false;
   let exportedComponentName = null;
   let originalComponentName = null;
   let componentExportPath = null;
   let componentReturnPath = null;
   let classComponentPath = null;
-  let functionalComponentPath = null;
-  let closestHoCPath = null;
-  let componentIdentifierInHoC = null;
+  let arrowComponentDeclaration = null;
+  let arrowComponentExpressionPath = null;
+  let closestHocPath = null;
+  let componentIdentifierInHoc = null;
 
   traverse(ast, {
     ExportDefaultDeclaration(path) {
@@ -29,7 +33,7 @@ const getComponentExportDetails = (ast) => {
       }
 
       const isComponent = isComponentDeclaration(node.declaration);
-      const isArrowComponent = isExportDefaultArrowComponentDeclaration(node);
+      const isArrowComponent = isArrowComponentExpression(node.declaration);
       if (isComponent || isArrowComponent) {
         isDefaultExport = true;
         isInstantExport = true;
@@ -39,7 +43,7 @@ const getComponentExportDetails = (ast) => {
       if (isComponent) {
         classComponentPath = path.get('declaration');
       } else if (isArrowComponent) {
-        functionalComponentPath = path.get('declaration');
+        arrowComponentDeclaration = path.get('declaration');
       } 
     },
     ExportNamedDeclaration(path) {
@@ -48,11 +52,12 @@ const getComponentExportDetails = (ast) => {
         exportedComponentName = path.node.declaration.declarations[0].id.name;
         return;
       }
+
       const variableDeclaration = path.node.declaration;
       if (isArrowComponentDeclaration(variableDeclaration)) {
         isInstantExport = true;
         componentExportPath = path;
-        functionalComponentPath = path.get('declaration');
+        arrowComponentDeclaration = path.get('declaration');
       }
 
       if (isComponentDeclaration(variableDeclaration)) {
@@ -62,9 +67,14 @@ const getComponentExportDetails = (ast) => {
       }
     },
     VariableDeclaration(path) {
+      // if (isHocFunctionDeclaration(path.node)) {
+      //   isHoc = true;
+      //   return;
+      // }
+
       if (isArrowComponentDeclaration(path.node)) {
         originalComponentName = path.node.declarations[0].id.name;
-        functionalComponentPath = path;
+        arrowComponentDeclaration = path;
       }
     },
     ClassDeclaration(path) {
@@ -73,9 +83,15 @@ const getComponentExportDetails = (ast) => {
         classComponentPath = path;
       }
     },
+    enter(path) {
+      if (!arrowComponentDeclaration && isArrowComponentExpression(path.node)) {
+        isHoc = true;
+        arrowComponentExpressionPath = path;
+      }
+    },
     CallExpression(path) {
       const { node } = path;
-      if (!originalComponentName || closestHoCPath) {
+      if (!originalComponentName || closestHocPath) {
         return;
       }
 
@@ -83,34 +99,36 @@ const getComponentExportDetails = (ast) => {
         (argument) => isIdentifier(argument, { name: originalComponentName })
       );
       if (componentIdentifier) {
-        closestHoCPath = path;
-        componentIdentifierInHoC = componentIdentifier;
+        closestHocPath = path;
+        componentIdentifierInHoc = componentIdentifier;
       }
     },
     ReturnStatement(path) {
-      if (!originalComponentName || closestHoCPath) {
+      if (!originalComponentName || closestHocPath) {
         return;
       }
 
       if (isIdentifierInside(path, originalComponentName)) {
+        isHoc = true;
         componentReturnPath = path;
       }
     }
   });
 
   return {
+    arrowComponentExpressionPath,
     isDefaultExport,
     isExported: Boolean(componentExportPath),
-    isHoC: Boolean(componentReturnPath),
+    isHoc,
     isInstantExport,
     exportedComponentName: exportedComponentName || originalComponentName,
     componentReturnPath,
     originalComponentName,
     componentExportPath,
-    componentIdentifierInHoC,
+    componentIdentifierInHoc,
     classComponentPath,
-    closestHoCPath,
-    functionalComponentPath
+    closestHocPath,
+    arrowComponentDeclaration
   };
 };
 
