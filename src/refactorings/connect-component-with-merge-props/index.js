@@ -3,7 +3,7 @@ const parser = require('../../utils/parser');
 const ReduxConnectBuilder = require('../../builders/redux-connect-builder');
 const { Refactoring } = require('../../model');
 
-class ConnectComponentWithDispatch extends Refactoring {
+class ConnectComponentWithMergeProps extends Refactoring {
   constructor() {
     super();
     this.transformations = [
@@ -17,8 +17,8 @@ class ConnectComponentWithDispatch extends Refactoring {
 
   connectComponent(code, ast) {
     const reduxConnectBuilder = new ReduxConnectBuilder(code, ast);
-    return reduxConnectBuilder.connectDispatch().build();
+    return reduxConnectBuilder.connectMergeProps().build();
   }
 }
 
-module.exports = ConnectComponentWithDispatch;
+module.exports = ConnectComponentWithMergeProps;

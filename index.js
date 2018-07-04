@@ -5,6 +5,9 @@ const settings = require('./src/settings');
 const refactorings = {
   'add-classname': require('./src/refactorings/add-classname'),
   'connect-component': require('./src/refactorings/connect-component'),
+  'connect-component-with-state': require('./src/refactorings/connect-component-with-state'),
+  'connect-component-with-dispatch': require('./src/refactorings/connect-component-with-dispatch'),
+  'connect-component-with-merge-props': require('./src/refactorings/connect-component-with-merge-props'),
   'convert-to-class-component': require('./src/refactorings/convert-to-class-component'),
   'convert-to-arrow-component': require('./src/refactorings/convert-to-arrow-component'),
   'convert-to-function-component': require('./src/refactorings/convert-to-function-component'),

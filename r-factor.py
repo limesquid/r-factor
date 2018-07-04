@@ -67,6 +67,24 @@ class ConnectComponent(BaseCommand):
     self.refactoring_name = 'connect-component'
 
 
+class ConnectComponentWithState(BaseCommand):
+  def __init__(self, arg):
+    super(ConnectComponentWithState, self).__init__(arg)
+    self.refactoring_name = 'connect-component-with-state'
+
+
+class ConnectComponentWithDispatch(BaseCommand):
+  def __init__(self, arg):
+    super(ConnectComponentWithDispatch, self).__init__(arg)
+    self.refactoring_name = 'connect-component-with-dispatch'
+
+
+class ConnectComponentWithMergeProps(BaseCommand):
+  def __init__(self, arg):
+    super(ConnectComponentWithMergeProps, self).__init__(arg)
+    self.refactoring_name = 'connect-component-with-merge-props'
+
+
 class ConvertToClassComponentCommand(BaseCommand):
   def __init__(self, arg):
     super(ConvertToClassComponentCommand, self).__init__(arg)

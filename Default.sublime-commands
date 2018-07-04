@@ -8,6 +8,18 @@
     "command": "connect_component"
   },
   {
+    "caption": "R-factor: Connect component with mapStateToProps",
+    "command": "connect_component_with_state"
+  },
+  {
+    "caption": "R-factor: Connect component with mapDispatchToProps",
+    "command": "connect_component_with_dispatch"
+  },
+  {
+    "caption": "R-factor: Connect component with mergeProps",
+    "command": "connect_component_with_merge_props"
+  },
+  {
     "caption": "R-factor: Convert to arrow component",
     "command": "convert_to_arrow_component"
   },

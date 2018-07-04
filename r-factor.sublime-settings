@@ -1,9 +1,16 @@
 {
+  "component-name-collision-pattern": "${name}Component",
   "component-superclass": "Component",
-  "connected-component-name-pattern": "${name}Component",
+  "default-component-name": "Component",
+  "default-hoc-component-name": "InnerComponent",
   "end-of-line": "\n",
   "functional-component-type": "arrow",
   "indent": 2,
+  "map-dispatch-to-props-name": "mapDispatchToProps",
+  "map-state-to-props-name": "mapStateToProps",
+  "map-to-props-prefer-one-line": false,
+  "map-to-state-prefer-one-line": false,
+  "merge-props-name": "mergeProps",
   "modules-order": [
     "react",
     "react-dom",
