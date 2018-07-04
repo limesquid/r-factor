@@ -1,5 +1,6 @@
 const { identifier, nullLiteral } = require('@babel/types');
 const parser = require('../../utils/parser');
+const settings = require('../../settings');
 const wrapComponent = require('../../transformations/wrap-component');
 const {
   checkIsConnected,
@@ -54,7 +55,7 @@ class ReduxConnectBuilder {
       hasMapStateToPropsDefinition,
       isConnected,
       mapDispatchToPropsDefinitionPath,
-      mapStateToPropsName = 'mapStateToProps',
+      mapStateToPropsName = settings.mapStateToPropsName || 'mapStateToProps',
       mergePropsDefinitionPath
     } = this.details;
 
@@ -82,7 +83,7 @@ class ReduxConnectBuilder {
       hasMapDispatchToPropsDefinition,
       hasMapDispatchToProps,
       isConnected,
-      mapDispatchToPropsName = 'mapDispatchToProps',
+      mapDispatchToPropsName = settings.mapDispatchToPropsName || 'mapStateToProps',
       mapStateToPropsDefinitionPath,
       mergePropsDefinitionPath
     } = this.details;
@@ -115,7 +116,7 @@ class ReduxConnectBuilder {
       isConnected,
       mapStateToPropsDefinitionPath,
       mapDispatchToPropsDefinitionPath,
-      mergePropsName = 'mergeProps'
+      mergePropsName = settings.mergePropsName || 'mergeProps'
     } = this.details;
 
     if (!hasMergePropsDefinition) {

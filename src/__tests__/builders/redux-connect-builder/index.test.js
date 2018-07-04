@@ -1,6 +1,7 @@
 const { readBuilderFile } = require('../../test-utils');
 const parser = require('../../../utils/parser');
 const ReduxConnectBuilder = require('../../../builders/redux-connect-builder');
+const settings = require('../../../settings');
 
 const tests = [
   {
@@ -158,6 +159,17 @@ const tests = [
 }));
 
 describe('ReduxConnectBuilder', () => {
+  beforeAll(() => {
+    settings.set({
+      'map-to-dispatch-prefer-object': true,
+      'map-to-state-prefer-one-line': true
+    });
+  });
+
+  afterAll(() => {
+    settings.revert();
+  });
+
   tests.forEach((test) => {
     describe(test.filename, () => {
       test.actions.forEach((action) => {
@@ -170,5 +182,33 @@ describe('ReduxConnectBuilder', () => {
         });
       });
     });
+  });
+});
+
+describe('ReduxConnectBuilder: settings', () => {
+  beforeAll(() => {
+    settings.set({
+      'map-dispatch-to-props-name': "mapDispatch",
+      'map-state-to-props-name': "mapState",
+      'map-to-dispatch-prefer-object': false,
+      'map-to-state-prefer-one-line': false,
+      'merge-props-name': "mergeAllProps"
+    });
+  });
+
+  afterAll(() => {
+    settings.revert();
+  });
+
+  it('Should use settings properly while generating connect functions', () => {
+    const input = readBuilderFile('redux-connect-builder/input/settings.js');
+    const output = readBuilderFile('redux-connect-builder/output/settings.js');
+    const ast = parser.parse(input);
+    const builder = new ReduxConnectBuilder(input, ast);
+    const result = builder
+      .connect()
+      .connectMergeProps()
+      .build();
+    expect(result).toBe(output);
   });
 });

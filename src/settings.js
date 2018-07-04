@@ -10,7 +10,7 @@ const DEFAULT_SETTINGS = {
   indent: 2,
   'map-dispatch-to-props-name': 'mapDispatchToProps',
   'map-state-to-props-name': 'mapStateToProps',
-  'map-to-props-prefer-one-line': false,
+  'map-to-dispatch-prefer-object': false,
   'map-to-state-prefer-one-line': false,
   'merge-props-name': 'mergeProps',
   'modules-order': [
@@ -109,8 +109,8 @@ class Settings {
     return this.get('map-state-to-props-name');
   }
 
-  get mapToPropsPreferOneLine() {
-    return this.get('map-to-props-prefer-one-line');
+  get mapToDispatchPreferObject() {
+    return this.get('map-to-dispatch-prefer-object');
   }
 
   get mapToStatePreferOneLine() {

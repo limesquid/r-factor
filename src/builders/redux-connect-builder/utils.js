@@ -122,20 +122,26 @@ const getDetails = (ast) => {
 };
 
 const createMapStateToPropsFunctionAst = (functionName) => {
-  const { semicolon, doubleEndOfLine, mapStateToPropsName } = settings;
-  const mapStateToPropsFunctionName = functionName || mapStateToPropsName || 'mapStateToProps';
+  const { doubleEndOfLine, mapToStatePreferOneLine, semicolon } = settings;
   let code = '';
   code += doubleEndOfLine;
-  code += `const ${mapStateToPropsFunctionName} = (state) => ({})${semicolon}`;
+  code += `const ${functionName} = (state) => ({`;
+  code += !mapToStatePreferOneLine ? doubleEndOfLine : '';
+  code += `})${semicolon}`;
   return parser.parse(code).program.body;
 };
 
 const createMapDispatchToPropsFunctionAst = (functionName) => {
-  const { semicolon, doubleEndOfLine, mapDispatchToPropsName } = settings;
-  const mapDispatchToPropsFunctionName = functionName || mapDispatchToPropsName || 'mapStateToProps';
+  const { doubleEndOfLine, endOfLine, mapToDispatchPreferObject, semicolon } = settings;
   let code = '';
   code += doubleEndOfLine;
-  code += `const ${mapDispatchToPropsFunctionName} = {}${semicolon}`;
+  if (mapToDispatchPreferObject) {
+    code += `const ${functionName} = {}${semicolon}${endOfLine}`;
+  } else {
+    code += `const ${functionName} = (dispatch) => ({${endOfLine}`;
+    code += endOfLine;
+    code += `})${semicolon}${doubleEndOfLine}`;
+  }
   return parser.parse(code).program.body;
 };
 
