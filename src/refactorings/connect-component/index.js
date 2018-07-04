@@ -1,6 +1,6 @@
 const traverse = require('@babel/traverse').default;
 const parser = require('../../utils/parser');
-const Imports = require('../../builders/imports');
+const ReduxConnectBuilder = require('../../builders/redux-connect-builder');
 const { Refactoring } = require('../../model');
 
 class ConnectComponent extends Refactoring {
@@ -15,9 +15,9 @@ class ConnectComponent extends Refactoring {
     return true;
   }
 
-  connectComponent(code) {
-    const ast = parser.parse(code);
-    return ''
+  connectComponent(code, ast) {
+    const reduxConnectBuilder = new ReduxConnectBuilder(code, ast);
+    return reduxConnectBuilder.connect().build();
   }
 }
 

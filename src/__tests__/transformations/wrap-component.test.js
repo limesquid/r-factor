@@ -173,4 +173,17 @@ describe('transformation:wrap-component', () => {
     });
     expect(result).toBe(output);
   });
+
+  it('should wrap class in hoc properly', () => {
+    const input = readInputFile('button14');
+    const output = readOutputFile('button14');
+    const result = wrapComponent(input, undefined, {
+      name: 'withRouter',
+      import: {
+        module: 'react-router',
+        subImports: { withRouter: 'withRouter' }
+      }
+    });
+    expect(result).toBe(output);
+  });
 });

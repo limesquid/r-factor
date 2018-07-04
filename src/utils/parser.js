@@ -8,10 +8,17 @@ const parse = (code, options) => recast.parse(code, {
   }
 });
 
+const parseExpression = (code, options) => recast.parse(code, {
+  parser: {
+    parse: (source) => console.log(options) || babylon.parseExpression(source, { ...babylonOptions, ...options })
+  }
+});
+
 const print = (ast) => recast.print(ast).code;
 
 const parser = {
   parse,
+  parseExpression,
   print
 };
 

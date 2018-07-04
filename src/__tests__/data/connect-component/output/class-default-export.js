@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 import styles from './styles.scss';
+import { connect } from 'react-redux';
 
 class Button extends Component {
   static defaultProps = {

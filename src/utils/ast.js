@@ -39,10 +39,6 @@ const isArrowFunctionDeclaration = (node) => node.type === 'VariableDeclaration'
   && node.declarations.length === 1
   && node.declarations[0].init.type === 'ArrowFunctionExpression';
 
-const isHocFunctionDeclaration = (node) =>
-  (isFunctionDeclaration(node) || isArrowFunctionDeclaration(node))
-  && (containsNode(node, isFunctionDeclaration) || containsNode(node, isArrowFunctionDeclaration));
-
 const isArrowComponentExpression = (node) => isArrowFunctionExpression(node)
   && isFunctionalComponentBody(node.body)
   && !containsNode(node.body, isArrowFunctionExpression)
@@ -186,7 +182,6 @@ module.exports = {
   isExportDefaultArrowComponentDeclaration,
   isExportDefaultFunctionComponentDeclaration,
   isFunctionComponentDeclaration,
-  isHocFunctionDeclaration,
   isIdentifierInside,
   isMemberDeclaration,
   isMemberOfDeclaration,

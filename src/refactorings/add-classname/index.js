@@ -36,9 +36,10 @@ class AddClassname extends Refactoring {
     let jsxNode = null;
 
     traverse(ast, {
-      JSXElement({ node }) {
+      JSXElement(path) {
         if (!jsxNode) {
-          jsxNode = node;
+          jsxNode = path.node;
+          path.stop();
         }
       }
     });
@@ -59,14 +60,11 @@ class AddClassname extends Refactoring {
 
   refactorCode(code, ast) {
     const builder = new ComponentBuilder(code);
-    let jsxNode = null;
 
     traverse(ast, {
-      JSXElement({ node }) {
-        if (!jsxNode) {
-          jsxNode = node;
-          builder.setNode(node);
-        }
+      JSXElement(path) {
+        builder.setNode(path.node);
+        path.stop();
       }
     });
 

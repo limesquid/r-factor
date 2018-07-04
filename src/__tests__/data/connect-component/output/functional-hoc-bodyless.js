@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-export default (hoc) => {
-  const Component = ({ prop }) => (
+export default hoc => {
+  const InnerComponent = ({ prop }) => (
     <div>{hoc}Test{prop}</div>
   );
 
@@ -10,5 +10,5 @@ export default (hoc) => {
 
   const mapDispatchToProps = {};
 
-  return connect(mapStateToProps, mapDispatchToProps)(Component);
+  return connect(mapStateToProps, mapDispatchToProps)(InnerComponent);
 };

@@ -5,7 +5,6 @@ const {
   isArrowComponentExpression,
   isComponentDeclaration,
   isExportDefaultArrowComponentDeclaration,
-  isHocFunctionDeclaration,
   isIdentifierInside
 } = require('./ast');
 
@@ -67,11 +66,6 @@ const getComponentExportDetails = (ast) => {
       }
     },
     VariableDeclaration(path) {
-      // if (isHocFunctionDeclaration(path.node)) {
-      //   isHoc = true;
-      //   return;
-      // }
-
       if (isArrowComponentDeclaration(path.node)) {
         originalComponentName = path.node.declarations[0].id.name;
         arrowComponentDeclaration = path;

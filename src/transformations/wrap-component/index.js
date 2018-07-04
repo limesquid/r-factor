@@ -1,5 +1,6 @@
 const template = require('babel-template');
 const {
+  blockStatement,
   callExpression,
   exportDefaultDeclaration,
   exportNamedDeclaration,
@@ -33,7 +34,7 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
   const componentScope = getComponentScope(details);
   const newComponentName = getNewComponentName(details, componentScope);
 
-  if (!isHoc && !originalComponentName || (isInstantExport && isDefaultExport)) {
+  if (!isHoc && (!originalComponentName || (isInstantExport && isDefaultExport))) {
     removeExportAndSetComponentName(source, details, newComponentName);
   }
 
@@ -41,22 +42,20 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
     removeExport(details);
     componentScope.rename(originalComponentName, newComponentName);
   }
-  const nodeToWrap = newComponentName
-    ? identifier(newComponentName)
-    : arrowComponentExpressionPath.node;
-  const wrappedComponentAst = createComponentWrappersAst(ast, details, nodeToWrap, { invoke, name, outermost });
 
-  if (isExported && !isInstantExport) {
+  const wrappedComponentAst = createComponentWrappersAst(ast, details, identifier(newComponentName), { invoke, name, outermost });
+
+  if (!isHoc && !isInstantExport) {
     const exportAst = createExportAst(details, wrappedComponentAst);
     componentExportPath.replaceWith(exportAst);
   }
 
-  if (isExported && isInstantExport) {
+  if (!isHoc && isInstantExport) {
     const exportAst = createExportAst(details, wrappedComponentAst);
     const componentScopeBodyNode = findComponentScopePath(details);
 
     // This is a hack. We need to append exportAst to body, but there is no empty line before it.
-    const exportAstWithEmptyLine = parser.parse('\n\n' + parser.print(exportAst)).program.body[0];
+    const exportAstWithEmptyLine = parser.parse(`${settings.doubleEndOfLine}${parser.print(exportAst)}`).program.body[0];
     appendNode(componentScopeBodyNode, exportAstWithEmptyLine);
   }
 
@@ -67,7 +66,8 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
   }
 
   if (isHoc && !componentReturnPath) {
-    arrowComponentExpressionPath.replaceWith(wrappedComponentAst);
+    const blockAst = createBodylessArrowFunctionBlock(newComponentName, wrappedComponentAst, details);
+    arrowComponentExpressionPath.replaceWith(blockAst);
   }
 
   const codeWithComponentWrapped = parser.print(ast);
@@ -92,7 +92,7 @@ const getComponentScope = ({ classComponentPath, arrowComponentDeclaration, arro
   (classComponentPath || arrowComponentDeclaration || arrowComponentExpressionPath).scope;
 
 const getNewComponentName = (details, componentScope) => {
-  const { componentNameCollisionPattern, defaultComponentName } = settings;
+  const { componentNameCollisionPattern, defaultComponentName, defaultHocComponentName } = settings;
   const {
     componentReturnPath,
     isDefaultExport,
@@ -106,7 +106,11 @@ const getNewComponentName = (details, componentScope) => {
     .find((potentialName) => !componentScope.hasBinding(potentialName));
 
   if (isHoc && !componentReturnPath) {
-    return null;
+    return findNameFromPotential([
+      defaultHocComponentName,
+      componentNameCollisionPattern.replace('${name}', defaultHocComponentName),
+      componentScope.generateUidIdentifier(defaultHocComponentName)
+    ]);
   }
 
   if (isHoc && originalComponentName) {
@@ -124,20 +128,17 @@ const getNewComponentName = (details, componentScope) => {
     return originalComponentName;
   }
 
-  if (exportedComponentName !== originalComponentName) {
+  if (exportedComponentName && exportedComponentName !== originalComponentName) {
     return originalComponentName;
   }
 
-  if (!details.closestHocPath) {
-    return findNameFromPotential([
-      componentNameCollisionPattern.replace('${name}', originalComponentName),
-      defaultComponentName,
-      componentNameCollisionPattern.replace('${name}', defaultComponentName),
-      componentScope.generateUidIdentifier(originalComponentName || defaultComponentName)
-    ]);
-  }
-
-  return originalComponentName;
+  const preferableComponentName = originalComponentName || defaultComponentName;
+  return findNameFromPotential([
+    componentNameCollisionPattern.replace('${name}', preferableComponentName),
+    defaultComponentName,
+    componentNameCollisionPattern.replace('${name}', defaultComponentName),
+    componentScope.generateUidIdentifier(originalComponentName || defaultComponentName)
+  ]);
 };
 
 const createExportAst = (details, wrappedComponentAst) => {
@@ -176,6 +177,14 @@ const removeExportAndSetComponentName = (source, details, newComponentName) => {
   componentExportPath.replaceWith(newComponentDeclaration);
 };
 
+const createBodylessArrowFunctionBlock = (newComponentName, wrappedComponentAst, details) => {
+  const { arrowComponentExpressionPath } = details;
+  const arrowComponentAst = parser.parse(
+    `const ${newComponentName} = ${parser.print(arrowComponentExpressionPath.node)}${settings.semicolon}${settings.doubleEndOfLine}`
+  ).program.body[0];
+  return blockStatement([ arrowComponentAst, returnStatement(wrappedComponentAst) ]);
+};
+
 const buildWrapperAst = (name, invoke, componentIdentifier) => {
   let callee = identifier(name);
 
@@ -186,8 +195,9 @@ const buildWrapperAst = (name, invoke, componentIdentifier) => {
     );
   }
 
-  const wrapperCode = `${parser.print(callee)}(${parser.print(componentIdentifier)})`;
-  return parser.parse(wrapperCode).program.body[0].expression;
+  // const wrapperCode = `${parser.print(callee)}(${parser.print(componentIdentifier)})`;
+  // return parser.parse(wrapperCode).program.body[0].expression;
+  return callExpression(callee, [ componentIdentifier ]);
 };
 
 const createComponentWrappersAst = (ast, details, nodeToWrap, { invoke, name, outermost }) => {

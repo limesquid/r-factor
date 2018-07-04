@@ -42,6 +42,7 @@ class ReduxConnectBuilder {
   connect() {
     this.connectState();
     this.connectDispatch();
+    return this;
   }
 
   connectState() {
@@ -69,6 +70,7 @@ class ReduxConnectBuilder {
     if (isConnected) {
       connectArguments[0] = identifier(mapStateToPropsName);
     }
+    return this;
   }
 
   connectDispatch() {
@@ -100,6 +102,7 @@ class ReduxConnectBuilder {
       }
       connectArguments[1] = identifier(mapDispatchToPropsName);
     }
+    return this;
   }
 
   connectMergeProps() {
@@ -130,6 +133,8 @@ class ReduxConnectBuilder {
       }
       connectArguments[2] = identifier(mergePropsName);
     }
+
+    return this;
   }
 
   disconnectState() {

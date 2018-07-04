@@ -1,4 +1,4 @@
-functional-connected-with-mapstatetoprops.jsimport React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 const ButtonComponent = (props) => (

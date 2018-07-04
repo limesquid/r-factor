@@ -4,6 +4,7 @@ const DEFAULT_SETTINGS = {
   'component-name-collision-pattern': '${name}Component',
   'component-superclass': 'Component',
   'default-component-name': 'Component',
+  'default-hoc-component-name': 'InnerComponent',
   'end-of-line': '\n',
   'functional-component-type': 'arrow',
   indent: 2,
@@ -65,6 +66,10 @@ class Settings {
 
   get defaultComponentName() {
     return this.get('default-component-name');
+  }
+
+  get defaultHocComponentName() {
+    return this.get('default-hoc-component-name');
   }
 
   get doubleEndOfLine() {

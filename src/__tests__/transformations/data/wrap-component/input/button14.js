@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 export default (hoc) => {
   class Button extends Component {
-    static propTypes = {
-      name: PropTypes.string
-    };
-
     render() {
       const { name } = this.props;
 
@@ -17,9 +12,9 @@ export default (hoc) => {
     }
   }
 
-  const mapStateToProps = (state) => ({});
+  Button.propTypes = {
+    name: PropTypes.string
+  };
 
-  const mapDispatchToProps = {};
-
-  return connect(mapStateToProps, mapDispatchToProps)(Button);
+  return Button;
 };

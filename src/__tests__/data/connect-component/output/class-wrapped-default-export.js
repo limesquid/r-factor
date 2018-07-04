@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import withRouter from 'react-router';
+import { connect } from 'react-redux';
 
 class Button extends Component {
   render() {

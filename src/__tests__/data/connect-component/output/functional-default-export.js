@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 import styles from './styles.scss';
+import { connect } from 'react-redux';
 
 const Button = ({ className, children, ...props }) => (
   <div className={classNames(styles.button, className)} {...props}>
