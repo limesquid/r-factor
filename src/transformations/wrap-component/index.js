@@ -26,7 +26,6 @@ const wrapComponent = (source, ast = parser.parse(source),  options) => {
     componentExportPath,
     componentReturnPath,
     isDefaultExport,
-    isExported,
     isHoc,
     isInstantExport,
     originalComponentName
