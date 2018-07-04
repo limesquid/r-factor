@@ -159,17 +159,6 @@ const tests = [
 }));
 
 describe('ReduxConnectBuilder', () => {
-  beforeAll(() => {
-    settings.set({
-      'map-to-dispatch-prefer-object': true,
-      'map-to-state-prefer-one-line': true
-    });
-  });
-
-  afterAll(() => {
-    settings.revert();
-  });
-
   tests.forEach((test) => {
     describe(test.filename, () => {
       test.actions.forEach((action) => {

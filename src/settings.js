@@ -10,8 +10,8 @@ const DEFAULT_SETTINGS = {
   indent: 2,
   'map-dispatch-to-props-name': 'mapDispatchToProps',
   'map-state-to-props-name': 'mapStateToProps',
-  'map-to-dispatch-prefer-object': false,
-  'map-to-state-prefer-one-line': false,
+  'map-to-dispatch-prefer-object': true,
+  'map-to-state-prefer-one-line': true,
   'merge-props-name': 'mergeProps',
   'modules-order': [
     'react',
