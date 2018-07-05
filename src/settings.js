@@ -13,25 +13,7 @@ const DEFAULT_SETTINGS = {
   'map-to-dispatch-prefer-object': true,
   'map-to-state-prefer-one-line': true,
   'merge-props-name': 'mergeProps',
-  'modules-order': [
-    'react',
-    'react-dom',
-    'prop-types',
-    'classnames',
-    'lodash',
-    'lodash-es',
-    'underscore',
-    'redux-saga',
-    'redux-saga/effects',
-    'react-redux',
-    'react-router',
-    'react-router-redux',
-    'redux-actions',
-    'reselect',
-    're-reselect',
-    'react-router-dom',
-    'react-hot-loader'
-  ],
+  'modules-order': [ 'react', 'prop-types', 'classnames' ],
   quotes: 'single',
   semicolons: true
 };
