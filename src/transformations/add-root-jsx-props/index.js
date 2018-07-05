@@ -1,22 +1,18 @@
-const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
-const { babylonOptions } = require('../../options');
+const parser = require('../../utils/parser');
 const CodeBuilder = require('./code-builder');
 
 const addRootJsxProps = (code, ast, props) => Object.keys(props).reduce(
   (refactoredCode, key) => {
-    const nextAst = code === refactoredCode ? ast : babylon.parse(refactoredCode, babylonOptions);
+    const nextAst = parser.parse(refactoredCode);
     const builder = new CodeBuilder(refactoredCode, nextAst);
-    let jsxNode = null;
 
     builder.setProp(key, props[key]);
 
     traverse(nextAst, {
-      JSXElement({ node }) {
-        if (!jsxNode) {
-          jsxNode = node;
-          builder.setNode(node);
-        }
+      JSXElement(path) {
+        builder.setNode(path.node);
+        path.stop();
       }
     });
 

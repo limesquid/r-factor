@@ -1,6 +1,5 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const traverse = require('@babel/traverse').default;
-const { babylonOptions } = require('../../options');
 const {
   isClassDeclaration,
   isArrowComponentDeclaration
@@ -27,7 +26,7 @@ class GeneratePropTypes extends Refactoring {
       return true;
     }
 
-    const ast = babylon.parse(code, babylonOptions);
+    const ast = parser.parse(code);
     let isComponent = false;
 
     traverse(ast, {

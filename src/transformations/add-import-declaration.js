@@ -1,4 +1,4 @@
-const Imports = require('../utils/imports');
+const Imports = require('../builders/imports');
 
 const addImportDeclaration = (source, ast, options) => {
   const imports = new Imports(source, ast);

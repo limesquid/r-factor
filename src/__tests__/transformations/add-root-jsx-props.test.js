@@ -1,6 +1,5 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const { readTransformationsFile } = require('./../test-utils');
-const { babylonOptions } = require('../../options');
 const addRootJsxProps = require('../../transformations/add-root-jsx-props');
 
 const files = [
@@ -14,7 +13,7 @@ describe('add-root-jsx-props', () => {
     output: readTransformationsFile(`add-root-jsx-props/output/${file}.js`)
   }));
   tests.forEach(({ name, input, output }) => {
-    const ast = babylon.parse(input, babylonOptions);
+    const ast = parser.parse(input);
     it(`transform "${name}"`, () => {
       expect(addRootJsxProps(input, ast, {
         d: '\'4\'',

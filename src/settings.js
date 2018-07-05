@@ -1,10 +1,18 @@
 const SETTINGS = Symbol('settings');
 
 const DEFAULT_SETTINGS = {
+  'component-name-collision-pattern': '${name}Component',
   'component-superclass': 'Component',
+  'default-component-name': 'Component',
+  'default-hoc-component-name': 'InnerComponent',
   'end-of-line': '\n',
   'functional-component-type': 'arrow',
   indent: 2,
+  'map-dispatch-to-props-name': 'mapDispatchToProps',
+  'map-state-to-props-name': 'mapStateToProps',
+  'map-to-dispatch-prefer-object': true,
+  'map-to-state-prefer-one-line': true,
+  'merge-props-name': 'mergeProps',
   'modules-order': [ 'react', 'prop-types', 'classnames' ],
   quotes: 'single',
   semicolons: true
@@ -32,6 +40,18 @@ class Settings {
 
   get componentSuperclass() {
     return this.get('component-superclass');
+  }
+
+  get componentNameCollisionPattern() {
+    return this.get('component-name-collision-pattern');
+  }
+
+  get defaultComponentName() {
+    return this.get('default-component-name');
+  }
+
+  get defaultHocComponentName() {
+    return this.get('default-hoc-component-name');
   }
 
   get doubleEndOfLine() {
@@ -62,6 +82,27 @@ class Settings {
   get isModulesOrderAlphabetic() {
     return this.get('modules-order') === 'alphabetic';
   }
+
+  get mapDispatchToPropsName() {
+    return this.get('map-dispatch-to-props-name');
+  }
+
+  get mapStateToPropsName() {
+    return this.get('map-state-to-props-name');
+  }
+
+  get mapToDispatchPreferObject() {
+    return this.get('map-to-dispatch-prefer-object');
+  }
+
+  get mapToStatePreferOneLine() {
+    return this.get('map-to-state-prefer-one-line');
+  }
+
+  get mergePropsName() {
+    return this.get('merge-props-name');
+  }
+
 
   get modulesOrder() {
     return this.get('modules-order');

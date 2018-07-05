@@ -1,6 +1,5 @@
-const babylon = require('@babel/parser');
+const parser = require('../utils/parser');
 const { readFile } = require('./test-utils');
-const { babylonOptions } = require('../options');
 const settings = require('../settings');
 const addImportDeclaration = require('../transformations/add-import-declaration');
 const AddClassname = require('../refactorings/add-classname');
@@ -13,7 +12,7 @@ describe('settings', () => {
       settings.set({ quotes });
       const input = readFile(`settings/input/quotes-add-import-declaration-${quotes}.js`);
       const output = readFile(`settings/output/quotes-add-import-declaration-${quotes}.js`);
-      const ast = babylon.parse(input, babylonOptions);
+      const ast = parser.parse(input);
       const result = addImportDeclaration(input, ast, {
         module: 'react',
         subImports: {
@@ -30,7 +29,7 @@ describe('settings', () => {
       settings.set({ quotes });
       const input = readFile(`settings/input/quotes-add-classname-${quotes}.js`);
       const output = readFile(`settings/output/quotes-add-classname-${quotes}.js`);
-      const ast = babylon.parse(input, babylonOptions);
+      const ast = parser.parse(input);
       const result = addClassname.refactor(input, ast);
       settings.revert();
       expect(result).toEqual(output);
@@ -42,7 +41,7 @@ describe('settings', () => {
       settings.set({ semicolons });
       const input = readFile(`settings/input/semicolons-${semicolons}.js`);
       const output = readFile(`settings/output/semicolons-${semicolons}.js`);
-      const ast = babylon.parse(input, babylonOptions);
+      const ast = parser.parse(input);
       const result = addImportDeclaration(input, ast, {
         module: 'react',
         subImports: {
@@ -59,7 +58,7 @@ describe('settings', () => {
       settings.set({ indent });
       const input = readFile(`settings/input/indent-${indent}.js`);
       const output = readFile(`settings/output/indent-${indent}.js`);
-      const ast = babylon.parse(input, babylonOptions);
+      const ast = parser.parse(input);
       const result = addClassname.refactor(input, ast);
       settings.revert();
       expect(result).toEqual(output);
@@ -72,7 +71,7 @@ describe('settings', () => {
       settings.set({ 'end-of-line': endOfLines[endOfLine] });
       const input = readFile(`settings/input/end-of-line-${endOfLine}.js`);
       const output = readFile(`settings/output/end-of-line-${endOfLine}.js`);
-      const ast = babylon.parse(input, babylonOptions);
+      const ast = parser.parse(input);
       const result = addClassname.refactor(input, ast);
       settings.revert();
       expect(result).toEqual(output);

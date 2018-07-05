@@ -1,10 +1,9 @@
-const babylon = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
+const parser = require('../../utils/parser');
 const {
   isExportDefaultArrowComponentDeclaration,
   isArrowComponentDeclaration
 } = require('../../utils/ast');
-const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const ConvertToArrowComponent = require('../convert-to-arrow-component');
 const ComponentBuilder = require('./component-builder');
@@ -21,7 +20,7 @@ class ConvertToFunctionComponent extends Refactoring {
   }
 
   canApply(code) {
-    const ast = babylon.parse(code, babylonOptions);
+    const ast = parser.parse(code);
 
     if (convertToArrowComponent.canApply(code, ast)) {
       return true;

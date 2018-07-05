@@ -1,5 +1,4 @@
-const babylon = require('@babel/parser');
-const { babylonOptions } = require('../options');
+const parser = require('../utils/parser');
 
 class Refactoring {
   constructor(transformations = []) {
@@ -16,7 +15,7 @@ class Refactoring {
 
   refactor(code) {
     try {
-      babylon.parse(code, babylonOptions);
+      parser.parse(code);
     } catch (error) {
       return [
         'Parsing failure - syntax error'
@@ -28,7 +27,7 @@ class Refactoring {
 
     for (const transformation of transformations) {
       try {
-        const ast = babylon.parse(nextCode, babylonOptions);
+        const ast = parser.parse(nextCode);
         nextCode = transformation(nextCode, ast);
       } catch (error) {
         return [

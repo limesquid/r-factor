@@ -39,10 +39,18 @@ class BaseCommand(sublime_plugin.TextCommand):
 
   def get_settings(self):
     return {
+      'component-name-collision-pattern': self.get_setting('component-name-collision-pattern'),
       'component-superclass': self.get_setting('component-superclass'),
+      'default-component-name': self.get_setting('default-component-name'),
+      'default-hoc-component-name': self.get_setting('default-hoc-component-name'),
       'end-of-line': self.get_setting('end-of-line'),
       'functional-component-type': self.get_setting('functional-component-type'),
       'indent': self.get_setting('indent'),
+      'map-dispatch-to-props-name': self.get_setting('map-dispatch-to-props-name'),
+      'map-state-to-props-name': self.get_setting('map-state-to-props-name'),
+      'map-to-dispatch-prefer-object': self.get_setting('map-to-dispatch-prefer-object'),
+      'map-to-state-prefer-one-line': self.get_setting('map-to-state-prefer-one-line'),
+      'merge-props-name': self.get_setting('merge-props-name'),
       'modules-order': self.get_setting('modules-order'),
       'quotes': self.get_setting('quotes'),
       'semicolons': self.get_setting('semicolons')
@@ -58,6 +66,30 @@ class AddClassnameCommand(BaseCommand):
   def __init__(self, arg):
     super(AddClassnameCommand, self).__init__(arg)
     self.refactoring_name = 'add-classname'
+
+
+class ConnectComponent(BaseCommand):
+  def __init__(self, arg):
+    super(ConnectComponent, self).__init__(arg)
+    self.refactoring_name = 'connect-component'
+
+
+class ConnectComponentWithState(BaseCommand):
+  def __init__(self, arg):
+    super(ConnectComponentWithState, self).__init__(arg)
+    self.refactoring_name = 'connect-component-with-state'
+
+
+class ConnectComponentWithDispatch(BaseCommand):
+  def __init__(self, arg):
+    super(ConnectComponentWithDispatch, self).__init__(arg)
+    self.refactoring_name = 'connect-component-with-dispatch'
+
+
+class ConnectComponentWithMergeProps(BaseCommand):
+  def __init__(self, arg):
+    super(ConnectComponentWithMergeProps, self).__init__(arg)
+    self.refactoring_name = 'connect-component-with-merge-props'
 
 
 class ConvertToClassComponentCommand(BaseCommand):

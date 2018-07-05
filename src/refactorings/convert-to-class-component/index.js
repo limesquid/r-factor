@@ -1,11 +1,10 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const traverse = require('@babel/traverse').default;
 const {
   isExportDefaultArrowComponentDeclaration,
   isArrowComponentDeclaration,
   isReactImport
 } = require('../../utils/ast');
-const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const ConvertFunctionToArrowComponent = require('../convert-function-to-arrow-component');
 const MoveDefaultPropsToClass = require('../move-default-props-to-class');
@@ -39,7 +38,7 @@ class ConvertToClassComponent extends Refactoring {
       return true;
     }
 
-    const ast = babylon.parse(code, babylonOptions);
+    const ast = parser.parse(code);
     let hasReactImport = false;
     let isFunctionalComponent = false;
 

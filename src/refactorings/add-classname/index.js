@@ -1,6 +1,5 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const traverse = require('@babel/traverse').default;
-const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const {
   addImportDeclaration,
@@ -33,13 +32,14 @@ class AddClassname extends Refactoring {
   }
 
   canApply(code) {
-    const ast = babylon.parse(code, babylonOptions);
+    const ast = parser.parse(code);
     let jsxNode = null;
 
     traverse(ast, {
-      JSXElement({ node }) {
+      JSXElement(path) {
         if (!jsxNode) {
-          jsxNode = node;
+          jsxNode = path.node;
+          path.stop();
         }
       }
     });
@@ -60,14 +60,11 @@ class AddClassname extends Refactoring {
 
   refactorCode(code, ast) {
     const builder = new ComponentBuilder(code);
-    let jsxNode = null;
 
     traverse(ast, {
-      JSXElement({ node }) {
-        if (!jsxNode) {
-          jsxNode = node;
-          builder.setNode(node);
-        }
+      JSXElement(path) {
+        builder.setNode(path.node);
+        path.stop();
       }
     });
 

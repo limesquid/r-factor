@@ -1,5 +1,5 @@
 const settings = require('../../settings');
-const { cleanUpCode } = require('../index');
+const { cleanUpCode } = require('../../utils');
 const { extractGroups } = require('./utils');
 const Group = require('./group');
 
@@ -24,6 +24,7 @@ class Imports {
 
   sort() {
     this.groups.forEach((group) => group.sort());
+    return this;
   }
 
   add({ groupIndex = 0, module, identifier, subImports }) {
@@ -31,12 +32,14 @@ class Imports {
       this.groups.push(new Group());
     }
     this.groups[groupIndex].add({ module, identifier, subImports });
+    return this;
   }
 
   removeDefault({ module, removeImportIfEmpty }) {
     for (const group of this.groups) {
       group.removeDefault({ module, removeImportIfEmpty });
     }
+    return this;
   }
 
   removeNamespace(/* { module } */) {
@@ -51,6 +54,7 @@ class Imports {
     for (const group of this.groups) {
       group.removeSubImports({ module, subImports });
     }
+    return this;
   }
 }
 

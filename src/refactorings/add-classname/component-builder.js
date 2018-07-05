@@ -1,5 +1,4 @@
-const babylon = require('@babel/parser');
-const { babylonOptions } = require('../../options');
+const parser = require('../../utils/parser');
 const { Builder } = require('../../model');
 const settings = require('../../settings');
 const { indentCode, squeezeCode } = require('../../utils');
@@ -30,7 +29,7 @@ class ComponentBuilder extends Builder {
       return withJsxPropCode;
     }
 
-    const ast = babylon.parse(withJsxPropCode, babylonOptions);
+    const ast = parser.parse(withJsxPropCode);
     return addImportDeclaration(withJsxPropCode, ast, {
       module: 'classnames',
       identifier: 'classNames'

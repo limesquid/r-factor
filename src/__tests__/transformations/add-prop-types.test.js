@@ -1,6 +1,5 @@
-const babylon = require('@babel/parser');
+const parser = require('../../utils/parser');
 const { readTransformationsFile } = require('./../test-utils');
-const { babylonOptions } = require('../../options');
 const addPropTypes = require('../../transformations/add-prop-types');
 
 const files = [ 1, 2, 3, 4, 5 ].map((n) => `file${n}`);
@@ -12,7 +11,7 @@ describe('add-prop-types', () => {
     output: readTransformationsFile(`add-prop-types/output/${file}.js`)
   }));
   tests.forEach(({ name, input, output }) => {
-    const ast = babylon.parse(input, babylonOptions);
+    const ast = parser.parse(input);
     it(`transform "${name}"`, () => {
       expect(addPropTypes(input, ast, {
         f: 'PropTypes.func.isRequired'

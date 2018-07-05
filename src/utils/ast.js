@@ -1,4 +1,12 @@
-const { isImportSpecifier } = require('@babel/types');
+const {
+  isArrowFunctionExpression,
+  isBlockStatement,
+  isCallExpression,
+  isIdentifier,
+  isImportSpecifier,
+  isObjectExpression,
+  isProgram
+} = require('@babel/types');
 
 const classExtendsSomething = (node) => Boolean(node.superClass);
 
@@ -31,6 +39,15 @@ const isArrowFunctionDeclaration = (node) => node.type === 'VariableDeclaration'
   && node.declarations.length === 1
   && node.declarations[0].init.type === 'ArrowFunctionExpression';
 
+const isArrowComponentExpression = (node) => isArrowFunctionExpression(node)
+  && isFunctionalComponentBody(node.body)
+  && !containsNode(node.body, isArrowFunctionExpression)
+  && !containsNode(node.body, isFunctionComponentDeclaration);
+
+const isObjectDeclaration = (node) => node.type === 'VariableDeclaration'
+  && node.declarations.length === 1
+  && isObjectExpression(node.declarations[0].init);
+
 const isClassDeclaration = (node) => node.type === 'ClassDeclaration';
 
 const isComponentDeclaration = (node) => isClassDeclaration(node)
@@ -38,7 +55,7 @@ const isComponentDeclaration = (node) => isClassDeclaration(node)
 
 const isExportDefaultArrowComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
   && node.declaration.type === 'ArrowFunctionExpression'
-  && isFunctionalComponentBody(node.declaration);
+  && isArrowComponentExpression(node.declaration);
 
 const isExportDefaultFunctionComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
   && node.declaration.type === 'FunctionDeclaration'
@@ -48,13 +65,15 @@ const isArrowComponentDeclaration = (node) => {
   if (!isArrowFunctionDeclaration(node)) {
     return false;
   }
-
-  return isFunctionalComponentBody(node.declarations[0].init);
+  const init = node.declarations[0].init;
+  return isFunctionalComponentBody(init)
+    && !containsNode(init.body, isArrowComponentExpression)
+    && !containsNode(init.body, isFunctionComponentDeclaration);
 };
 
 const isFunctionComponentDeclaration = (node) => isFunctionDeclaration(node)
   && isFunctionalComponentBody(node.body)
-  && !containsNode(node.body, isArrowFunctionDeclaration)
+  && !containsNode(node.body, isArrowComponentExpression)
   && !containsNode(node.body, isFunctionComponentDeclaration);
 
 const isFunctionalComponentBody = (node) => containsNode(
@@ -97,6 +116,8 @@ const isStaticPropertyDeclaration = (node, name) => node.type === 'ClassProperty
   && node.key.type === 'Identifier'
   && node.key.name === name;
 
+const isUndefinedIdentifier = (node) => isIdentifier(node) && node.name === 'undefined';
+
 const getNodeIndent = (node) => node.loc.start.column;
 
 const getFunctionalComponentName = (node) => node.declarations[0].id.name;
@@ -113,25 +134,63 @@ const getSubImports = ({ specifiers }) => specifiers
     {}
   );
 
+const getFurthestAncestorInScope = (path) => {
+  if (isProgram(path.parent) || isBlockStatement(path.parent)) {
+    return path;
+  }
+
+  return getFurthestAncestorInScope(path.parentPath);
+};
+
+const getOutermostCallExpressionPath = (path) => {
+  if (!isCallExpression(path.parent)) {
+    return path;
+  }
+
+  return getOutermostCallExpressionPath(path.parentPath);
+};
+
+const isIdentifierInside = (path, identifierName) => {
+  let isUsed = false;
+
+  path.traverse({
+    Identifier(innerPath) {
+      if (innerPath.node.name === identifierName) {
+        isUsed = true;
+        innerPath.stop();
+      }
+    }
+  });
+
+  return isUsed;
+};
+
 module.exports = {
   getClassComponentName,
   getClassMethod,
   getFunctionalComponentName,
+  getFurthestAncestorInScope,
   getNodeIndent,
+  getOutermostCallExpressionPath,
   getReturnStatement,
   getSubImports,
   isArrowComponentDeclaration,
+  isArrowComponentExpression,
+  isArrowFunctionDeclaration,
   isClassDeclaration,
   isComponentDeclaration,
   isExportDefaultArrowComponentDeclaration,
   isExportDefaultFunctionComponentDeclaration,
   isFunctionComponentDeclaration,
+  isIdentifierInside,
   isMemberDeclaration,
   isMemberOfDeclaration,
+  isObjectDeclaration,
   isPropsDeclaration,
   isPropTypesDeclaration,
   isReactImport,
   isSingleLine,
+  isStaticPropTypesDeclaration,
   isStaticPropertyDeclaration,
-  isStaticPropTypesDeclaration
+  isUndefinedIdentifier
 };

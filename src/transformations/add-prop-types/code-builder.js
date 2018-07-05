@@ -1,6 +1,6 @@
 const { Builder } = require('../../model');
 const settings = require('../../settings');
-const { cleanUpCode, indentCode, sortPropTypes } = require('../../utils');
+const { cleanUpCode, indentCode, sortPropTypes, squeezeCode } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 const insertCodeBelowNode = require('../insert-code-below-node');
 const addImportDeclaration = require('../add-import-declaration');
@@ -36,21 +36,27 @@ class ClassBuilder extends Builder {
     const propTypesFirstLine = this.propTypesObjectNode.loc.start.line;
     const propTypesLastLine = this.propTypesObjectNode.loc.end.line - 1;
     const codeLines = this.code.split(settings.endOfLine);
-    const definedPropTypesLines = codeLines
-      .slice(propTypesFirstLine, propTypesLastLine)
-      .filter((line) => !line.match(/^\s*$/));
+    const definedPropTypesLines = this.propTypesObjectNode.properties.map((property) =>
+      this.code.slice(property.start, property.end)
+    );
     const undefinedPropTypes = this.getUndefinedPropTypes();
+    const undefinedPropTypesLines = this.buildPropTypesContent(undefinedPropTypes)
+      .split(`,${settings.endOfLine}`)
+      .filter(Boolean)
+      .map(((propTypeLine) => squeezeCode(propTypeLine, 0, 0)));
     const allPropTypesLines = [
-      ...this.buildPropTypesContent(undefinedPropTypes).split(`,${settings.endOfLine}`),
+      ...undefinedPropTypesLines,
       ...definedPropTypesLines.map((line) => line.trim().replace(/,$/, ''))
     ].filter(Boolean);
-    const allPropTypesCode = sortPropTypes(allPropTypesLines).join(`,${settings.endOfLine}`);
+    const allPropTypesCode = sortPropTypes(allPropTypesLines)
+      .map((propTypeLine) => squeezeCode(propTypeLine, indent, 0))
+      .join(`,${settings.endOfLine}`);
     const sameLines = propTypesFirstLine === propTypesLastLine + 1;
 
     let code = '';
     code += codeLines.slice(0, propTypesFirstLine).join(settings.endOfLine);
     code += settings.endOfLine;
-    code += indentCode(allPropTypesCode, indent);
+    code += allPropTypesCode;
     code += settings.endOfLine;
     code += codeLines.slice(propTypesLastLine + (sameLines ? 1 : 0)).join(settings.endOfLine);
 
