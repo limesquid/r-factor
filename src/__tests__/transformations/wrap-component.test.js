@@ -6,7 +6,6 @@ const readInputFile = (filename) => readTransformationsFile(`wrap-component/inpu
 const readOutputFile = (filename) => readTransformationsFile(`wrap-component/output/${filename}.js`);
 
 describe('transformation:wrap-component', () => {
-
   beforeEach(() => {
     settings.revert();
   })

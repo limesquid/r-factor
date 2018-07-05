@@ -18,7 +18,7 @@ class ReduxConnectBuilder {
     this.isConnected = checkIsConnected(this.ast);
   }
 
-  refresh() {
+  updateDetails() {
     this.details = getDetails(this.ast);
   }
 
@@ -37,7 +37,6 @@ class ReduxConnectBuilder {
     });
     this.ast = parser.parse(this.code);
     this.isConnected = true;
-    this.refresh();
   }
 
   connect() {
@@ -48,14 +47,14 @@ class ReduxConnectBuilder {
 
   connectState() {
     this.wrapWithConnectHocIfNeeded();
-    this.refresh();
+    this.updateDetails();
     const {
       connectArguments,
       furthestConnectAncestorPath,
       hasMapStateToPropsDefinition,
       isConnected,
       mapDispatchToPropsDefinitionPath,
-      mapStateToPropsName = settings.mapStateToPropsName || 'mapStateToProps',
+      mapStateToPropsName = settings.mapStateToPropsName,
       mergePropsDefinitionPath
     } = this.details;
 
@@ -76,14 +75,14 @@ class ReduxConnectBuilder {
 
   connectDispatch() {
     this.wrapWithConnectHocIfNeeded();
-    this.refresh();
+    this.updateDetails();
     const {
       connectArguments,
       furthestConnectAncestorPath,
       hasMapDispatchToPropsDefinition,
       hasMapDispatchToProps,
       isConnected,
-      mapDispatchToPropsName = settings.mapDispatchToPropsName || 'mapStateToProps',
+      mapDispatchToPropsName = settings.mapDispatchToPropsName,
       mapStateToPropsDefinitionPath,
       mergePropsDefinitionPath
     } = this.details;
@@ -108,7 +107,7 @@ class ReduxConnectBuilder {
 
   connectMergeProps() {
     this.wrapWithConnectHocIfNeeded();
-    this.refresh();
+    this.updateDetails();
     const {
       connectArguments,
       furthestConnectAncestorPath,
@@ -116,7 +115,7 @@ class ReduxConnectBuilder {
       isConnected,
       mapStateToPropsDefinitionPath,
       mapDispatchToPropsDefinitionPath,
-      mergePropsName = settings.mergePropsName || 'mergeProps'
+      mergePropsName = settings.mergePropsName
     } = this.details;
 
     if (!hasMergePropsDefinition) {

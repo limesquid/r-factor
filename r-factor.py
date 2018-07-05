@@ -39,11 +39,18 @@ class BaseCommand(sublime_plugin.TextCommand):
 
   def get_settings(self):
     return {
+      'component-name-collision-pattern': self.get_setting('component-name-collision-pattern'),
       'component-superclass': self.get_setting('component-superclass'),
-      'connected-component-name-pattern': self.get_setting('connected-component-name-pattern'),
+      'default-component-name': self.get_setting('default-component-name'),
+      'default-hoc-component-name': self.get_setting('default-hoc-component-name'),
       'end-of-line': self.get_setting('end-of-line'),
       'functional-component-type': self.get_setting('functional-component-type'),
       'indent': self.get_setting('indent'),
+      'map-dispatch-to-props-name': self.get_setting('map-dispatch-to-props-name'),
+      'map-state-to-props-name': self.get_setting('map-state-to-props-name'),
+      'map-to-dispatch-prefer-object': self.get_setting('map-to-dispatch-prefer-object'),
+      'map-to-state-prefer-one-line': self.get_setting('map-to-state-prefer-one-line'),
+      'merge-props-name': self.get_setting('merge-props-name'),
       'modules-order': self.get_setting('modules-order'),
       'quotes': self.get_setting('quotes'),
       'semicolons': self.get_setting('semicolons')

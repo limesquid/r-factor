@@ -146,10 +146,9 @@ const createMapDispatchToPropsFunctionAst = (functionName) => {
 };
 
 const createMergePropsFunctionAst = (functionName) => {
-  const { endOfLine, indent, semicolon, mergePropsName } = settings;
-  const mergePropsFunctionName = functionName || mergePropsName || 'mergeProps';
+  const { endOfLine, indent, semicolon } = settings;
   let code = '';
-  code += `const ${mergePropsFunctionName} = (stateProps, dispatchProps, ownProps) => ({`;
+  code += `const ${functionName} = (stateProps, dispatchProps, ownProps) => ({`;
   code += endOfLine;
   code += indentCode([
     '...stateProps,',
