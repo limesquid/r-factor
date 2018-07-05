@@ -7,9 +7,9 @@ const {
   createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
   createMergePropsFunctionAst,
-  getDetails,
   insertNodeAfterOrBefore
 } = require('./utils');
+const ReduxDetailsBuilder = require('./redux-details-builder');
 
 class ReduxConnectBuilder {
   constructor(code, ast) {
@@ -19,7 +19,7 @@ class ReduxConnectBuilder {
   }
 
   updateDetails() {
-    this.details = getDetails(this.ast);
+    this.details = new ReduxDetailsBuilder(this.ast).getDetails();
   }
 
   wrapWithConnectHocIfNeeded() {
@@ -137,17 +137,17 @@ class ReduxConnectBuilder {
     return this;
   }
 
-  disconnectState() {
+  // disconnectState() {
 
-  }
+  // }
 
-  disconnectDispatch() {
-    
-  }
+  // disconnectDispatch() {
 
-  disconnectMergeProps() {
+  // }
 
-  } 
+  // disconnectMergeProps() {
+
+  // }
 
   build() {
     return parser.print(this.ast);

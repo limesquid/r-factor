@@ -1,5 +1,3 @@
-const traverse = require('@babel/traverse').default;
-const parser = require('../../utils/parser');
 const ReduxConnectBuilder = require('../../builders/redux-connect-builder');
 const { Refactoring } = require('../../model');
 
