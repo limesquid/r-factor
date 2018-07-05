@@ -8,122 +8,132 @@ const {
   isIdentifierInside
 } = require('./ast');
 
-const getComponentExportDetails = (ast) => {
-  let isDefaultExport = false;
-  let isInstantExport = false;
-  let isHoc = false;
-  let exportedComponentName = null;
-  let originalComponentName = null;
-  let componentExportPath = null;
-  let componentReturnPath = null;
-  let classComponentPath = null;
-  let arrowComponentDeclaration = null;
-  let arrowComponentExpressionPath = null;
-  let closestHocPath = null;
-  let componentIdentifierInHoc = null;
+class ComponentExportDetails {
+  constructor(ast) {
+    this.isDefaultExport = false;
+    this.isInstantExport = false;
+    this.isHoc = false;
+    this.exportedComponentName = null;
+    this.originalComponentName = null;
+    this.componentExportPath = null;
+    this.componentReturnPath = null;
+    this.classComponentPath = null;
+    this.arrowComponentDeclaration = null;
+    this.arrowComponentExpressionPath = null;
+    this.closestHocPath = null;
+    this.componentIdentifierInHoc = null;
 
-  traverse(ast, {
-    ExportDefaultDeclaration(path) {
-      const { node } = path;
-      if (originalComponentName && isIdentifierInside(path, originalComponentName)) {
-        isDefaultExport = true;
-        isInstantExport = false;
-        componentExportPath = path;
-      }
+    this.gatherDetails(ast);
+  }
 
-      const isComponent = isComponentDeclaration(node.declaration);
-      const isArrowComponent = isArrowComponentExpression(node.declaration);
-      if (isComponent || isArrowComponent) {
-        isDefaultExport = true;
-        isInstantExport = true;
-        componentExportPath = path;
-      }
+  gatherDetails(ast) {
+    const that = this;
 
-      if (isComponent) {
-        classComponentPath = path.get('declaration');
-      } else if (isArrowComponent) {
-        arrowComponentDeclaration = path.get('declaration');
-      } 
-    },
-    ExportNamedDeclaration(path) {
-      if (originalComponentName && isIdentifierInside(path, originalComponentName)) {
-        componentExportPath = path;
-        exportedComponentName = path.node.declaration.declarations[0].id.name;
-        return;
-      }
+    traverse(ast, {
+      ExportDefaultDeclaration(path) {
+        const { node } = path;
+        if (that.originalComponentName && isIdentifierInside(path, that.originalComponentName)) {
+          that.isDefaultExport = true;
+          that.isInstantExport = false;
+          that.componentExportPath = path;
+        }
 
-      const variableDeclaration = path.node.declaration;
-      if (isArrowComponentDeclaration(variableDeclaration)) {
-        isInstantExport = true;
-        componentExportPath = path;
-        arrowComponentDeclaration = path.get('declaration');
-      }
+        const isComponent = isComponentDeclaration(node.declaration);
+        const isArrowComponent = isArrowComponentExpression(node.declaration);
+        if (isComponent || isArrowComponent) {
+          that.isDefaultExport = true;
+          that.isInstantExport = true;
+          that.componentExportPath = path;
+        }
 
-      if (isComponentDeclaration(variableDeclaration)) {
-        isInstantExport = true;
-        componentExportPath = path;
-        classComponentPath = path.get('declaration');
-      }
-    },
-    VariableDeclaration(path) {
-      if (isArrowComponentDeclaration(path.node)) {
-        originalComponentName = path.node.declarations[0].id.name;
-        arrowComponentDeclaration = path;
-      }
-    },
-    ClassDeclaration(path) {
-      if (isComponentDeclaration(path.node)) {
-        originalComponentName = path.node.id && path.node.id.name;
-        classComponentPath = path;
-      }
-    },
-    enter(path) {
-      if (!arrowComponentDeclaration && isArrowComponentExpression(path.node)) {
-        isHoc = true;
-        arrowComponentExpressionPath = path;
-      }
-    },
-    CallExpression(path) {
-      const { node } = path;
-      if (!originalComponentName || closestHocPath) {
-        return;
-      }
+        if (isComponent) {
+          that.classComponentPath = path.get('declaration');
+        } else if (isArrowComponent) {
+          that.arrowComponentDeclaration = path.get('declaration');
+        } 
+      },
+      ExportNamedDeclaration(path) {
+        if (that.originalComponentName && isIdentifierInside(path, that.originalComponentName)) {
+          that.componentExportPath = path;
+          that.exportedComponentName = path.node.declaration.declarations[0].id.name;
+          return;
+        }
 
-      const componentIdentifier = node.arguments.find(
-        (argument) => isIdentifier(argument, { name: originalComponentName })
-      );
-      if (componentIdentifier) {
-        closestHocPath = path;
-        componentIdentifierInHoc = componentIdentifier;
-      }
-    },
-    ReturnStatement(path) {
-      if (!originalComponentName || closestHocPath) {
-        return;
-      }
+        const variableDeclaration = path.node.declaration;
+        if (isArrowComponentDeclaration(variableDeclaration)) {
+          that.isInstantExport = true;
+          that.componentExportPath = path;
+          that.arrowComponentDeclaration = path.get('declaration');
+        }
 
-      if (isIdentifierInside(path, originalComponentName)) {
-        isHoc = true;
-        componentReturnPath = path;
+        if (isComponentDeclaration(variableDeclaration)) {
+          that.isInstantExport = true;
+          that.componentExportPath = path;
+          that.classComponentPath = path.get('declaration');
+        }
+      },
+      VariableDeclaration(path) {
+        if (isArrowComponentDeclaration(path.node)) {
+          that.originalComponentName = path.node.declarations[0].id.name;
+          that.arrowComponentDeclaration = path;
+        }
+      },
+      ClassDeclaration(path) {
+        if (isComponentDeclaration(path.node)) {
+          that.originalComponentName = path.node.id && path.node.id.name;
+          that.classComponentPath = path;
+        }
+      },
+      enter(path) {
+        if (!that.arrowComponentDeclaration && isArrowComponentExpression(path.node)) {
+          that.isHoc = true;
+          that.arrowComponentExpressionPath = path;
+        }
+      },
+      CallExpression(path) {
+        const { node } = path;
+        if (!that.originalComponentName || that.closestHocPath) {
+          return;
+        }
+
+        const componentIdentifier = node.arguments.find(
+          (argument) => isIdentifier(argument, { name: that.originalComponentName })
+        );
+        if (componentIdentifier) {
+          that.closestHocPath = path;
+          that.componentIdentifierInHoc = componentIdentifier;
+        }
+      },
+      ReturnStatement(path) {
+        if (!that.originalComponentName || that.closestHocPath) {
+          return;
+        }
+
+        if (isIdentifierInside(path, that.originalComponentName)) {
+          that.isHoc = true;
+          that.componentReturnPath = path;
+        }
       }
-    }
-  });
+    });
+  }
 
-  return {
-    arrowComponentExpressionPath,
-    isDefaultExport,
-    isExported: Boolean(componentExportPath),
-    isHoc,
-    isInstantExport,
-    exportedComponentName: exportedComponentName || originalComponentName,
-    componentReturnPath,
-    originalComponentName,
-    componentExportPath,
-    componentIdentifierInHoc,
-    classComponentPath,
-    closestHocPath,
-    arrowComponentDeclaration
-  };
-};
+  getDetails() {
+    return {
+      arrowComponentExpressionPath: this.arrowComponentExpressionPath,
+      isDefaultExport: this.isDefaultExport,
+      isExported: Boolean(this.componentExportPath),
+      isHoc: this.isHoc,
+      isInstantExport: this.isInstantExport,
+      exportedComponentName: this.exportedComponentName || this.originalComponentName,
+      componentReturnPath: this.componentReturnPath,
+      originalComponentName: this.originalComponentName,
+      componentExportPath: this.componentExportPath,
+      componentIdentifierInHoc: this.componentIdentifierInHoc,
+      classComponentPath: this.classComponentPath,
+      closestHocPath: this.closestHocPath,
+      arrowComponentDeclaration: this.arrowComponentDeclaration
+    };
+  }
+}
 
-module.exports = getComponentExportDetails;
+module.exports = ComponentExportDetails;

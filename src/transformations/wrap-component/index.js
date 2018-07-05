@@ -13,13 +13,13 @@ const {
 } = require('@babel/types');
 const parser = require('../../utils/parser');
 const addImportDeclaration = require('../add-import-declaration');
-const getComponentExportDetails = require('../../utils/component-export-details');
+const ComponentExportDetails = require('../../utils/component-export-details');
 const { getOutermostCallExpressionPath } = require('../../utils/ast');
 const settings = require('../../settings');
 
 const wrapComponent = (source, ast = parser.parse(source),  options) => {
   const { import: importDetails, invoke, name, outermost = false } = options;
-  const details = getComponentExportDetails(ast);
+  const details = new ComponentExportDetails(ast).getDetails();
   const {
     arrowComponentDeclaration,
     arrowComponentExpressionPath,
@@ -149,7 +149,7 @@ const createExportAst = (details, wrappedComponentAst) => {
     variableDeclaration(
       'const', [
         variableDeclarator(
-            identifier(details.exportedComponentName),
+          identifier(details.exportedComponentName),
           wrappedComponentAst
         )
       ]
@@ -194,8 +194,6 @@ const buildWrapperAst = (name, invoke, componentIdentifier) => {
     );
   }
 
-  // const wrapperCode = `${parser.print(callee)}(${parser.print(componentIdentifier)})`;
-  // return parser.parse(wrapperCode).program.body[0].expression;
   return callExpression(callee, [ componentIdentifier ]);
 };
 
