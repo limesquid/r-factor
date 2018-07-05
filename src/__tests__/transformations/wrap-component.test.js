@@ -8,7 +8,7 @@ const readOutputFile = (filename) => readTransformationsFile(`wrap-component/out
 describe('transformation:wrap-component', () => {
   beforeEach(() => {
     settings.revert();
-  })
+  });
 
   it('should rename and wrap a component (without importing a module)', () => {
     settings.set({ 'default-component-name': 'MyComponent' });

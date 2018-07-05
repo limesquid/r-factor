@@ -4,7 +4,6 @@ const {
   isArrowComponentDeclaration,
   isArrowComponentExpression,
   isComponentDeclaration,
-  isExportDefaultArrowComponentDeclaration,
   isIdentifierInside
 } = require('./ast');
 
@@ -27,6 +26,7 @@ class ComponentExportDetails {
   }
 
   gatherDetails(ast) {
+    // eslint-disable-next-line
     const that = this;
 
     traverse(ast, {
@@ -50,7 +50,7 @@ class ComponentExportDetails {
           that.classComponentPath = path.get('declaration');
         } else if (isArrowComponent) {
           that.arrowComponentDeclaration = path.get('declaration');
-        } 
+        }
       },
       ExportNamedDeclaration(path) {
         if (that.originalComponentName && isIdentifierInside(path, that.originalComponentName)) {

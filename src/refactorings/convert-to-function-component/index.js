@@ -4,7 +4,6 @@ const {
   isExportDefaultArrowComponentDeclaration,
   isArrowComponentDeclaration
 } = require('../../utils/ast');
-const { babylonOptions } = require('../../options');
 const { Refactoring } = require('../../model');
 const ConvertToArrowComponent = require('../convert-to-arrow-component');
 const ComponentBuilder = require('./component-builder');

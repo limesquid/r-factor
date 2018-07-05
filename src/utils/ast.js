@@ -143,7 +143,7 @@ const getFurthestAncestorInScope = (path) => {
 };
 
 const getOutermostCallExpressionPath = (path) => {
-  if(!isCallExpression(path.parent)) {
+  if (!isCallExpression(path.parent)) {
     return path;
   }
 
@@ -163,7 +163,7 @@ const isIdentifierInside = (path, identifierName) => {
   });
 
   return isUsed;
-}
+};
 
 module.exports = {
   getClassComponentName,

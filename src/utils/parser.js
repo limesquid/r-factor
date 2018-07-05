@@ -10,7 +10,7 @@ const parse = (code, options) => recast.parse(code, {
 
 const parseExpression = (code, options) => recast.parse(code, {
   parser: {
-    parse: (source) => console.log(options) || babylon.parseExpression(source, { ...babylonOptions, ...options })
+    parse: (source) => babylon.parseExpression(source, { ...babylonOptions, ...options })
   }
 });
 
