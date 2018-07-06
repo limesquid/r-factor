@@ -4,7 +4,8 @@ const GeneratePropTypes = require('../refactorings/generate-prop-types');
 const files = [
   ...range(1, 7).map((n) => `button${n}`),
   ...range(1, 1).map((n) => `filter${n}`),
-  ...range(1, 2).map((n) => `header${n}`)
+  ...range(1, 2).map((n) => `header${n}`),
+  ...range(1, 1).map((n) => `hoc${n}`),
 ];
 
 describe('generate-prop-types:canApply', () => {
