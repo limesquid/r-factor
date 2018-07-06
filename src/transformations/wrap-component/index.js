@@ -35,7 +35,7 @@ const wrapComponent = (source, ast = parser.parse(source), options) => {
     removeExportAndSetComponentName(source, details, newComponentName);
   }
 
-  if (isInstantExport && !isDefaultExport) {
+  if (!isHoc && isInstantExport && !isDefaultExport) {
     removeExport(details);
     componentScope.rename(originalComponentName, newComponentName);
   }

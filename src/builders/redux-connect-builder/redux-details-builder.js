@@ -21,9 +21,9 @@ class ReduxDetailsBuilder {
     this.hasMapStateToPropsDefinition = false;
     this.hasMapDispatchToPropsDefinition = false;
     this.hasMergePropsDefinition = false;
-    this.mapStateToPropsName = null;
-    this.mapDispatchToPropsName = null;
-    this.mergePropsName = null;
+    this.mapStateToPropsName = undefined;
+    this.mapDispatchToPropsName = undefined;
+    this.mergePropsName = undefined;
     this.gatherDetails(ast);
   }
 
