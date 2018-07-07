@@ -15,7 +15,6 @@ class ToggleWithRouterHoc extends Refactoring {
     const { outermostHocPath } = details;
     let isWrapped = false;
 
-
     if (outermostHocPath) {
       outermostHocPath.parentPath.traverse({
         CallExpression(path) {
