@@ -1,5 +1,6 @@
 const { isCallExpression, isIdentifier } = require('@babel/types');
 const parser = require('../../utils/parser');
+const { findBinding } = require('../../utils/bindings');
 const removeImportDeclaration = require('../remove-import-declaration');
 const ComponentExportDetails = require('../../utils/component-export-details');
 
@@ -16,10 +17,13 @@ const unwrapComponent = (source, ast = parser.parse(source), options) => {
   const { hocPath, withInvoke } = getHocPath(outermostHocPath, hocName);
 
   if (withInvoke && removeInvoked) {
-    const invokeArguments = hocPath.node.callee.arguments
+    hocPath.node.callee.arguments
       .filter(isIdentifier)
-      .map(({ name }) => name);
-    invokeArguments.forEach((argument) => componentScope.remove(argument));
+      .map(({ name }) => findBinding(componentScope, name))
+      .filter(Boolean)
+      .forEach((binding) => {
+        binding.path.remove();
+      });
   }
 
   hocPath.replaceWith(hocPath.node.arguments[0]);
