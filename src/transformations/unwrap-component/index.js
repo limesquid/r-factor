@@ -7,13 +7,7 @@ const ComponentExportDetails = require('../../utils/component-export-details');
 const unwrapComponent = (source, ast = parser.parse(source), options) => {
   const { name: hocName, importDetails, removeInvoked = true } = options;
   const details = new ComponentExportDetails(ast).getDetails();
-  const {
-    componentScope,
-    outermostHocPath,
-    // componentExportPath,
-    // componentReturnPath,
-  } = details;
-
+  const { componentScope, outermostHocPath } = details;
   const { hocPath, withInvoke } = getHocPath(outermostHocPath, hocName);
 
   if (withInvoke && removeInvoked) {
