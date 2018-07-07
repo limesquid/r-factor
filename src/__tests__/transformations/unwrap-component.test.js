@@ -56,7 +56,7 @@ const tests = [
       importDetails: {
         module: 'auth',
         removeImportIfEmpty: true,
-        identifier: true
+        subImports: [ 'withAuth' ]
       }
     }
   },
@@ -114,7 +114,7 @@ const tests = [
       importDetails: {
         module: 'auth',
         removeImportIfEmpty: true,
-        identifier: true
+        subImports: [ 'withAuth' ]
       }
     }
   },
@@ -144,11 +144,6 @@ const tests = [
     filename: 'button13',
     unwrapOptions: {
       name: 'connect',
-      importDetails: {
-        module: 'react-redux',
-        removeImportIfEmpty: true,
-        subImports: [ 'connect' ]
-      },
       removeInvoked: false
     }
   }

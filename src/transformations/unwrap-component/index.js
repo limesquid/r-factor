@@ -4,10 +4,10 @@ const removeImportDeclaration = require('../remove-import-declaration');
 const ComponentExportDetails = require('../../utils/component-export-details');
 
 const unwrapComponent = (source, ast = parser.parse(source), options) => {
-  const { module, name: hocName, importDetails, removeInvoked = true } = options;
+  const { name: hocName, importDetails, removeInvoked = true } = options;
   const details = new ComponentExportDetails(ast).getDetails();
   const {
-    // componentScope,
+    componentScope,
     outermostHocPath,
     // componentExportPath,
     // componentReturnPath,
@@ -15,7 +15,15 @@ const unwrapComponent = (source, ast = parser.parse(source), options) => {
 
   const { hocPath, withInvoke } = getHocPath(outermostHocPath, hocName);
 
+  if (withInvoke && removeInvoked) {
+    const invokeArguments = hocPath.node.callee.arguments
+      .filter(isIdentifier)
+      .map(({ name }) => name);
+    invokeArguments.forEach((argument) => componentScope.remove(argument));
+  }
+
   hocPath.replaceWith(hocPath.node.arguments[0]);
+
   const codeWithoutHoc = parser.print(ast);
 
   if (importDetails) {
@@ -30,14 +38,17 @@ const getHocPath = (outermostHocPath, hocName) => {
   outermostHocPath.traverse({
     CallExpression(path) {
       const { node } = path;
-      if (isIdentifier(node.callee) && node.calee.name === hocName) {
+      if (isIdentifier(node.callee) && node.callee.name === hocName) {
         hocIdentifierPath = path;
         path.stop();
       }
     }
   });
 
-  const withInvoke = isCallExpression(hocIdentifierPath.parentPath.parentPath.callee);
+  const isParentCallExpression = isCallExpression(hocIdentifierPath.parent);
+  const withInvoke = isParentCallExpression && !hocIdentifierPath.parent.arguments.includes(
+    hocIdentifierPath.node
+  );
   const hocPath = withInvoke
     ? hocIdentifierPath.parentPath
     : hocIdentifierPath;
