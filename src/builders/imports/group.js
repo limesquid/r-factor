@@ -36,7 +36,15 @@ class Group {
     this.imports = sortImports(this.imports);
   }
 
-  updateImportAtIndex(index, updatedImport) {
+  updateImportAtIndex(index, updatedImport, removeImportIfEmpty = false) {
+    if (removeImportIfEmpty && isEmptyImport(updatedImport)) {
+      this.imports = [
+        ...this.imports.slice(0, index),
+        ...this.imports.slice(index + 1)
+      ];
+      return;
+    }
+
     this.imports = [
       ...this.imports.slice(0, index),
       updatedImport,
@@ -77,14 +85,10 @@ class Group {
       identifier: null
     };
 
-    if (removeImportIfEmpty && isEmptyImport(updatedImport)) {
-      this.removeImport(existingImportIndex);
-    } else {
-      this.updateImportAtIndex(existingImportIndex, updatedImport);
-    }
+    this.updateImportAtIndex(existingImportIndex, updatedImport, removeImportIfEmpty);
   }
 
-  removeSubImports({ module, subImports }) {
+  removeSubImports({ module, subImports, removeImportIfEmpty }) {
     const existingImportIndex = this.findImportIndex(module);
 
     if (existingImportIndex < 0) {
@@ -102,7 +106,7 @@ class Group {
         return result;
       }, {})
     };
-    this.updateImportAtIndex(existingImportIndex, updatedImport);
+    this.updateImportAtIndex(existingImportIndex, updatedImport, removeImportIfEmpty);
   }
 
   removeImport(index) {
