@@ -2,6 +2,7 @@ const { identifier, nullLiteral } = require('@babel/types');
 const parser = require('../../utils/parser');
 const settings = require('../../settings');
 const wrapComponent = require('../../transformations/wrap-component');
+const unwrapComponent = require('../../transformations/unwrap-component');
 const {
   checkIsConnected,
   createMapDispatchToPropsFunctionAst,
@@ -137,17 +138,30 @@ class ReduxConnectBuilder {
     return this;
   }
 
-  // disconnectState() {
+  disconnect() {
+    this.updateDetails();
+    this.code = unwrapComponent(this.code, this.ast, {
+      name: 'connect',
+      importDetails: {
+        module: 'react-redux',
+        removeImportIfEmpty: true,
+        subImports: [ 'connect' ]
+      }
+    });
+    this.ast = parser.parse(this.code);
+  }
 
-  // }
+  disconnectState() {
 
-  // disconnectDispatch() {
+  }
 
-  // }
+  disconnectDispatch() {
 
-  // disconnectMergeProps() {
+  }
 
-  // }
+  disconnectMergeProps() {
+
+  }
 
   build() {
     return parser.print(this.ast);

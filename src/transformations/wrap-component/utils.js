@@ -25,9 +25,6 @@ const appendNode = (componentScopePath, node) => {
   componentScopePath.body.push(node);
 };
 
-const getComponentScope = ({ classComponentPath, arrowComponentDeclaration, arrowComponentExpressionPath }) =>
-  (classComponentPath || arrowComponentDeclaration || arrowComponentExpressionPath).scope;
-
 const getNewComponentName = (details, componentScope) => {
   const { componentNameCollisionPattern, defaultComponentName, defaultHocComponentName } = settings;
   const {
@@ -160,7 +157,6 @@ const createComponentWrappersAst = (ast, details, nodeToWrap, { invoke, name, ou
 module.exports = {
   findComponentScopePath,
   appendNode,
-  getComponentScope,
   getNewComponentName,
   createExportAst,
   removeExport,

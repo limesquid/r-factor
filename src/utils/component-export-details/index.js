@@ -1,11 +1,14 @@
 const traverse = require('@babel/traverse').default;
 const { isIdentifier } = require('@babel/types');
 const {
+  getOutermostCallExpressionPath,
   isArrowComponentDeclaration,
+  isArrowComponentExpressionPath,
   isArrowComponentExpression,
   isComponentDeclaration,
   isIdentifierInside
-} = require('./ast');
+} = require('../ast');
+const { getComponentScope } = require('./utils');
 
 class ComponentExportDetails {
   constructor(ast) {
@@ -85,9 +88,10 @@ class ComponentExportDetails {
         }
       },
       enter(path) {
-        if (!that.arrowComponentDeclaration && isArrowComponentExpression(path.node)) {
+        if (!that.arrowComponentDeclaration && isArrowComponentExpressionPath(path)) {
           that.isHoc = true;
           that.arrowComponentExpressionPath = path;
+          path.skip();
         }
       },
       CallExpression(path) {
@@ -118,20 +122,31 @@ class ComponentExportDetails {
   }
 
   getDetails() {
+    const outermostHocPath = this.closestHocPath
+      ? getOutermostCallExpressionPath(this.closestHocPath)
+      : null;
+    const componentScope = getComponentScope(
+      this.classComponentPath,
+      this.arrowComponentDeclaration,
+      this.arrowComponentExpressionPath
+    );
+
     return {
+      arrowComponentDeclaration: this.arrowComponentDeclaration,
       arrowComponentExpressionPath: this.arrowComponentExpressionPath,
+      classComponentPath: this.classComponentPath,
+      closestHocPath: this.closestHocPath,
+      componentExportPath: this.componentExportPath,
+      componentIdentifierInHoc: this.componentIdentifierInHoc,
+      componentScope,
+      componentReturnPath: this.componentReturnPath,
+      exportedComponentName: this.exportedComponentName || this.originalComponentName,
+      outermostHocPath,
       isDefaultExport: this.isDefaultExport,
       isExported: Boolean(this.componentExportPath),
       isHoc: this.isHoc,
       isInstantExport: this.isInstantExport,
-      exportedComponentName: this.exportedComponentName || this.originalComponentName,
-      componentReturnPath: this.componentReturnPath,
-      originalComponentName: this.originalComponentName,
-      componentExportPath: this.componentExportPath,
-      componentIdentifierInHoc: this.componentIdentifierInHoc,
-      classComponentPath: this.classComponentPath,
-      closestHocPath: this.closestHocPath,
-      arrowComponentDeclaration: this.arrowComponentDeclaration
+      originalComponentName: this.originalComponentName
     };
   }
 }

@@ -50,9 +50,9 @@ class Imports {
     /* TODO */
   }
 
-  removeSubImports({ module, subImports }) {
+  removeSubImports({ module, subImports, removeImportIfEmpty }) {
     for (const group of this.groups) {
-      group.removeSubImports({ module, subImports });
+      group.removeSubImports({ module, subImports, removeImportIfEmpty });
     }
     return this;
   }

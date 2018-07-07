@@ -44,6 +44,32 @@ const isArrowComponentExpression = (node) => isArrowFunctionExpression(node)
   && !containsNode(node.body, isArrowFunctionExpression)
   && !containsNode(node.body, isFunctionComponentDeclaration);
 
+const isArrowComponentExpressionPath = (path) => {
+  let isComponent = false;
+
+  if (!isArrowFunctionExpression(path.node) && !isFunctionDeclaration(path.node)) {
+    return false;
+  }
+
+  path.traverse({
+    enter(innerPath) {
+      if (isArrowFunctionExpression(innerPath.node) || isFunctionDeclaration(innerPath.node)) {
+        innerPath.skip();
+      }
+    },
+    JSXElement(innerPath) {
+      isComponent = true;
+      innerPath.stop();
+    },
+    JSXFragment(innerPath) {
+      isComponent = true;
+      innerPath.stop();
+    }
+  });
+
+  return isComponent;
+};
+
 const isObjectDeclaration = (node) => node.type === 'VariableDeclaration'
   && node.declarations.length === 1
   && isObjectExpression(node.declarations[0].init);
@@ -176,6 +202,7 @@ module.exports = {
   getSubImports,
   isArrowComponentDeclaration,
   isArrowComponentExpression,
+  isArrowComponentExpressionPath,
   isArrowFunctionDeclaration,
   isClassDeclaration,
   isComponentDeclaration,

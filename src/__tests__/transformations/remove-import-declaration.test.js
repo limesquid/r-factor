@@ -5,7 +5,9 @@ const removeImportDeclaration = require('../../transformations/remove-import-dec
 const OUTPUT_PATH = 'remove-import-declaration/output/';
 
 const code = readTransformationsFile('remove-import-declaration/input/common.js');
+const codeWithSubimportsOnly = readTransformationsFile('remove-import-declaration/input/subimports.js');
 const ast = parser.parse(code);
+const subimportsOnlyAst = parser.parse(codeWithSubimportsOnly);
 
 describe('transformation:remove-import-declaration', () => {
   it('should just sort when module is not found', () => {
@@ -46,6 +48,16 @@ describe('transformation:remove-import-declaration', () => {
       removeImportIfEmpty: true
     });
     const expectedResult = readTransformationsFile(`${OUTPUT_PATH}/remove-whole-import.js`);
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('should remove whole import 2', () => {
+    const result = removeImportDeclaration(codeWithSubimportsOnly, subimportsOnlyAst, {
+      module: 'react-redux',
+      subImports: [ 'Provider', 'createProvider', 'connectAdvanced', 'connect' ],
+      removeImportIfEmpty: true
+    });
+    const expectedResult = readTransformationsFile(`${OUTPUT_PATH}/subimports-remove-whole-import.js`);
     expect(result).toEqual(expectedResult);
   });
 
