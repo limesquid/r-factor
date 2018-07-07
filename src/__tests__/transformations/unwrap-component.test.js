@@ -9,7 +9,7 @@ const tests = [
     filename: 'button1',
     unwrapOptions: {
       name: 'withRouter',
-      importDetails: {
+      import: {
         module: 'react-router',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
@@ -20,7 +20,7 @@ const tests = [
     filename: 'button2',
     unwrapOptions: {
       name: 'withRouter',
-      importDetails: {
+      import: {
         module: 'react-router',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
@@ -31,7 +31,7 @@ const tests = [
     filename: 'button3',
     unwrapOptions: {
       name: 'withRouter',
-      importDetails: {
+      import: {
         module: 'react-router',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
@@ -42,7 +42,7 @@ const tests = [
     filename: 'button4',
     unwrapOptions: {
       name: 'withRouter',
-      importDetails: {
+      import: {
         module: 'react-router',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
@@ -53,7 +53,7 @@ const tests = [
     filename: 'button5',
     unwrapOptions: {
       name: 'withAuth',
-      importDetails: {
+      import: {
         module: 'auth',
         removeImportIfEmpty: true,
         subImports: [ 'withAuth' ]
@@ -64,7 +64,7 @@ const tests = [
     filename: 'button6',
     unwrapOptions: {
       name: 'connect',
-      importDetails: {
+      import: {
         module: 'react-redux',
         removeImportIfEmpty: true,
         subImports: [ 'connect' ]
@@ -76,7 +76,7 @@ const tests = [
     filename: 'button7',
     unwrapOptions: {
       name: 'connect',
-      importDetails: {
+      import: {
         module: 'react-redux',
         removeImportIfEmpty: true,
         subImports: [ 'connect' ]
@@ -88,7 +88,7 @@ const tests = [
     filename: 'button8',
     unwrapOptions: {
       name: 'withRouter',
-      importDetails: {
+      import: {
         module: 'react-router',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
@@ -100,7 +100,7 @@ const tests = [
     filename: 'button9',
     unwrapOptions: {
       name: 'withRouter',
-      importDetails: {
+      import: {
         module: 'react-router',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
@@ -111,7 +111,7 @@ const tests = [
     filename: 'button10',
     unwrapOptions: {
       name: 'withAuth',
-      importDetails: {
+      import: {
         module: 'auth',
         removeImportIfEmpty: true,
         subImports: [ 'withAuth' ]
@@ -122,7 +122,7 @@ const tests = [
     filename: 'button11',
     unwrapOptions: {
       name: 'withRouter',
-      importDetails: {
+      import: {
         module: 'react-router',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
@@ -133,7 +133,7 @@ const tests = [
     filename: 'button12',
     unwrapOptions: {
       name: 'connect',
-      importDetails: {
+      import: {
         module: 'react-redux',
         removeImportIfEmpty: true,
         subImports: [ 'connect' ]
