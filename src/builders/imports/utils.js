@@ -105,6 +105,7 @@ const sortImportsCustom = (imports) => {
   ];
 };
 
+// eslint-disable-next-line
 const buildImportDeclarationCode = (importData) => {
   const { identifier, module, subImports, startLine, endLine } = importData;
   const isMultiline = startLine !== endLine;
@@ -126,10 +127,11 @@ const buildImportDeclarationCode = (importData) => {
   }
   if (sortedSubImportStrings.length > 0) {
     if (isMultiline) {
-      const indentedSubImports = indentCode(sortedSubImportStrings.join(`,${settings.endOfLine}`), settings.indent);
+      const subImportsCode = sortedSubImportStrings.join(`,${settings.endOfLine}`) + settings.trailingComma;
+      const indentedSubImports = indentCode(subImportsCode, settings.indent);
       code += `{${settings.endOfLine}${indentedSubImports}${settings.endOfLine}}`;
     } else {
-      code += `{ ${sortedSubImportStrings.join(', ')} }`;
+      code += `{ ${sortedSubImportStrings.join(', ')}${settings.trailingComma} }`;
     }
   }
   if (identifier || sortedSubImportStrings.length > 0) {
