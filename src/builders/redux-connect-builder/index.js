@@ -173,6 +173,7 @@ class ReduxConnectBuilder {
   disconnect() {
     this.updateDetails();
     this.unwrapConnect();
+    return this;
   }
 
   disconnectState() {
@@ -183,6 +184,7 @@ class ReduxConnectBuilder {
       connectCallExpressionPath.node.arguments[0] = nullLiteral();
       this.cleanConnect();
     }
+    return this;
   }
 
   disconnectDispatch() {
@@ -193,6 +195,7 @@ class ReduxConnectBuilder {
       connectCallExpressionPath.node.arguments[1] = nullLiteral();
       this.cleanConnect();
     }
+    return this;
   }
 
   disconnectMergeProps() {
@@ -203,6 +206,7 @@ class ReduxConnectBuilder {
       connectCallExpressionPath.node.arguments[2] = nullLiteral();
       this.cleanConnect();
     }
+    return this;
   }
 
   build() {
