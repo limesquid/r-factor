@@ -6,7 +6,6 @@ const settings = require('../../settings');
 const {
   findComponentScopePath,
   appendNode,
-  getComponentScope,
   getNewComponentName,
   createExportAst,
   removeExport,
@@ -23,12 +22,12 @@ const wrapComponent = (source, ast = parser.parse(source), options) => {
     arrowComponentExpressionPath,
     componentExportPath,
     componentReturnPath,
+    componentScope,
     isDefaultExport,
     isHoc,
     isInstantExport,
     originalComponentName
   } = details;
-  const componentScope = getComponentScope(details);
   const newComponentName = getNewComponentName(details, componentScope);
 
   if (!isHoc && (!originalComponentName || (isInstantExport && isDefaultExport))) {
