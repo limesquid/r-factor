@@ -11,6 +11,7 @@ const sortObjectAttributes = (code, node, indentSize) => {
   let newCode = '{';
   newCode += isMultiLine ? settings.endOfLine : ' ';
   newCode += buildProperties(node.properties, code, buildProperty);
+  newCode += settings.trailingComma;
   newCode += isMultiLine ? `${settings.endOfLine}${generateIndent(indentSize)}` : ' ';
   newCode += '}';
   return newCode;
