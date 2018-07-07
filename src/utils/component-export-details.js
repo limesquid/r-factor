@@ -2,6 +2,7 @@ const traverse = require('@babel/traverse').default;
 const { isIdentifier } = require('@babel/types');
 const {
   isArrowComponentDeclaration,
+  isArrowComponentExpressionPath,
   isArrowComponentExpression,
   isComponentDeclaration,
   isIdentifierInside
@@ -85,9 +86,10 @@ class ComponentExportDetails {
         }
       },
       enter(path) {
-        if (!that.arrowComponentDeclaration && isArrowComponentExpression(path.node)) {
+        if (!that.arrowComponentDeclaration && isArrowComponentExpressionPath(path)) {
           that.isHoc = true;
           that.arrowComponentExpressionPath = path;
+          path.skip();
         }
       },
       CallExpression(path) {

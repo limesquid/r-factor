@@ -25,6 +25,10 @@ const tests = [
     actions: [ 'connect' ]
   },
   {
+    filename: 'connect-hoc-complicated2',
+    actions: [ 'connect' ]
+  },
+  {
     filename: 'connect-identity',
     actions: [ 'connect', 'connectState', 'connectDispatch' ]
   },
