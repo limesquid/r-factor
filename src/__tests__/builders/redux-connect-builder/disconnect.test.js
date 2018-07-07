@@ -6,19 +6,19 @@ const settings = require('../../../settings');
 const tests = [
   {
     filename: 'disconnect-dispatch-wrapped',
-    actions: [ 'diconnectDispatch' ]
+    actions: [ 'disconnectDispatch' ]
   },
   {
     filename: 'disconnect-dispatch-wrapped2',
-    actions: [ 'disconnect', 'diconnectDispatch' ]
+    actions: [ 'disconnect', 'disconnectDispatch' ]
   },
   {
     filename: 'disconnect-dispatch',
-    actions: [ 'diconnectDispatch' ]
+    actions: [ 'disconnectDispatch' ]
   },
   {
     filename: 'disconnect-dispatch2',
-    actions: [ 'disconnect', 'diconnectDispatch' ]
+    actions: [ 'disconnect', 'disconnectDispatch' ]
   },
   {
     filename: 'disconnect-mergeprops',

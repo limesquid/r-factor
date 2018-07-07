@@ -1,5 +1,7 @@
-const { identifier, nullLiteral } = require('@babel/types');
+const { identifier, isNullLiteral, nullLiteral } = require('@babel/types');
 const parser = require('../../utils/parser');
+const { removeBinding } = require('../../utils/bindings');
+const { isUndefinedIdentifier } = require('../../utils/ast');
 const settings = require('../../settings');
 const wrapComponent = require('../../transformations/wrap-component');
 const unwrapComponent = require('../../transformations/unwrap-component');
@@ -38,6 +40,36 @@ class ReduxConnectBuilder {
     });
     this.ast = parser.parse(this.code);
     this.isConnected = true;
+  }
+
+  cleanConnect() {
+    const { connectCallExpressionPath } = this.details;
+    const argumentsArray = connectCallExpressionPath.get('arguments');
+    let index = argumentsArray.length - 1;
+    while (
+      index >= 0 &&
+      (isNullLiteral(argumentsArray[index]) || isUndefinedIdentifier(argumentsArray[index]))
+    ) {
+      argumentsArray[index].remove();
+      index--;
+    }
+
+    if (index === -1) {
+      this.unwrapConnect();
+    }
+  }
+
+  unwrapConnect() {
+    this.code = unwrapComponent(this.code, this.ast, {
+      name: 'connect',
+      importDetails: {
+        module: 'react-redux',
+        removeImportIfEmpty: true,
+        subImports: [ 'connect' ]
+      }
+    });
+    this.ast = parser.parse(this.code);
+    this.isConnected = false;
   }
 
   connect() {
@@ -140,27 +172,37 @@ class ReduxConnectBuilder {
 
   disconnect() {
     this.updateDetails();
-    this.code = unwrapComponent(this.code, this.ast, {
-      name: 'connect',
-      importDetails: {
-        module: 'react-redux',
-        removeImportIfEmpty: true,
-        subImports: [ 'connect' ]
-      }
-    });
-    this.ast = parser.parse(this.code);
+    this.unwrapConnect();
   }
 
   disconnectState() {
-
+    this.updateDetails();
+    const { connectCallExpressionPath, hasMapStateToProps, mapStateToPropsName, scope } = this.details;
+    if (hasMapStateToProps) {
+      removeBinding(scope, mapStateToPropsName);
+      connectCallExpressionPath.node.arguments[0] = nullLiteral();
+      this.cleanConnect();
+    }
   }
 
   disconnectDispatch() {
-
+    this.updateDetails();
+    const { connectCallExpressionPath, hasMapDispatchToProps, mapDispatchToPropsName, scope } = this.details;
+    if (hasMapDispatchToProps) {
+      removeBinding(scope, mapDispatchToPropsName);
+      connectCallExpressionPath.node.arguments[1] = nullLiteral();
+      this.cleanConnect();
+    }
   }
 
   disconnectMergeProps() {
-
+    this.updateDetails();
+    const { connectCallExpressionPath, hasMergeProps, mergePropsName, scope } = this.details;
+    if (hasMergeProps) {
+      removeBinding(scope, mergePropsName);
+      connectCallExpressionPath.node.arguments[2] = nullLiteral();
+      this.cleanConnect();
+    }
   }
 
   build() {
