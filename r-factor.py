@@ -53,7 +53,8 @@ class BaseCommand(sublime_plugin.TextCommand):
       'merge-props-name': self.get_setting('merge-props-name'),
       'modules-order': self.get_setting('modules-order'),
       'quotes': self.get_setting('quotes'),
-      'semicolons': self.get_setting('semicolons')
+      'semicolons': self.get_setting('semicolons'),
+      'trailing-commas': self.get_setting('trailing-commas')
     }
 
   def get_setting(self, key):

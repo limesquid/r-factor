@@ -30,5 +30,6 @@
     "react-hot-loader"
   ],
   "quotes": "single",
-  "semicolons": true
+  "semicolons": true,
+  "trailing-commas": false
 }
