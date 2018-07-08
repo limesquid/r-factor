@@ -62,7 +62,7 @@ class ReduxConnectBuilder {
   unwrapConnect() {
     this.code = unwrapComponent(this.code, this.ast, {
       name: 'connect',
-      importDetails: {
+      import: {
         module: 'react-redux',
         removeImportIfEmpty: true,
         subImports: [ 'connect' ]

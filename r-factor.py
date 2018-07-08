@@ -180,3 +180,9 @@ class ToggleComponentType(BaseCommand):
   def __init__(self, arg):
     super(ToggleComponentType, self).__init__(arg)
     self.refactoring_name = 'toggle-component-type'
+
+
+class ToggleWithRouterHoc(BaseCommand):
+  def __init__(self, arg):
+    super(ToggleWithRouterHoc, self).__init__(arg)
+    self.refactoring_name = 'toggle-with-router-hoc'
