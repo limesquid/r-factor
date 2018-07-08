@@ -8,4 +8,4 @@ const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = {};
 
-export const Button = withAuth(connect(mapStateToProps, mapDispatchToProps)(ButtonComponent));
+export const Button = withRouter(connect(mapStateToProps, mapDispatchToProps)(ButtonComponent));

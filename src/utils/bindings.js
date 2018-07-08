@@ -1,18 +1,16 @@
 const findBinding = (scope, name) => {
   const binding = scope.bindings[name];
-
-  if (binding) {
-    return binding;
-  }
-
-  if (scope.parent) {
-    return findBinding(scope.parent, name);
-  }
-
-  return null;
+  return binding || null;
 };
 
+const removeBinding = (scope, name) => {
+  const binding = findBinding(scope, name);
+  if (binding) {
+    binding.path.remove();
+  }
+};
 
 module.exports = {
-  findBinding
+  findBinding,
+  removeBinding
 };
