@@ -107,7 +107,8 @@ class ReduxDetailsBuilder {
       mapDispatchToPropsName: this.mapDispatchToPropsName,
       mapDispatchToPropsDefinitionPath,
       mergePropsDefinitionPath,
-      mergePropsName: this.mergePropsName
+      mergePropsName: this.mergePropsName,
+      scope: this.connectCallExpressionPath.scope
     };
   }
 }

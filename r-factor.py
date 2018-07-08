@@ -111,6 +111,30 @@ class ConvertToFunctionComponentCommand(BaseCommand):
     self.refactoring_name = 'convert-to-function-component'
 
 
+class DisconnectComponent(BaseCommand):
+  def __init__(self, arg):
+    super(DisconnectComponent, self).__init__(arg)
+    self.refactoring_name = 'disconnect-component'
+
+
+class DisconnectComponentFromState(BaseCommand):
+  def __init__(self, arg):
+    super(DisconnectComponentFromState, self).__init__(arg)
+    self.refactoring_name = 'disconnect-component-from-state'
+
+
+class DisconnectComponentFromDispatch(BaseCommand):
+  def __init__(self, arg):
+    super(DisconnectComponentFromDispatch, self).__init__(arg)
+    self.refactoring_name = 'disconnect-component-from-dispatch'
+
+
+class DisconnectComponentFromMergeProps(BaseCommand):
+  def __init__(self, arg):
+    super(DisconnectComponentFromMergeProps, self).__init__(arg)
+    self.refactoring_name = 'disconnect-component-from-merge-props'
+
+
 class GeneratePropTypesCommand(BaseCommand):
   def __init__(self, arg):
     super(GeneratePropTypesCommand, self).__init__(arg)
@@ -157,3 +181,9 @@ class ToggleComponentType(BaseCommand):
   def __init__(self, arg):
     super(ToggleComponentType, self).__init__(arg)
     self.refactoring_name = 'toggle-component-type'
+
+
+class ToggleWithRouterHoc(BaseCommand):
+  def __init__(self, arg):
+    super(ToggleWithRouterHoc, self).__init__(arg)
+    self.refactoring_name = 'toggle-with-router-hoc'
