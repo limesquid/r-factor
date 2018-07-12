@@ -1,6 +1,7 @@
 const babylon = require('@babel/parser');
 const recast = require('recast');
 const { babylonOptions } = require('../options');
+const settings = require('../settings');
 
 const parse = (code, options) => recast.parse(code, {
   parser: {
@@ -14,12 +15,14 @@ const parseExpression = (code, options) => recast.parse(code, {
   }
 });
 
-const print = (ast) => recast.print(ast).code;
+const print = (ast) => recast.print(ast, {
+  lineTerminator: settings.endOfLine,
+  tabWidth: settings.indent,
+  useTabs: settings.indentCharacter === '\t'
+}).code;
 
-const parser = {
+module.exports = {
   parse,
   parseExpression,
   print
 };
-
-module.exports = parser;
