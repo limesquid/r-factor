@@ -13,13 +13,16 @@ const MovePropTypesToClass = require('../../refactorings/move-prop-types-to-clas
 const CodeBuilder = require('./code-builder');
 
 const addPropTypes = (code, ast, propTypes) => {
-  const builder = new CodeBuilder(
-    code.replace(
+  const codeWithMultilinePropTypes = code
+    .replace(
       /^(\s+)static\s+propTypes\s*=\s*{\s*}\s*(;?)/m,
       `$1static propTypes = {${settings.endOfLine}$1}$2`
-    ),
-    ast
-  );
+    )
+    .replace(
+      /^([\t ]+)(\w+)\.propTypes\s*=\s*{\s*}\s*(;?)/m,
+      `$1$2.propTypes = {${settings.endOfLine}$1}$3`
+    );
+  const builder = new CodeBuilder(codeWithMultilinePropTypes, ast);
   let isClass = false;
   let isStatic = false;
 
