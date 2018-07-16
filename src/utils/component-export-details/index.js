@@ -2,7 +2,7 @@ const traverse = require('@babel/traverse').default;
 const { isIdentifier } = require('@babel/types');
 const {
   getOutermostCallExpressionPath,
-  isArrowComponentDeclaration,
+  isArrowComponentDeclarationPath,
   isArrowComponentExpressionPath,
   isArrowComponentExpression,
   isComponentDeclaration,
@@ -62,21 +62,20 @@ class ComponentExportDetails {
           return;
         }
 
-        const variableDeclaration = path.node.declaration;
-        if (isArrowComponentDeclaration(variableDeclaration)) {
+        if (isArrowComponentDeclarationPath(path.get('declaration'))) {
           that.isInstantExport = true;
           that.componentExportPath = path;
           that.arrowComponentDeclaration = path.get('declaration');
         }
 
-        if (isComponentDeclaration(variableDeclaration)) {
+        if (isComponentDeclaration(path.node.declaration)) {
           that.isInstantExport = true;
           that.componentExportPath = path;
           that.classComponentPath = path.get('declaration');
         }
       },
       VariableDeclaration(path) {
-        if (isArrowComponentDeclaration(path.node)) {
+        if (isArrowComponentDeclarationPath(path)) {
           that.originalComponentName = path.node.declarations[0].id.name;
           that.arrowComponentDeclaration = path;
         }
