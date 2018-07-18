@@ -18,7 +18,6 @@ describe('toggle-with-router-hoc:canApply', () => {
 });
 
 describe('toggle-with-router-hoc:refactor', () => {
-  debugger;
   const refactoring = new ToggleWithRouterHoc();
   tests.forEach((test) => {
     it(`refactor: ${test.name}`, () => {
