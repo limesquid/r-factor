@@ -48,8 +48,8 @@ class BaseCommand(sublime_plugin.TextCommand):
       'indent': self.get_setting('indent'),
       'map-dispatch-to-props-name': self.get_setting('map-dispatch-to-props-name'),
       'map-state-to-props-name': self.get_setting('map-state-to-props-name'),
-      'map-to-dispatch-prefer-object': self.get_setting('map-to-dispatch-prefer-object'),
-      'map-to-state-prefer-one-line': self.get_setting('map-to-state-prefer-one-line'),
+      'map-dispatch-to-props-prefer-object': self.get_setting('map-dispatch-to-props-prefer-object'),
+      'map-state-to-props-prefer-one-line': self.get_setting('map-state-to-props-prefer-one-line'),
       'merge-props-name': self.get_setting('merge-props-name'),
       'modules-order': self.get_setting('modules-order'),
       'quotes': self.get_setting('quotes'),
@@ -68,28 +68,28 @@ class AddClassnameCommand(BaseCommand):
     self.refactoring_name = 'add-classname'
 
 
-class ConnectComponent(BaseCommand):
+class Connect(BaseCommand):
   def __init__(self, arg):
-    super(ConnectComponent, self).__init__(arg)
-    self.refactoring_name = 'connect-component'
+    super(Connect, self).__init__(arg)
+    self.refactoring_name = 'connect'
 
 
-class ConnectComponentWithState(BaseCommand):
+class ConnectMapStateToProps(BaseCommand):
   def __init__(self, arg):
-    super(ConnectComponentWithState, self).__init__(arg)
-    self.refactoring_name = 'connect-component-with-state'
+    super(ConnectMapStateToProps, self).__init__(arg)
+    self.refactoring_name = 'connect-map-state-to-props'
 
 
-class ConnectComponentWithDispatch(BaseCommand):
+class ConnectMapDispatchToProps(BaseCommand):
   def __init__(self, arg):
-    super(ConnectComponentWithDispatch, self).__init__(arg)
-    self.refactoring_name = 'connect-component-with-dispatch'
+    super(ConnectMapDispatchToProps, self).__init__(arg)
+    self.refactoring_name = 'connect-map-dispatch-to-props'
 
 
-class ConnectComponentWithMergeProps(BaseCommand):
+class ConnectMergeProps(BaseCommand):
   def __init__(self, arg):
-    super(ConnectComponentWithMergeProps, self).__init__(arg)
-    self.refactoring_name = 'connect-component-with-merge-props'
+    super(ConnectMergeProps, self).__init__(arg)
+    self.refactoring_name = 'connect-merge-props'
 
 
 class ConvertToClassComponentCommand(BaseCommand):
@@ -110,28 +110,28 @@ class ConvertToFunctionComponentCommand(BaseCommand):
     self.refactoring_name = 'convert-to-function-component'
 
 
-class DisconnectComponent(BaseCommand):
+class Disconnect(BaseCommand):
   def __init__(self, arg):
-    super(DisconnectComponent, self).__init__(arg)
-    self.refactoring_name = 'disconnect-component'
+    super(Disconnect,, self).__init__(arg)
+    self.refactoring_name = 'disconnect'
 
 
-class DisconnectComponentFromState(BaseCommand):
+class DisconnectMapStateToProps(BaseCommand):
   def __init__(self, arg):
-    super(DisconnectComponentFromState, self).__init__(arg)
-    self.refactoring_name = 'disconnect-component-from-state'
+    super(DisconnectMapStateToProps, self).__init__(arg)
+    self.refactoring_name = 'disconnect-map-state-to-props'
 
 
-class DisconnectComponentFromDispatch(BaseCommand):
+class DisconnectMapDispatchToProps(BaseCommand):
   def __init__(self, arg):
-    super(DisconnectComponentFromDispatch, self).__init__(arg)
-    self.refactoring_name = 'disconnect-component-from-dispatch'
+    super(DisconnectMapDispatchToProps, self).__init__(arg)
+    self.refactoring_name = 'disconnect-map-dispatch-to-props'
 
 
-class DisconnectComponentFromMergeProps(BaseCommand):
+class DisconnectMergeProps(BaseCommand):
   def __init__(self, arg):
-    super(DisconnectComponentFromMergeProps, self).__init__(arg)
-    self.refactoring_name = 'disconnect-component-from-merge-props'
+    super(DisconnectMergeProps, self).__init__(arg)
+    self.refactoring_name = 'disconnect-merge-props'
 
 
 class GeneratePropTypesCommand(BaseCommand):

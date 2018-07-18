@@ -12,15 +12,17 @@ class SortAttributes extends Refactoring {
   }
 
   canApply(code) {
-    const ast = parser.parse(code, parser);
+    const ast = parser.parse(code);
     let hasObjects = false;
 
     traverse(ast, {
-      ObjectExpression() {
+      ObjectExpression(path) {
         hasObjects = true;
+        path.stop();
       },
-      ObjectPattern() {
+      ObjectPattern(path) {
         hasObjects = true;
+        path.stop();
       }
     });
 
@@ -43,11 +45,13 @@ class SortAttributes extends Refactoring {
     const builder = new CodeBuilder(code);
 
     traverse(ast, {
-      ObjectExpression({ node }) {
-        builder.addNode(node);
+      ObjectExpression(path) {
+        builder.setNode(path.node);
+        path.stop();
       },
-      ObjectPattern({ node }) {
-        builder.addNode(node);
+      ObjectPattern(path) {
+        builder.setNode(path.node);
+        path.stop();
       }
     });
 

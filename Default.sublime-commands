@@ -1,86 +1,86 @@
 [
   {
-    "caption": "R-factor: Add className",
+    "caption": "R-Factor: Add className",
     "command": "add_classname"
   },
   {
-    "caption": "R-factor: Connect component with mapStateToProps & mapDispatchToProps",
-    "command": "connect_component"
+    "caption": "R-Factor: Connect",
+    "command": "connect"
   },
   {
-    "caption": "R-factor: Connect component with mapStateToProps",
-    "command": "connect_component_with_state"
+    "caption": "R-Factor: Connect mapStateToProps",
+    "command": "connect_map_state_to_props"
   },
   {
-    "caption": "R-factor: Connect component with mapDispatchToProps",
-    "command": "connect_component_with_dispatch"
+    "caption": "R-Factor: Connect mapDispatchToProps",
+    "command": "connect_map_dispatch_to_props"
   },
   {
-    "caption": "R-factor: Connect component with mergeProps",
-    "command": "connect_component_with_merge_props"
+    "caption": "R-Factor: Connect mergeProps",
+    "command": "connect_merge_props"
   },
   {
-    "caption": "R-factor: Convert to arrow component",
+    "caption": "R-Factor: Convert to arrow component",
     "command": "convert_to_arrow_component"
   },
   {
-    "caption": "R-factor: Convert to class component",
+    "caption": "R-Factor: Convert to class component",
     "command": "convert_to_class_component"
   },
   {
-    "caption": "R-factor: Convert to function component",
+    "caption": "R-Factor: Convert to function component",
     "command": "convert_to_function_component"
   },
   {
-    "caption": "R-factor: Disconnect component",
-    "command": "disconnect_component"
+    "caption": "R-Factor: Disconnect",
+    "command": "disconnect"
   },
   {
-    "caption": "R-factor: Disconnect component from state",
-    "command": "disconnect_component_from_state"
+    "caption": "R-Factor: Disconnect mapStateToProps",
+    "command": "disconnect_map_state_to_props"
   },
   {
-    "caption": "R-factor: Disconnect component from dispatch",
-    "command": "disconnect_component_from_dispatch"
+    "caption": "R-Factor: Disconnect mapDispatchToProps",
+    "command": "disconnect_map_dispatch_to_props"
   },
   {
-    "caption": "R-factor: Disconnect component from merge props",
-    "command": "disconnect_component_from_merge_props"
+    "caption": "R-Factor: Disconnect mergeProps",
+    "command": "disconnect_merge_props"
   },
   {
-    "caption": "R-factor: Generate propTypes",
+    "caption": "R-Factor: Generate propTypes",
     "command": "generate_prop_types"
   },
   {
-    "caption": "R-factor: Move defaultProps out of class",
+    "caption": "R-Factor: Move defaultProps out of class",
     "command": "move_default_props_out_of_class"
   },
   {
-    "caption": "R-factor: Move defaultProps to class",
+    "caption": "R-Factor: Move defaultProps to class",
     "command": "move_default_props_to_class"
   },
   {
-    "caption": "R-factor: Move propTypes out of class",
+    "caption": "R-Factor: Move propTypes out of class",
     "command": "move_prop_types_out_of_class"
   },
   {
-    "caption": "R-factor: Move propTypes to class",
+    "caption": "R-Factor: Move propTypes to class",
     "command": "move_prop_types_to_class"
   },
   {
-    "caption": "R-factor: Sort attributes in objects",
+    "caption": "R-Factor: Sort attributes in objects",
     "command": "sort_attributes"
   },
   {
-    "caption": "R-factor: Sort imports",
+    "caption": "R-Factor: Sort imports",
     "command": "sort_imports"
   },
   {
-    "caption": "R-factor: Toggle component type",
+    "caption": "R-Factor: Toggle component type",
     "command": "toggle_component_type"
   },
   {
-    "caption": "R-factor: Toggle withRouter HoC",
+    "caption": "R-Factor: Toggle withRouter HoC",
     "command": "toggle_with_router_hoc"
   }
 ]

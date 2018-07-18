@@ -13,8 +13,6 @@ describe('transformation:remove-import-declaration', () => {
   it('should just sort when module is not found', () => {
     const result = removeImportDeclaration(code, ast, {
       module: 'react2',
-      global: true,
-      namespace: true,
       identifier: true,
       subImports: [ 'PureComponent' ]
     });

@@ -7,9 +7,9 @@
   "functional-component-type": "arrow",
   "indent": 2,
   "map-dispatch-to-props-name": "mapDispatchToProps",
+  "map-dispatch-to-props-prefer-object": false,
   "map-state-to-props-name": "mapStateToProps",
-  "map-to-dispatch-prefer-object": false,
-  "map-to-state-prefer-one-line": false,
+  "map-state-to-props-prefer-one-line": false,
   "merge-props-name": "mergeProps",
   "modules-order": [
     "react",

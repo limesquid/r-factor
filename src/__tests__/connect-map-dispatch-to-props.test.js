@@ -1,15 +1,15 @@
 const { readDirectoryFilenames, readFile } = require('./test-utils');
-const ToggleWithRouterHoc = require('../refactorings/toggle-with-router-hoc');
+const ConnectMapDispatchToProps = require('../refactorings/connect-map-dispatch-to-props');
 
 const tests = readDirectoryFilenames('connect-map-dispatch-to-props/input')
   .map((filename) => ({
     name: filename,
-    input: readFile(`toggle-with-router-hoc/input/${filename}`),
-    output: readFile(`toggle-with-router-hoc/output/${filename}`)
+    input: readFile(`connect-map-dispatch-to-props/input/${filename}`),
+    output: readFile(`connect-map-dispatch-to-props/output/${filename}`)
   }));
 
-describe('toggle-with-router-hoc:canApply', () => {
-  const refactoring = new ToggleWithRouterHoc();
+describe('connect-map-dispatch-to-props:canApply', () => {
+  const refactoring = new ConnectMapDispatchToProps();
   tests.forEach((test) => {
     it(`canApply: ${test.name}`, () => {
       expect(refactoring.canApply(test.input)).toBeTruthy();
@@ -17,8 +17,8 @@ describe('toggle-with-router-hoc:canApply', () => {
   });
 });
 
-describe('toggle-with-router-hoc:refactor', () => {
-  const refactoring = new ToggleWithRouterHoc();
+describe('connect-map-dispatch-to-props:refactor', () => {
+  const refactoring = new ConnectMapDispatchToProps();
   tests.forEach((test) => {
     it(`refactor: ${test.name}`, () => {
       expect(refactoring.refactor(test.input)).toBe(test.output);

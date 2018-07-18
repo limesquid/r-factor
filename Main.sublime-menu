@@ -10,7 +10,7 @@
         "mnemonic": "P",
         "children": [
           {
-            "caption": "R-factor",
+            "caption": "R-Factor",
             "id": "r-factor-settings",
             "children": [
               {

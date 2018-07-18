@@ -1,11 +1,11 @@
 const ReduxConnectBuilder = require('../../builders/redux-connect-builder');
 const { Refactoring } = require('../../model');
 
-class ConnectComponentWithDispatch extends Refactoring {
+class Connect extends Refactoring {
   constructor() {
     super();
     this.transformations = [
-      this.connectComponent
+      this.connect
     ];
   }
 
@@ -13,10 +13,10 @@ class ConnectComponentWithDispatch extends Refactoring {
     return true;
   }
 
-  connectComponent(code, ast) {
+  connect(code, ast) {
     const reduxConnectBuilder = new ReduxConnectBuilder(code, ast);
-    return reduxConnectBuilder.connectDispatch().build();
+    return reduxConnectBuilder.connect().build();
   }
 }
 
-module.exports = ConnectComponentWithDispatch;
+module.exports = Connect;

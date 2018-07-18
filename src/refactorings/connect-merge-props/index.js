@@ -1,11 +1,11 @@
 const ReduxConnectBuilder = require('../../builders/redux-connect-builder');
 const { Refactoring } = require('../../model');
 
-class DisconnectComponentFromDispatch extends Refactoring {
+class ConnectMergeProps extends Refactoring {
   constructor() {
     super();
     this.transformations = [
-      this.disconnectComponentFromDispatch
+      this.connect
     ];
   }
 
@@ -13,10 +13,10 @@ class DisconnectComponentFromDispatch extends Refactoring {
     return true;
   }
 
-  disconnectComponentFromDispatch(code, ast) {
+  connect(code, ast) {
     const reduxConnectBuilder = new ReduxConnectBuilder(code, ast);
-    return reduxConnectBuilder.disconnectDispatch().build();
+    return reduxConnectBuilder.connectMergeProps().build();
   }
 }
 
-module.exports = DisconnectComponentFromDispatch;
+module.exports = ConnectMergeProps;

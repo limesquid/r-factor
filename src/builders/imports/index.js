@@ -42,14 +42,6 @@ class Imports {
     return this;
   }
 
-  removeNamespace(/* { module } */) {
-    /* TODO */
-  }
-
-  removeGlobal(/* { module } */) {
-    /* TODO */
-  }
-
   removeSubImports({ module, subImports, removeImportIfEmpty }) {
     for (const group of this.groups) {
       group.removeSubImports({ module, subImports, removeImportIfEmpty });
