@@ -7,7 +7,7 @@ class SortAttributes extends Refactoring {
   constructor() {
     super();
     this.transformations = [
-      (code, ast) => this.refactor(code, ast)
+      (code, ast) => this.refactorCode(code, ast)
     ];
   }
 
@@ -30,7 +30,7 @@ class SortAttributes extends Refactoring {
     return numberOfObjects;
   }
 
-  refactor(code, ast) {
+  refactorCode(code, ast) {
     const numberOfObjects = this.getNumberOfObjects(code, ast);
     let refactored = code;
 

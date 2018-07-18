@@ -108,15 +108,6 @@ class Group {
     };
     this.updateImportAtIndex(existingImportIndex, updatedImport, removeImportIfEmpty);
   }
-
-  removeImport(index) {
-    const { code } = this.imports[index];
-    this.code = this.code.replace(code, '');
-    this.imports = [
-      ...this.imports.slice(0, index),
-      ...this.imports.slice(index + 1)
-    ];
-  }
 }
 
 module.exports = Group;
