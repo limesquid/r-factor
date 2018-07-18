@@ -62,9 +62,9 @@ class BaseCommand(sublime_plugin.TextCommand):
       settings = sublime.load_settings('r-factor.sublime-settings')
     return settings.get(key)
 
-class AddClassnameCommand(BaseCommand):
+class AddClassname(BaseCommand):
   def __init__(self, arg):
-    super(AddClassnameCommand, self).__init__(arg)
+    super(AddClassname, self).__init__(arg)
     self.refactoring_name = 'add-classname'
 
 
@@ -92,27 +92,27 @@ class ConnectMergeProps(BaseCommand):
     self.refactoring_name = 'connect-merge-props'
 
 
-class ConvertToClassComponentCommand(BaseCommand):
+class ConvertToClassComponent(BaseCommand):
   def __init__(self, arg):
-    super(ConvertToClassComponentCommand, self).__init__(arg)
+    super(ConvertToClassComponent, self).__init__(arg)
     self.refactoring_name = 'convert-to-class-component'
 
 
-class ConvertToArrowComponentCommand(BaseCommand):
+class ConvertToArrowComponent(BaseCommand):
   def __init__(self, arg):
-    super(ConvertToArrowComponentCommand, self).__init__(arg)
+    super(ConvertToArrowComponent, self).__init__(arg)
     self.refactoring_name = 'convert-to-arrow-component'
 
 
-class ConvertToFunctionComponentCommand(BaseCommand):
+class ConvertToFunctionComponent(BaseCommand):
   def __init__(self, arg):
-    super(ConvertToFunctionComponentCommand, self).__init__(arg)
+    super(ConvertToFunctionComponent, self).__init__(arg)
     self.refactoring_name = 'convert-to-function-component'
 
 
 class Disconnect(BaseCommand):
   def __init__(self, arg):
-    super(Disconnect,, self).__init__(arg)
+    super(Disconnect, self).__init__(arg)
     self.refactoring_name = 'disconnect'
 
 
@@ -134,9 +134,9 @@ class DisconnectMergeProps(BaseCommand):
     self.refactoring_name = 'disconnect-merge-props'
 
 
-class GeneratePropTypesCommand(BaseCommand):
+class GeneratePropTypes(BaseCommand):
   def __init__(self, arg):
-    super(GeneratePropTypesCommand, self).__init__(arg)
+    super(GeneratePropTypes, self).__init__(arg)
     self.refactoring_name = 'generate-prop-types'
 
 
@@ -164,15 +164,15 @@ class MovePropTypesToClass(BaseCommand):
     self.refactoring_name = 'move-prop-types-to-class'
 
 
-class SortAttributesCommand(BaseCommand):
+class SortAttributes(BaseCommand):
   def __init__(self, arg):
-    super(SortAttributesCommand, self).__init__(arg)
+    super(SortAttributes, self).__init__(arg)
     self.refactoring_name = 'sort-attributes'
 
 
-class SortImportsCommand(BaseCommand):
+class SortImports(BaseCommand):
   def __init__(self, arg):
-    super(SortImportsCommand, self).__init__(arg)
+    super(SortImports, self).__init__(arg)
     self.refactoring_name = 'sort-imports'
 
 
