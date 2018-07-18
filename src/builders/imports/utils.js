@@ -9,6 +9,7 @@ const createImport = (code, node) => ({
   identifier: getIdentifier(node),
   module: getModule(node),
   subImports: getSubImports(node),
+  namespace: getNamespaceSpecifier(node),
   start: node.start,
   startLine: node.loc.start.line,
   end: node.end,
@@ -18,6 +19,13 @@ const createImport = (code, node) => ({
 const getIdentifier = (node) => {
   const defaultImport = node.specifiers.find(({ type }) => type === 'ImportDefaultSpecifier');
   return defaultImport && defaultImport.local.name;
+};
+
+const getNamespaceSpecifier = (node) => {
+  if (node.specifiers.length === 1 && node.specifiers[0].type === 'ImportNamespaceSpecifier') {
+    return node.specifiers[0].local.name;
+  }
+  return null;
 };
 
 const getModule = (node) => node.source.value;
@@ -106,7 +114,7 @@ const sortImportsCustom = (imports) => {
 };
 
 const buildImportDeclarationCode = (importData) => {
-  const { identifier, module, subImports, startLine, endLine } = importData;
+  const { identifier, module, namespace, subImports, startLine, endLine } = importData;
   const isMultiline = startLine !== endLine;
   const subImportStrings = Object.keys(subImports).map((subImportImportedName) => {
     const subImportLocalName = subImports[subImportImportedName];
@@ -118,12 +126,18 @@ const buildImportDeclarationCode = (importData) => {
 
   let code = '';
   code += 'import ';
+  if (namespace) {
+    code += `* as ${namespace}`;
+  }
+
   if (identifier) {
     code += identifier;
+
+    if (sortedSubImportStrings.length > 0) {
+      code += ', ';
+    }
   }
-  if (identifier && sortedSubImportStrings.length > 0) {
-    code += ', ';
-  }
+
   if (sortedSubImportStrings.length > 0) {
     if (isMultiline) {
       const indentedSubImports = indentCode(sortedSubImportStrings.join(`,${settings.endOfLine}`), settings.indent);
@@ -132,7 +146,7 @@ const buildImportDeclarationCode = (importData) => {
       code += `{ ${sortedSubImportStrings.join(', ')} }`;
     }
   }
-  if (identifier || sortedSubImportStrings.length > 0) {
+  if (namespace || identifier || sortedSubImportStrings.length > 0) {
     code += ' from ';
   }
   const quote = settings.quote === '`' ? '\'' : settings.quote;

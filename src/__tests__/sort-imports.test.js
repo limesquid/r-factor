@@ -2,8 +2,8 @@ const { range, readFile } = require('./test-utils');
 const SortImports = require('../refactorings/sort-imports');
 const settings = require('../settings');
 
-const alphabeticFiles = range(1, 1).map((n) => `alphabetic${n}`);
-const customFiles = range(1, 5).map((n) => `custom${n}`);
+const alphabeticFiles = range(1, 2).map((n) => `alphabetic${n}`);
+const customFiles = range(1, 4).map((n) => `custom${n}`);
 const allFiles = [
   ...customFiles,
   ...alphabeticFiles
