@@ -76,15 +76,13 @@ const insertNodeAfterOrBefore = (node, afterPaths, beforePaths) => {
 
   if (pathToInsertAfter) {
     pathToInsertAfter.insertAfter(node);
-    return true;
+    return;
   }
 
   if (pathToInsertBefore) {
     pathToInsertBefore.insertBefore(node);
-    return true;
+    return;
   }
-
-  return false;
 };
 
 module.exports = {

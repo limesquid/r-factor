@@ -62,7 +62,7 @@ const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index
   if (property.code) {
     propertyCode += property.code;
   } else if (
-    [ 'RestElement', 'SpreadElement' ].includes(property.type)
+    [ 'RestElement', 'SpreadElement', 'ObjectMethod' ].includes(property.type)
     || (property.value && property.value.type === 'AssignmentPattern')
   ) {
     propertyCode += code.substring(property.start, property.end);

@@ -7,52 +7,55 @@ class SortAttributes extends Refactoring {
   constructor() {
     super();
     this.transformations = [
-      (code, ast) => this.refactorRecursive(code, ast)
+      (code, ast) => this.refactor(code, ast)
     ];
   }
 
   canApply(code) {
-    const ast = parser.parse(code);
-    let hasObjects = false;
-
-    traverse(ast, {
-      ObjectExpression(path) {
-        hasObjects = true;
-        path.stop();
-      },
-      ObjectPattern(path) {
-        hasObjects = true;
-        path.stop();
-      }
-    });
-
-    return hasObjects;
+    return this.getNumberOfObjects(code) > 0;
   }
 
-  refactorRecursive(code, ast) {
+  getNumberOfObjects(code, ast = parser.parse(code)) {
+    let numberOfObjects = 0;
+
+    const traverseCallback = () => {
+      ++numberOfObjects;
+    };
+
+    traverse(ast, {
+      ObjectExpression: traverseCallback,
+      ObjectPattern: traverseCallback
+    });
+
+    return numberOfObjects;
+  }
+
+  refactor(code, ast) {
+    const numberOfObjects = this.getNumberOfObjects(code, ast);
     let refactored = code;
-    let lastCode = code;
-    refactored = this.refactorCode(code, ast);
-    while (refactored !== lastCode) {
-      lastCode = refactored;
-      const newAst = parser.parse(refactored);
-      refactored = this.refactorCode(refactored, newAst);
+
+    for (let i = 0; i < numberOfObjects; ++i) {
+      refactored = this.refactorObject(refactored, parser.parse(refactored), i);
     }
+
     return refactored;
   }
 
-  refactorCode(code, ast) {
+  refactorObject(code, ast, objectIndex) {
     const builder = new CodeBuilder(code);
+    let i = 0;
 
-    traverse(ast, {
-      ObjectExpression(path) {
-        builder.setNode(path.node);
-        path.stop();
-      },
-      ObjectPattern(path) {
+    const traverseCallback = (path) => {
+      if (i === objectIndex) {
         builder.setNode(path.node);
         path.stop();
       }
+      ++i;
+    };
+
+    traverse(ast, {
+      ObjectExpression: traverseCallback,
+      ObjectPattern: traverseCallback
     });
 
     return builder.build();

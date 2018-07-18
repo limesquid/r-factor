@@ -17,7 +17,7 @@ const ReduxDetailsBuilder = require('./redux-details-builder');
 class ReduxConnectBuilder {
   constructor(code, ast) {
     this.code = code;
-    this.ast = ast || parser.parse(code);
+    this.ast = ast;
     this.isConnected = checkIsConnected(this.ast);
   }
 
