@@ -1,7 +1,7 @@
 const { readDirectoryFilenames, readFile } = require('./test-utils');
 const ToggleWithRouterHoc = require('../refactorings/toggle-with-router-hoc');
 
-const tests = readDirectoryFilenames('connect-map-dispatch-to-props/input')
+const tests = readDirectoryFilenames('toggle-with-router-hoc/input')
   .map((filename) => ({
     name: filename,
     input: readFile(`toggle-with-router-hoc/input/${filename}`),
@@ -18,6 +18,7 @@ describe('toggle-with-router-hoc:canApply', () => {
 });
 
 describe('toggle-with-router-hoc:refactor', () => {
+  debugger;
   const refactoring = new ToggleWithRouterHoc();
   tests.forEach((test) => {
     it(`refactor: ${test.name}`, () => {
