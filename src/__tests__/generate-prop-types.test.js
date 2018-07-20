@@ -8,7 +8,7 @@ const createFileDetails = (file, additionalSettings = {}) => ({
 });
 
 const files = [
-  ...range(1, 7).map((n) => createFileDetails(`button${n}`)),
+  ...range(1, 9).map((n) => createFileDetails(`button${n}`)),
   ...range(1, 1).map((n) => createFileDetails(`filter${n}`)),
   ...range(1, 2).map((n) => createFileDetails(`header${n}`)),
   ...range(1, 1).map((n) => createFileDetails(`hoc${n}`, { indent: 4 }))
