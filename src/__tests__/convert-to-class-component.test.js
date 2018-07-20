@@ -1,11 +1,6 @@
-const { range, readFile } = require('./test-utils');
+const { createFileDetails, range, readFile } = require('./test-utils');
 const settings = require('../settings');
 const ConvertToClassComponent = require('../refactorings/convert-to-class-component');
-
-const createFileDetails = (file, additionalSettings = {}) => ({
-  file,
-  additionalSettings
-});
 
 const types = [ 'arrow', 'function' ];
 const files = [

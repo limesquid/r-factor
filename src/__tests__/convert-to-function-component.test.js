@@ -1,11 +1,12 @@
-const { range, readFile } = require('./test-utils');
+const { createFileDetails, range, readFile } = require('./test-utils');
+const settings = require('../settings');
 const ConvertToFunctionComponent = require('../refactorings/convert-to-function-component');
 
 const types = [ 'class', 'arrow' ];
 const files = [
-  ...range(1, 14).map((n) => `button${n}`),
-  'contact-us',
-  'image-header'
+  ...range(1, 14).map((n) => createFileDetails(`button${n}`)),
+  createFileDetails('contact-us'),
+  createFileDetails('image-header', { indent: 4 })
 ];
 
 describe('convert-to-function-component:refactor:react-imports', () => {
@@ -34,7 +35,7 @@ describe('convert-to-function-component:refactor:react-imports', () => {
 types.forEach((type) => {
   describe(`convert-to-function-component:${type}:canApply`, () => {
     const refactoring = new ConvertToFunctionComponent();
-    const tests = files.map((file) => ({
+    const tests = files.map(({ file }) => ({
       name: `${type}/${file}.js`,
       input: readFile(`${type}/${file}.js`),
       output: true
@@ -54,14 +55,17 @@ types.forEach((type) => {
   });
   describe(`convert-to-function-component:${type}:refactor`, () => {
     const refactoring = new ConvertToFunctionComponent();
-    const tests = files.map((file) => ({
+    const tests = files.map(({ file, additionalSettings }) => ({
+      additionalSettings,
       name: `${type}/${file}.js -> function/${file}.js`,
       input: readFile(`${type}/${file}.js`),
       output: readFile(`function/${file}.js`)
     }));
-    tests.forEach(({ name, input, output }) => {
+    tests.forEach(({ additionalSettings, name, input, output }) => {
       it(`refactor "${name}"`, () => {
+        settings.set(additionalSettings);
         expect(refactoring.refactor(input)).toBe(output);
+        settings.revert();
       });
     });
   });

@@ -1,9 +1,8 @@
-const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
 const settings = require('../../settings');
-const { babelGeneratorOptions } = require('../../options');
 const { isExportDefaultArrowComponentDeclaration } = require('../../utils/ast');
 const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
+const { print } = require('../../utils/parser');
 
 class ComponentBuilder extends Builder {
   build() {
@@ -70,7 +69,7 @@ class ComponentBuilder extends Builder {
 
     if (params.length > 0) {
       if (propsNode.type === 'ObjectPattern') {
-        const left = `const ${generate(propsNode, babelGeneratorOptions).code}`;
+        const left = `const ${print(propsNode)}`;
         const right = `this.props${settings.semicolon}`;
         return `${left} = ${right}`;
       }

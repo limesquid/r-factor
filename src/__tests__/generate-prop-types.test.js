@@ -1,11 +1,6 @@
-const { range, readFile } = require('./test-utils');
+const { createFileDetails, range, readFile } = require('./test-utils');
 const settings = require('../settings');
 const GeneratePropTypes = require('../refactorings/generate-prop-types');
-
-const createFileDetails = (file, additionalSettings = {}) => ({
-  file,
-  additionalSettings
-});
 
 const files = [
   ...range(1, 7).map((n) => createFileDetails(`button${n}`)),

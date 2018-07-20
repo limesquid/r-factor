@@ -1,8 +1,7 @@
-const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
 const settings = require('../../settings');
-const { babelGeneratorOptions } = require('../../options');
 const { cleanUpCode, indentCode, squeezeCode } = require('../../utils');
+const { print } = require('../../utils/parser');
 const { getClassMethod, getReturnStatement, isPropsDeclaration } = require('../../utils/ast');
 
 class ComponentBuilder extends Builder {
@@ -100,7 +99,7 @@ class ComponentBuilder extends Builder {
   buildProps() {
     if (this.hasPropsDeclaration()) {
       const declaration = this.getPropsDeclaration();
-      return generate(declaration.id, babelGeneratorOptions).code;
+      return print(declaration.id);
     }
 
     return '';

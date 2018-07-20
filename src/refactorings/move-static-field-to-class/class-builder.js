@@ -1,8 +1,7 @@
-const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
 const settings = require('../../settings');
-const { babelGeneratorOptions } = require('../../options');
-const { cleanUpCode, generateIndent, squeezeCode } = require('../../utils');
+const { cleanUpCode, squeezeCode } = require('../../utils');
+const { print } = require('../../utils/parser');
 
 class ClassBuilder extends Builder {
   constructor(code, staticFieldName) {
@@ -54,11 +53,7 @@ class ClassBuilder extends Builder {
   }
 
   buildStaticField() {
-    const staticField = generate(this.staticFieldNode.expression.right, {
-      ...babelGeneratorOptions,
-      concise: false
-    });
-    const staticFieldCode = staticField.code.replace(/[ ]{2}/g, generateIndent(settings.indent));
+    const staticFieldCode = print(this.staticFieldNode.expression.right);
     const left = `static ${this.staticFieldName}`;
     const right = `${staticFieldCode}${settings.semicolon}${settings.doubleEndOfLine}`;
     return `${left} = ${right}`;
