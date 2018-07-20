@@ -7,6 +7,7 @@ const {
   isPropTypesDeclaration,
   isStaticPropTypesDeclaration
 } = require('../../utils/ast');
+const parser = require('../../utils/parser');
 const { COMPONENT_TYPE } = require('../../constants');
 const settings = require('../../settings');
 const MovePropTypesToClass = require('../../refactorings/move-prop-types-to-class');
@@ -22,13 +23,16 @@ const addPropTypes = (code, ast, propTypes) => {
       /^([\t ]+)(\w+)\.propTypes\s*=\s*{\s*}\s*(;?)/m,
       `$1$2.propTypes = {${settings.endOfLine}$1}$3`
     );
-  const builder = new CodeBuilder(codeWithMultilinePropTypes, ast);
+  const newAst = codeWithMultilinePropTypes === code
+    ? ast
+    : parser.parse(codeWithMultilinePropTypes);
+  const builder = new CodeBuilder(codeWithMultilinePropTypes, newAst);
   let isClass = false;
   let isStatic = false;
 
   builder.setNewPropTypes(propTypes);
 
-  traverse(ast, {
+  traverse(newAst, {
     enter({ node }) {
       if (isPropTypesDeclaration(node)) {
         builder.setPropTypesNode(node);
