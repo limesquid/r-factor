@@ -4,7 +4,8 @@ const ConvertToArrowComponent = require('../refactorings/convert-to-arrow-compon
 const types = [ 'class', 'function' ];
 const files = [
   ...range(1, 14).map((n) => `button${n}`),
-  'contact-us'
+  'contact-us',
+  'image-header'
 ];
 
 describe('convert-to-arrow-component:refactor:react-imports', () => {

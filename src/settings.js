@@ -103,7 +103,6 @@ class Settings {
     return this.get('merge-props-name');
   }
 
-
   get modulesOrder() {
     return this.get('modules-order');
   }
@@ -121,6 +120,10 @@ class Settings {
 
   get semicolon() {
     return this.get('semicolons') ? ';' : '';
+  }
+
+  get tripleIndent() {
+    return 3 * this.indent;
   }
 }
 

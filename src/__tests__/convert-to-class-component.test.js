@@ -1,10 +1,17 @@
 const { range, readFile } = require('./test-utils');
+const settings = require('../settings');
 const ConvertToClassComponent = require('../refactorings/convert-to-class-component');
+
+const createFileDetails = (file, additionalSettings = {}) => ({
+  file,
+  additionalSettings
+});
 
 const types = [ 'arrow', 'function' ];
 const files = [
-  ...[ ...range(1, 6), ...range(10, 13) ].map((n) => `button${n}`),
-  'contact-us'
+  ...[ ...range(1, 6), ...range(10, 13) ].map((n) => createFileDetails(`button${n}`)),
+  createFileDetails('contact-us'),
+  createFileDetails('image-header', { indent: 4 })
 ];
 
 describe('convert-to-class-component:refactor:react-imports', () => {
@@ -33,7 +40,7 @@ describe('convert-to-class-component:refactor:react-imports', () => {
 types.forEach((type) => {
   describe(`convert-to-class-component:${type}:canApply`, () => {
     const refactoring = new ConvertToClassComponent();
-    const tests = files.map((file) => ({
+    const tests = files.map(({ file }) => ({
       name: `${type}/${file}.js`,
       input: readFile(`${type}/${file}.js`),
       output: true
@@ -47,14 +54,17 @@ types.forEach((type) => {
 
   describe(`convert-to-class-component:${type}:refactor`, () => {
     const refactoring = new ConvertToClassComponent();
-    const tests = files.map((file) => ({
+    const tests = files.map(({ file, additionalSettings }) => ({
+      additionalSettings,
       name: `${type}/${file}.js -> class/${file}.js`,
       input: readFile(`${type}/${file}.js`),
       output: readFile(`class/${file}.js`)
     }));
-    tests.forEach(({ name, input, output }) => {
+    tests.forEach(({ additionalSettings, name, input, output }) => {
       it(`refactor "${name}"`, () => {
+        settings.set(additionalSettings);
         expect(refactoring.refactor(input)).toBe(output);
+        settings.revert();
       });
     });
   });

@@ -4,7 +4,8 @@ const ConvertToFunctionComponent = require('../refactorings/convert-to-function-
 const types = [ 'class', 'arrow' ];
 const files = [
   ...range(1, 14).map((n) => `button${n}`),
-  'contact-us'
+  'contact-us',
+  'image-header'
 ];
 
 describe('convert-to-function-component:refactor:react-imports', () => {

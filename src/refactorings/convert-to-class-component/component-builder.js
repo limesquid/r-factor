@@ -54,7 +54,7 @@ class ComponentBuilder extends Builder {
       : [ ...functionBody.body ].reverse().find((node) => node.type === 'ReturnStatement').argument;
     const jsx = this.code.substring(jsxNode.start, jsxNode.end);
     const squeeze = this.isSingleReturnStatement() ? settings.doubleIndent : settings.indent;
-    return squeezeCode(jsx, 6, squeeze - indent);
+    return squeezeCode(jsx, settings.tripleIndent, squeeze - indent);
   }
 
   buildName() {
