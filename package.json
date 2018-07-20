@@ -9,9 +9,9 @@
     "url": "http://kamilmielnik.com/"
   },
   "license": "Proprietary",
-  "engines" : {
+  "engines": {
     "node": "^8.11.3",
-    "npm" : "^5.6.0"
+    "npm": "^5.6.0"
   },
   "scripts": {
     "analyze-bundle": "better-npm-run analyze-bundle",
