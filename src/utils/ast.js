@@ -91,10 +91,14 @@ const isArrowComponentDeclaration = (node) => {
   if (!isArrowFunctionDeclaration(node)) {
     return false;
   }
-  const init = node.declarations[0].init;
-  return isFunctionalComponentBody(init)
-    && !containsNode(init.body, isArrowComponentExpression)
-    && !containsNode(init.body, isFunctionComponentDeclaration);
+  return isFunctionalComponentBody(node.declarations[0].init);
+};
+
+const isArrowComponentDeclarationPath = (path) => {
+  if (!isArrowFunctionDeclaration(path.node)) {
+    return false;
+  }
+  return isArrowComponentExpressionPath(path.get('declarations.0.init'));
 };
 
 const isFunctionComponentDeclaration = (node) => isFunctionDeclaration(node)
@@ -201,6 +205,7 @@ module.exports = {
   getReturnStatement,
   getSubImports,
   isArrowComponentDeclaration,
+  isArrowComponentDeclarationPath,
   isArrowComponentExpression,
   isArrowComponentExpressionPath,
   isArrowFunctionDeclaration,

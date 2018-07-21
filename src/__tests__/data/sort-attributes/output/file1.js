@@ -15,4 +15,3 @@ function a3() {
 function a4() {
   let { ...rest } = x;
 }
-

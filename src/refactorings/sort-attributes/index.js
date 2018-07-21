@@ -7,48 +7,55 @@ class SortAttributes extends Refactoring {
   constructor() {
     super();
     this.transformations = [
-      (code, ast) => this.refactorRecursive(code, ast)
+      (code, ast) => this.refactorCode(code, ast)
     ];
   }
 
   canApply(code) {
-    const ast = parser.parse(code, parser);
-    let hasObjects = false;
-
-    traverse(ast, {
-      ObjectExpression() {
-        hasObjects = true;
-      },
-      ObjectPattern() {
-        hasObjects = true;
-      }
-    });
-
-    return hasObjects;
+    return this.getNumberOfObjects(code) > 0;
   }
 
-  refactorRecursive(code, ast) {
-    let refactored = code;
-    let lastCode = code;
-    refactored = this.refactorCode(code, ast);
-    while (refactored !== lastCode) {
-      lastCode = refactored;
-      const newAst = parser.parse(refactored);
-      refactored = this.refactorCode(refactored, newAst);
-    }
-    return refactored;
+  getNumberOfObjects(code, ast = parser.parse(code)) {
+    let numberOfObjects = 0;
+
+    const traverseCallback = () => {
+      ++numberOfObjects;
+    };
+
+    traverse(ast, {
+      ObjectExpression: traverseCallback,
+      ObjectPattern: traverseCallback
+    });
+
+    return numberOfObjects;
   }
 
   refactorCode(code, ast) {
+    const numberOfObjects = this.getNumberOfObjects(code, ast);
+    let refactored = code;
+
+    for (let i = 0; i < numberOfObjects; ++i) {
+      refactored = this.refactorObject(refactored, parser.parse(refactored), i);
+    }
+
+    return refactored;
+  }
+
+  refactorObject(code, ast, objectIndex) {
     const builder = new CodeBuilder(code);
+    let i = 0;
+
+    const traverseCallback = (path) => {
+      if (i === objectIndex) {
+        builder.setNode(path.node);
+        path.stop();
+      }
+      ++i;
+    };
 
     traverse(ast, {
-      ObjectExpression({ node }) {
-        builder.addNode(node);
-      },
-      ObjectPattern({ node }) {
-        builder.addNode(node);
-      }
+      ObjectExpression: traverseCallback,
+      ObjectPattern: traverseCallback
     });
 
     return builder.build();

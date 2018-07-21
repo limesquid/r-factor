@@ -9,10 +9,12 @@ const sortObjectAttributes = (code, node, indentSize) => {
   const buildProperty = createBuildProperty(code, innerIndent, isMultiLine);
 
   let newCode = '{';
-  newCode += isMultiLine ? settings.endOfLine : ' ';
-  newCode += buildProperties(node.properties, code, buildProperty);
-  newCode += settings.trailingComma;
-  newCode += isMultiLine ? `${settings.endOfLine}${generateIndent(indentSize)}` : ' ';
+  if (node.properties.length > 0) {
+    newCode += isMultiLine ? settings.endOfLine : ' ';
+    newCode += buildProperties(node.properties, code, buildProperty);
+    newCode += isMultiLine ? settings.trailingComma : '';
+    newCode += isMultiLine ? `${settings.endOfLine}${generateIndent(indentSize)}` : ' ';
+  }
   newCode += '}';
   return newCode;
 };
@@ -63,7 +65,7 @@ const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index
   if (property.code) {
     propertyCode += property.code;
   } else if (
-    [ 'RestElement', 'SpreadElement' ].includes(property.type)
+    [ 'RestElement', 'SpreadElement', 'ObjectMethod' ].includes(property.type)
     || (property.value && property.value.type === 'AssignmentPattern')
   ) {
     propertyCode += code.substring(property.start, property.end);

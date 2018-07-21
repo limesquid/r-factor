@@ -9,9 +9,9 @@ const DEFAULT_SETTINGS = {
   'functional-component-type': 'arrow',
   indent: 2,
   'map-dispatch-to-props-name': 'mapDispatchToProps',
+  'map-dispatch-to-props-prefer-object': true,
   'map-state-to-props-name': 'mapStateToProps',
-  'map-to-dispatch-prefer-object': true,
-  'map-to-state-prefer-one-line': true,
+  'map-state-to-props-prefer-one-line': true,
   'merge-props-name': 'mergeProps',
   'modules-order': [ 'react', 'prop-types', 'classnames' ],
   quotes: 'single',
@@ -93,11 +93,11 @@ class Settings {
   }
 
   get mapToDispatchPreferObject() {
-    return this.get('map-to-dispatch-prefer-object');
+    return this.get('map-dispatch-to-props-prefer-object');
   }
 
   get mapToStatePreferOneLine() {
-    return this.get('map-to-state-prefer-one-line');
+    return this.get('map-state-to-props-prefer-one-line');
   }
 
   get mergePropsName() {
@@ -125,6 +125,10 @@ class Settings {
 
   get trailingComma() {
     return this.get('trailing-commas') ? ',' : '';
+  }
+
+  get tripleIndent() {
+    return 3 * this.indent;
   }
 }
 

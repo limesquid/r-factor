@@ -1,11 +1,11 @@
 const ReduxConnectBuilder = require('../../builders/redux-connect-builder');
 const { Refactoring } = require('../../model');
 
-class ConnectComponentWithState extends Refactoring {
+class DisconnectMapStateToProps extends Refactoring {
   constructor() {
     super();
     this.transformations = [
-      this.connectComponent
+      this.disconnect
     ];
   }
 
@@ -13,10 +13,10 @@ class ConnectComponentWithState extends Refactoring {
     return true;
   }
 
-  connectComponent(code, ast) {
+  disconnect(code, ast) {
     const reduxConnectBuilder = new ReduxConnectBuilder(code, ast);
-    return reduxConnectBuilder.connectState().build();
+    return reduxConnectBuilder.disconnectState().build();
   }
 }
 
-module.exports = ConnectComponentWithState;
+module.exports = DisconnectMapStateToProps;

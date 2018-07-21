@@ -8,14 +8,6 @@ const removeImportDeclaration = (source, ast, options) => {
     imports.removeDefault(options);
   }
 
-  if (options.namespace) {
-    imports.removeNamespace(options);
-  }
-
-  if (options.global) {
-    imports.removeGlobal(options);
-  }
-
   if (Object.keys(subImports).length > 0) {
     imports.removeSubImports(options);
   }

@@ -61,15 +61,23 @@ describe('transformation:add-import-declaration', () => {
 
   it('should add new import with sub imports (trailing comma)', () => {
     settings.set({ 'trailing-commas': true });
-    const result = addImportDeclaration(code, ast, {
+    const trailingCommaCode = readTransformationsFile('add-import-declaration/input/trailing-comma.js');
+    const resultWithPropTypes = addImportDeclaration(trailingCommaCode, ast, {
       module: 'prop-types',
       identifier: 'PropTypes',
       subImports: {
         Something: 'Something'
       }
     });
+    const astWithPropTypes = parser.parse(resultWithPropTypes);
+    const resultWithLodash = addImportDeclaration(resultWithPropTypes, astWithPropTypes, {
+      module: 'lodash',
+      subImports: {
+        flowRight: 'flowRight'
+      }
+    });
     const expectedResult = readTransformationsFile('add-import-declaration/output/trailing-comma.js');
-    expect(result).toEqual(expectedResult);
+    expect(resultWithLodash).toEqual(expectedResult);
     settings.revert();
   });
 });

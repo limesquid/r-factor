@@ -1,10 +1,12 @@
-const { range, readFile } = require('./test-utils');
+const { createFileDetails, range, readFile } = require('./test-utils');
+const settings = require('../settings');
 const ConvertToArrowComponent = require('../refactorings/convert-to-arrow-component');
 
 const types = [ 'class', 'function' ];
 const files = [
-  ...range(1, 14).map((n) => `button${n}`),
-  'contact-us'
+  ...range(1, 14).map((n) => createFileDetails(`button${n}`)),
+  createFileDetails('contact-us'),
+  createFileDetails('image-header', { indent: 4 })
 ];
 
 describe('convert-to-arrow-component:refactor:react-imports', () => {
@@ -33,7 +35,7 @@ describe('convert-to-arrow-component:refactor:react-imports', () => {
 types.forEach((type) => {
   describe(`convert-to-arrow-component:${type}:canApply`, () => {
     const refactoring = new ConvertToArrowComponent();
-    const tests = files.map((file) => ({
+    const tests = files.map(({ file }) => ({
       name: `${type}/${file}.js`,
       input: readFile(`${type}/${file}.js`),
       output: true
@@ -54,14 +56,17 @@ types.forEach((type) => {
 
   describe(`convert-to-arrow-component:${type}:refactor`, () => {
     const refactoring = new ConvertToArrowComponent();
-    const tests = files.map((file) => ({
+    const tests = files.map(({ file, additionalSettings }) => ({
+      additionalSettings,
       name: `${type}/${file}.js -> arrow/${file}.js`,
       input: readFile(`${type}/${file}.js`),
       output: readFile(`arrow/${file}.js`)
     }));
-    tests.forEach(({ name, input, output }) => {
+    tests.forEach(({ additionalSettings, name, input, output }) => {
       it(`refactor "${name}"`, () => {
+        settings.set(additionalSettings);
         expect(refactoring.refactor(input)).toBe(output);
+        settings.revert();
       });
     });
   });

@@ -1,7 +1,7 @@
 const { readDirectoryFilenames, readFile } = require('./test-utils');
 const ToggleWithRouterHoc = require('../refactorings/toggle-with-router-hoc');
 
-const tests = readDirectoryFilenames('connect-component-with-dispatch/input')
+const tests = readDirectoryFilenames('toggle-with-router-hoc/input')
   .map((filename) => ({
     name: filename,
     input: readFile(`toggle-with-router-hoc/input/${filename}`),

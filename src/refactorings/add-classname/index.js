@@ -37,10 +37,8 @@ class AddClassname extends Refactoring {
 
     traverse(ast, {
       JSXElement(path) {
-        if (!jsxNode) {
-          jsxNode = path.node;
-          path.stop();
-        }
+        jsxNode = path.node;
+        path.stop();
       }
     });
 

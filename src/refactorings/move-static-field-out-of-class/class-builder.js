@@ -1,8 +1,7 @@
-const generate = require('@babel/generator').default;
 const { Builder } = require('../../model');
 const settings = require('../../settings');
-const { babelGeneratorOptions } = require('../../options');
 const { cleanUpCode, indentCode } = require('../../utils');
+const { print } = require('../../utils/parser');
 
 class ClassBuilder extends Builder {
   constructor(code, staticFieldName) {
@@ -34,12 +33,9 @@ class ClassBuilder extends Builder {
   }
 
   buildStaticField() {
-    const staticField = generate(this.staticFieldNode.value, {
-      ...babelGeneratorOptions,
-      concise: false
-    });
+    const staticFieldCode = print(this.staticFieldNode.value);
     const left = `${settings.doubleEndOfLine}${this.buildName()}.${this.staticFieldName}`;
-    const right = `${staticField.code}${settings.semicolon}${settings.doubleEndOfLine}`;
+    const right = `${staticFieldCode}${settings.semicolon}${settings.doubleEndOfLine}`;
     return `${left} = ${right}`;
   }
 

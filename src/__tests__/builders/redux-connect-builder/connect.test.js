@@ -135,8 +135,8 @@ describe('ReduxConnectBuilder: settings', () => {
     settings.set({
       'map-dispatch-to-props-name': 'mapDispatch',
       'map-state-to-props-name': 'mapState',
-      'map-to-dispatch-prefer-object': false,
-      'map-to-state-prefer-one-line': false,
+      'map-dispatch-to-props-prefer-object': false,
+      'map-state-to-props-prefer-one-line': false,
       'merge-props-name': 'mergeAllProps'
     });
   });

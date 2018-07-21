@@ -78,9 +78,7 @@ class ReduxDetailsBuilder {
 
   getDetails() {
     const isConnected = Boolean(this.connectCallExpressionPath);
-    const furthestConnectAncestorPath = isConnected
-      ? getFurthestAncestorInScope(this.connectCallExpressionPath)
-      : null;
+    const furthestConnectAncestorPath = isConnected && getFurthestAncestorInScope(this.connectCallExpressionPath);
     const connectArguments = isConnected && this.connectCallExpressionPath.node.arguments;
     const mapStateToPropsDefinitionPath = this.mapStateToPropsName
       && this.functionsDeclarationsMap[this.mapStateToPropsName];
