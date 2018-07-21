@@ -25,7 +25,6 @@ class ClassBuilder extends Builder {
     return Object.keys(propTypes).map((key) => `${key}: ${propTypes[key]}`);
   }
 
-  // eslint-disable-next-line
   buildCodeWithExistingPropTypes() {
     const definedPropsFirstPropNode = this.propTypesObjectNode.properties[0];
     let indent = getNodeIndent(this.componentNode) + settings.indent;
