@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes, { Something } from 'prop-types';
 import {
-  noop,
+  flowRight,
   identity,
-  flowRight
+  noop,
 } from 'lodash';
