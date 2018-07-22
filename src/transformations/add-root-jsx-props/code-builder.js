@@ -2,6 +2,7 @@ const { Builder } = require('../../model');
 const settings = require('../../settings');
 const { cleanUpCode, indentCode, isString, sortPropTypes } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
+const { print } = require('../../utils/parser');
 
 class CodeBuilder extends Builder {
   constructor(code) {
@@ -59,7 +60,7 @@ class CodeBuilder extends Builder {
     return sortPropTypes([
       ...this.node.openingElement.attributes.map(({ argument, name, type, value }) => {
         if (type === 'JSXSpreadAttribute') {
-          return `{...${argument.name}}`;
+          return `{...${print(argument)}}`;
         }
         if (value) {
           return `${name.name}=${this.code.substring(value.start, value.end)}`;
