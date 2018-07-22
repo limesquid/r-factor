@@ -2,7 +2,7 @@ const { range, readFile } = require('./test-utils');
 const AddClassname = require('../refactorings/add-classname');
 
 const files = [
-  ...range(1, 22).map((n) => `arrow/file${n}`),
+  ...range(1, 23).map((n) => `arrow/file${n}`),
   ...range(1, 23).map((n) => `class/file${n}`),
   ...range(1, 1).map((n) => `function/file${n}`),
   'arrow/alerts',
