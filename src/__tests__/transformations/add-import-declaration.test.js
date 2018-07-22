@@ -17,6 +17,17 @@ describe('transformation:add-import-declaration', () => {
     expect(result).toEqual(expectedResult);
   });
 
+  it('should add sub import to existing module import', () => {
+    const result = addImportDeclaration(code, ast, {
+      module: 'react-redux',
+      subImports: {
+        a: 'a'
+      }
+    });
+    const expectedResult = readTransformationsFile('add-import-declaration/output/sub-import-to-existing-sub-imports.js');
+    expect(result).toEqual(expectedResult);
+  });
+
   it('should add aliased sub import to existing module import', () => {
     const result = addImportDeclaration(code, ast, {
       module: 'react',
