@@ -9,9 +9,9 @@ describe('transformation:add-import-declaration', () => {
   it('should add sub import to existing module import', () => {
     const result = addImportDeclaration(code, ast, {
       module: 'react',
-      subImports: {
-        PureComponent: 'PureComponent'
-      }
+      subImports: [
+        { name: 'PureComponent', alias: 'PureComponent' }
+      ]
     });
     const expectedResult = readTransformationsFile('add-import-declaration/output/sub-import.js');
     expect(result).toEqual(expectedResult);
@@ -20,20 +20,22 @@ describe('transformation:add-import-declaration', () => {
   it('should add sub import to existing module import', () => {
     const result = addImportDeclaration(code, ast, {
       module: 'react-redux',
-      subImports: {
-        a: 'a'
-      }
+      subImports: [
+        { name: 'a', alias: 'a' }
+      ]
     });
-    const expectedResult = readTransformationsFile('add-import-declaration/output/sub-import-to-existing-sub-imports.js');
+    const expectedResult = readTransformationsFile(
+      'add-import-declaration/output/sub-import-to-existing-sub-imports.js'
+    );
     expect(result).toEqual(expectedResult);
   });
 
   it('should add aliased sub import to existing module import', () => {
     const result = addImportDeclaration(code, ast, {
       module: 'react',
-      subImports: {
-        PureComponent: 'PurestComponent'
-      }
+      subImports: [
+        { name: 'PureComponent', alias: 'PurestComponent' }
+      ]
     });
     const expectedResult = readTransformationsFile('add-import-declaration/output/sub-import-alias.js');
     expect(result).toEqual(expectedResult);
@@ -61,9 +63,9 @@ describe('transformation:add-import-declaration', () => {
     const result = addImportDeclaration(code, ast, {
       module: 'prop-types',
       identifier: 'PropTypes',
-      subImports: {
-        Something: 'Something'
-      }
+      subImports: [
+        { name: 'Something' }
+      ]
     });
     const expectedResult = readTransformationsFile('add-import-declaration/output/new-import-with-alias.js');
     expect(result).toEqual(expectedResult);

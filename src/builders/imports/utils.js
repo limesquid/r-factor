@@ -69,12 +69,20 @@ const groupImports = (imports) => {
 const isEmptyImport = ({ identifier, subImports }) => !identifier && Object.keys(subImports).length === 0;
 
 const sortImports = (imports) => {
+  const importsWithSortedSubImports = imports.map(sortSubImports);
   if (settings.isModulesOrderAlphabetic) {
-    return sortImportsAlphabetically(imports);
+    return sortImportsAlphabetically(importsWithSortedSubImports);
   }
 
-  return sortImportsCustom(imports);
+  return sortImportsCustom(importsWithSortedSubImports);
 };
+
+const sortSubImports = (importData) => ({
+  ...importData,
+  subImports: [ ...importData.subImports ].sort(
+    (a, b) => a.name.localeCompare(b.name)
+  )
+});
 
 const sortImportsAlphabetically = (imports) => stable(
   [ ...imports ],
@@ -116,13 +124,12 @@ const sortImportsCustom = (imports) => {
 const buildImportDeclarationCode = (importData) => {
   const { identifier, module, namespace, subImports, startLine, endLine } = importData;
   const isMultiline = startLine !== endLine;
-  const subImportStrings = Object.keys(subImports).map((subImportImportedName) => {
-    const subImportLocalName = subImports[subImportImportedName];
-    return subImportImportedName === subImportLocalName
-      ? subImportImportedName
-      : `${subImportImportedName} as ${subImportLocalName}`;
+  const subImportStrings = subImports.map(({ name, alias }) => {
+    if (!alias || name === alias) {
+      return name;
+    }
+    return `${name} as ${alias}`;
   });
-  const sortedSubImportStrings = subImportStrings.sort();
 
   let code = '';
   code += 'import ';
@@ -133,20 +140,20 @@ const buildImportDeclarationCode = (importData) => {
   if (identifier) {
     code += identifier;
 
-    if (sortedSubImportStrings.length > 0) {
+    if (subImportStrings.length > 0) {
       code += ', ';
     }
   }
 
-  if (sortedSubImportStrings.length > 0) {
+  if (subImportStrings.length > 0) {
     if (isMultiline) {
-      const indentedSubImports = indentCode(sortedSubImportStrings.join(`,${settings.endOfLine}`), settings.indent);
+      const indentedSubImports = indentCode(subImportStrings.join(`,${settings.endOfLine}`), settings.indent);
       code += `{${settings.endOfLine}${indentedSubImports}${settings.endOfLine}}`;
     } else {
-      code += `{ ${sortedSubImportStrings.join(', ')} }`;
+      code += `{ ${subImportStrings.join(', ')} }`;
     }
   }
-  if (namespace || identifier || sortedSubImportStrings.length > 0) {
+  if (namespace || identifier || subImportStrings.length > 0) {
     code += ' from ';
   }
   const quote = settings.quote === '`' ? '\'' : settings.quote;

@@ -157,11 +157,14 @@ const getClassComponentName = (node) => node.id.name;
 const getSubImports = ({ specifiers }) => specifiers
   .filter((specifier) => isImportSpecifier(specifier))
   .reduce(
-    (result, specifier) => ({
+    (result, specifier) => [
       ...result,
-      [specifier.imported.name]: specifier.local.name
-    }),
-    {}
+      {
+        name: specifier.imported.name,
+        alias: specifier.local.name
+      }
+    ],
+    []
   );
 
 const getFurthestAncestorInScope = (path) => {

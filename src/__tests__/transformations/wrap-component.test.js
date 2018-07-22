@@ -32,7 +32,9 @@ describe('transformation:wrap-component', () => {
       name: 'withRouter',
       import: {
         module: 'react-router',
-        subImports: { withRouter: 'withRouter' }
+        subImports: [
+          { name: 'withRouter' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -45,7 +47,9 @@ describe('transformation:wrap-component', () => {
       name: 'withAuth',
       import: {
         module: 'auth',
-        subImports: { withAuth: 'withAuth' }
+        subImports: [
+          { name: 'withAuth' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -59,7 +63,9 @@ describe('transformation:wrap-component', () => {
       invoke: [],
       import: {
         module: 'react-redux',
-        subImports: { connect: 'connect' }
+        subImports: [
+          { name: 'connect', alias: 'connect' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -73,7 +79,9 @@ describe('transformation:wrap-component', () => {
       invoke: [ 'mapStateToProps' ],
       import: {
         module: 'react-redux',
-        subImports: { connect: 'connect' }
+        subImports: [
+          { name: 'connect', alias: 'connect' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -87,7 +95,9 @@ describe('transformation:wrap-component', () => {
       outermost: true,
       import: {
         module: 'react-router',
-        subImports: { withRouter: 'withRouter' }
+        subImports: [
+          { name: 'withRouter' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -100,7 +110,9 @@ describe('transformation:wrap-component', () => {
       name: 'withRouter',
       import: {
         module: 'react-router',
-        subImports: { withRouter: 'withRouter' }
+        subImports: [
+          { name: 'withRouter' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -114,7 +126,9 @@ describe('transformation:wrap-component', () => {
       outermost: true,
       import: {
         module: 'auth',
-        subImports: { withAuth: 'withAuth' }
+        subImports: [
+          { name: 'withAuth' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -127,7 +141,9 @@ describe('transformation:wrap-component', () => {
       name: 'withRouter',
       import: {
         module: 'react-router',
-        subImports: { withRouter: 'withRouter' }
+        subImports: [
+          { name: 'withRouter' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -140,7 +156,9 @@ describe('transformation:wrap-component', () => {
       name: 'withRouter',
       import: {
         module: 'react-router',
-        subImports: { withRouter: 'withRouter' }
+        subImports: [
+          { name: 'withRouter' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -154,7 +172,9 @@ describe('transformation:wrap-component', () => {
       name: 'withRouter',
       import: {
         module: 'react-router',
-        subImports: { withRouter: 'withRouter' }
+        subImports: [
+          { name: 'withRouter' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -167,7 +187,9 @@ describe('transformation:wrap-component', () => {
       name: 'withRouter',
       import: {
         module: 'react-router',
-        subImports: { withRouter: 'withRouter' }
+        subImports: [
+          { name: 'withRouter' }
+        ]
       }
     });
     expect(result).toBe(output);
@@ -180,7 +202,9 @@ describe('transformation:wrap-component', () => {
       name: 'withRouter',
       import: {
         module: 'react-router',
-        subImports: { withRouter: 'withRouter' }
+        subImports: [
+          { name: 'withRouter' }
+        ]
       }
     });
     expect(result).toBe(output);

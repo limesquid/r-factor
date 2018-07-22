@@ -35,7 +35,9 @@ class ReduxConnectBuilder {
       invoke: [],
       import: {
         module: 'react-redux',
-        subImports: { connect: 'connect' }
+        subImports: [
+          { name: 'connect' }
+        ]
       }
     });
     this.ast = parser.parse(this.code);
