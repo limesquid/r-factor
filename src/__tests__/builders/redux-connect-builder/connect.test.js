@@ -107,6 +107,10 @@ const tests = [
   {
     filename: 'connect-mergeprops3',
     actions: [ 'connectMergeProps' ]
+  },
+  {
+    filename: 'connect-mergeprops4',
+    actions: [ 'connectMergeProps' ]
   }
 ].map((test) => ({
   ...test,

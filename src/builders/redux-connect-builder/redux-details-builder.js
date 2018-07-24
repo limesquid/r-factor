@@ -88,6 +88,9 @@ class ReduxDetailsBuilder {
     );
     const mergePropsDefinitionPath = this.mergePropsName
       && this.functionsDeclarationsMap[this.mergePropsName];
+    const scope = this.connectCallExpressionPath
+      ? this.connectCallExpressionPath.scope
+      : null;
 
     return {
       connectArguments,
@@ -106,7 +109,7 @@ class ReduxDetailsBuilder {
       mapDispatchToPropsDefinitionPath,
       mergePropsDefinitionPath,
       mergePropsName: this.mergePropsName,
-      scope: this.connectCallExpressionPath.scope
+      scope
     };
   }
 }

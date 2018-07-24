@@ -76,4 +76,19 @@ describe('ReduxConnectBuilder', () => {
       });
     });
   });
+
+  describe('disocnnect (chaining)', () => {
+    const input = readBuilderFile(`redux-connect-builder/input/disconnect2.js`);
+    const output = readBuilderFile(`redux-connect-builder/output/disconnect2.js`);
+    const builder = new ReduxConnectBuilder(input);
+    const result = builder
+      .disconnectState()
+      .disconnectDispatch()
+      .disconnectState()
+      .disconnectMergeProps()
+      .disconnectDispatch()
+      .disconnectMergeProps()
+      .build();
+    expect(result).toBe(output);
+  });
 });
