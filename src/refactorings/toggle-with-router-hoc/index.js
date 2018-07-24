@@ -19,7 +19,6 @@ class ToggleWithRouterHoc extends Refactoring {
       outermostHocPath.parentPath.traverse({
         CallExpression(path) {
           const { node } = path;
-          console.log(isIdentifier(node.callee) && node.callee.name === 'withRouter');
           if (isIdentifier(node.callee) && node.callee.name === 'withRouter') {
             isWrapped = true;
             path.stop();

@@ -51,14 +51,13 @@ class ClassBuilder extends Builder {
     const allPropTypesCode = sortPropTypes(allPropTypesLines)
       .map((propTypeLine) => squeezeCode(propTypeLine, indent, 0))
       .join(`,${settings.endOfLine}`);
-    const sameLines = propTypesFirstLine === propTypesLastLine + 1;
 
     let code = '';
     code += codeLines.slice(0, propTypesFirstLine).join(settings.endOfLine);
     code += settings.endOfLine;
     code += allPropTypesCode;
     code += settings.endOfLine;
-    code += codeLines.slice(propTypesLastLine + (sameLines ? 1 : 0)).join(settings.endOfLine);
+    code += codeLines.slice(propTypesLastLine).join(settings.endOfLine);
 
     return code;
   }

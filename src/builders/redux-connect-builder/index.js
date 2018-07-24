@@ -113,7 +113,6 @@ class ReduxConnectBuilder {
       connectArguments,
       furthestConnectAncestorPath,
       hasMapDispatchToPropsDefinition,
-      hasMapStateToProps,
       mapDispatchToPropsName = settings.mapDispatchToPropsName,
       mapStateToPropsDefinitionPath,
       mergePropsDefinitionPath
@@ -127,8 +126,7 @@ class ReduxConnectBuilder {
         [ mergePropsDefinitionPath, furthestConnectAncestorPath ]
       );
     }
-
-    if (!hasMapStateToProps) {
+    if (connectArguments.length === 0) {
       connectArguments.push(nullLiteral());
     }
     connectArguments[1] = identifier(mapDispatchToPropsName);
@@ -142,7 +140,6 @@ class ReduxConnectBuilder {
       connectArguments,
       furthestConnectAncestorPath,
       hasMergePropsDefinition,
-      isConnected,
       mapStateToPropsDefinitionPath,
       mapDispatchToPropsDefinitionPath,
       mergePropsName = settings.mergePropsName

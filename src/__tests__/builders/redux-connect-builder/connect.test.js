@@ -21,6 +21,10 @@ const tests = [
     actions: [ 'connect', 'connectDispatch' ]
   },
   {
+    filename: 'connect-dispatch2',
+    actions: [ 'connectDispatch' ]
+  },
+  {
     filename: 'connect-hoc-complicated',
     actions: [ 'connect' ]
   },
