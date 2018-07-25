@@ -29,8 +29,9 @@ class BaseCommand(sublime_plugin.TextCommand):
     return True
 
   def execute(self, data, refactoring_name):
+    NODE_BIN = self.get_setting('NODE_BIN')
     try:
-      return node_bridge(data, BIN_PATH, [
+      return node_bridge(data, NODE_BIN, BIN_PATH, [
         '-r', refactoring_name,
         '-s', json.dumps(self.get_settings())
       ])
