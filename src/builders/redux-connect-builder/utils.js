@@ -72,16 +72,14 @@ const createMergePropsFunctionAst = (functionName) => {
 
 const insertNodeAfterOrBefore = (node, afterPaths, beforePaths) => {
   const pathToInsertAfter = afterPaths.find(Boolean);
-  const pathToInsertBefore = beforePaths.find(Boolean);
-
   if (pathToInsertAfter) {
     pathToInsertAfter.insertAfter(node);
     return;
   }
 
+  const pathToInsertBefore = beforePaths.find(Boolean);
   if (pathToInsertBefore) {
     pathToInsertBefore.insertBefore(node);
-    return;
   }
 };
 

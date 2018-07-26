@@ -2,7 +2,7 @@ const parser = require('../../utils/parser');
 const { readTransformationsFile } = require('./../test-utils');
 const addPropTypes = require('../../transformations/add-prop-types');
 
-const files = [ 1, 2, 3, 4, 5 ].map((n) => `file${n}`);
+const files = [ 1, 2, 3, 4, 5, 6 ].map((n) => `file${n}`);
 
 describe('add-prop-types', () => {
   const tests = files.map((file) => ({

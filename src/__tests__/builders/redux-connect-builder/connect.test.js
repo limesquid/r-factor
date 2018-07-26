@@ -21,6 +21,10 @@ const tests = [
     actions: [ 'connect', 'connectDispatch' ]
   },
   {
+    filename: 'connect-dispatch2',
+    actions: [ 'connectDispatch' ]
+  },
+  {
     filename: 'connect-hoc-complicated',
     actions: [ 'connect' ]
   },
@@ -106,6 +110,10 @@ const tests = [
   },
   {
     filename: 'connect-mergeprops3',
+    actions: [ 'connectMergeProps' ]
+  },
+  {
+    filename: 'connect-mergeprops4',
     actions: [ 'connectMergeProps' ]
   }
 ].map((test) => ({
