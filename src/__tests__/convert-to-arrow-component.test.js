@@ -67,8 +67,9 @@ types.forEach((type) => {
     tests.forEach(({ additionalSettings, name, input, output }) => {
       it(`refactor "${name}"`, () => {
         settings.set(additionalSettings);
-        expect(refactoring.refactor(input)).toBe(output);
+        const result = refactoring.refactor(input);
         settings.revert();
+        expect(result).toBe(output);
       });
     });
   });

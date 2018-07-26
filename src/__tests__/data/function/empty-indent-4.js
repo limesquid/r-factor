@@ -9,8 +9,6 @@ function DatePicker({  }) {
     );
 }
 
-DatePicker.propTypes = {
-
-};
+DatePicker.propTypes = {};
 
 export default DatePicker;

@@ -7,8 +7,6 @@ const DatePicker = ({  }) => (
     </div>
 );
 
-DatePicker.propTypes = {
-
-};
+DatePicker.propTypes = {};
 
 export default DatePicker;
