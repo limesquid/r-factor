@@ -6,7 +6,9 @@ const types = [ 'arrow', 'function' ];
 const files = [
   ...[ ...range(1, 6), ...range(10, 13) ].map((n) => createFileDetails(`button${n}`)),
   createFileDetails('contact-us'),
-  createFileDetails('image-header', { indent: 4 })
+  createFileDetails('image-header', { indent: 4 }),
+  createFileDetails('empty-indent-2'),
+  createFileDetails('empty-indent-4', { indent: 4 })
 ];
 
 describe('convert-to-class-component:refactor:react-imports', () => {

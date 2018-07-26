@@ -19,8 +19,7 @@
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
     "test": "jest --no-cache --coverage",
-    "test:debug": "node --inspect-brk node_modules/jest/bin/jest.js --runInBand --no-cache --watch",
-    "test:debug:windows": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --no-cache --watch",
+    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand --no-cache --watch",
     "test:watch": "jest --no-cache --watch"
   },
   "betterScripts": {
