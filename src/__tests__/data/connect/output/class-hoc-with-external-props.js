@@ -17,7 +17,9 @@ export default (hoc) => {
     name: PropTypes.string
   };
 
-  const mapStateToProps = (state) => ({});
+  const mapStateToProps = (state) => ({
+    
+  });
 
   const mapDispatchToProps = {};
 

@@ -1,7 +1,7 @@
 const { isNullLiteral } = require('@babel/types');
 const traverse = require('@babel/traverse').default;
 const { isUndefinedIdentifier } = require('../../utils/ast');
-const { indentCode } = require('../../utils');
+const { indentCode, indentLine } = require('../../utils');
 const parser = require('../../utils/parser');
 const settings = require('../../settings');
 
@@ -31,17 +31,19 @@ const checkIsConnected = (ast) => {
 };
 
 const createMapStateToPropsFunctionAst = (functionName) => {
-  const { doubleEndOfLine, mapToStatePreferOneLine, semicolon } = settings;
+  const { doubleEndOfLine, endOfLine, indent, semicolon } = settings;
   let code = '';
   code += doubleEndOfLine;
   code += `const ${functionName} = (state) => ({`;
-  code += mapToStatePreferOneLine ? '' : doubleEndOfLine;
+  code += endOfLine;
+  code += indentLine('', indent);
+  code += endOfLine;
   code += `})${semicolon}`;
   return parser.parse(code).program.body;
 };
 
 const createMapDispatchToPropsFunctionAst = (functionName) => {
-  const { doubleEndOfLine, endOfLine, mapToDispatchPreferObject, semicolon } = settings;
+  const { doubleEndOfLine, endOfLine, mapToDispatchPreferObject, indent, semicolon } = settings;
   let code = '';
   code += doubleEndOfLine;
   if (mapToDispatchPreferObject) {

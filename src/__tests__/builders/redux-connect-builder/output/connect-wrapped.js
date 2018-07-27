@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 
 const ButtonComponent = () => (<span>123</span>);
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  
+});
 
 const mapDispatchToProps = {};
 

@@ -6,7 +6,9 @@ export default hoc => {
     <div>{hoc}Test{prop}</div>
   );
 
-  const mapStateToProps = (state) => ({});
+  const mapStateToProps = (state) => ({
+    
+  });
 
   const mapDispatchToProps = {};
 

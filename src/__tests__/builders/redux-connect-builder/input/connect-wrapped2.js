@@ -4,6 +4,8 @@ import { withRouter } from 'react-router';
 
 const ButtonComponent = () => (<span>123</span>);
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  
+});
 
 export const Button = withRouter(connect(mapStateToProps)(ButtonComponent));

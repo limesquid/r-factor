@@ -4,7 +4,9 @@ import { withRouter } from 'react-router';
 
 const ButtonComponent = () => (<span>123</span>);
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  
+});
 
 const mapDispatchToProps = {};
 
