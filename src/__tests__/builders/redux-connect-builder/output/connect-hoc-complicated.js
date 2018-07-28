@@ -30,7 +30,9 @@ export const withMyContext = (Component) => {
     
   });
 
-  const mapDispatchToProps = {};
+  const mapDispatchToProps = {
+    
+  };
 
   return connect(mapStateToProps, mapDispatchToProps)(MyComponent);
 };

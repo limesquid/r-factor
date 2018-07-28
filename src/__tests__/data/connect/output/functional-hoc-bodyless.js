@@ -10,7 +10,9 @@ export default hoc => {
     
   });
 
-  const mapDispatchToProps = {};
+  const mapDispatchToProps = {
+    
+  };
 
   return connect(mapStateToProps, mapDispatchToProps)(InnerComponent);
 };

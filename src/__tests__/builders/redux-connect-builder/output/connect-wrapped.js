@@ -8,6 +8,8 @@ const mapStateToProps = (state) => ({
   
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  
+};
 
 export const Button = withRouter(connect(mapStateToProps, mapDispatchToProps)(ButtonComponent));

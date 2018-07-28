@@ -8,7 +8,7 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = (dispatch) => ({
-
+  
 });
 
 const mergeAllProps = (stateProps, dispatchProps, ownProps) => ({

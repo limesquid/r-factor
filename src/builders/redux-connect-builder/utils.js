@@ -34,8 +34,7 @@ const createMapStateToPropsFunctionAst = (functionName) => {
   const { doubleEndOfLine, endOfLine, indent, semicolon } = settings;
   let code = '';
   code += doubleEndOfLine;
-  code += `const ${functionName} = (state) => ({`;
-  code += endOfLine;
+  code += `const ${functionName} = (state) => ({${endOfLine}`;
   code += indentLine('', indent);
   code += endOfLine;
   code += `})${semicolon}`;
@@ -47,9 +46,13 @@ const createMapDispatchToPropsFunctionAst = (functionName) => {
   let code = '';
   code += doubleEndOfLine;
   if (mapToDispatchPreferObject) {
-    code += `const ${functionName} = {}${semicolon}${endOfLine}`;
+    code += `const ${functionName} = {${endOfLine}`;
+    code += indentLine('', indent);
+    code += endOfLine;
+    code += `}${semicolon}${endOfLine}`;
   } else {
     code += `const ${functionName} = (dispatch) => ({${endOfLine}`;
+    code += indentLine('', indent);
     code += endOfLine;
     code += `})${semicolon}${doubleEndOfLine}`;
   }

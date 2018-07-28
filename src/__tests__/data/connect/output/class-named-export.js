@@ -14,6 +14,8 @@ const mapStateToProps = (state) => ({
   
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  
+};
 
 export const Button = connect(mapStateToProps, mapDispatchToProps)(ButtonComponent);

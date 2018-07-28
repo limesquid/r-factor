@@ -22,6 +22,8 @@ const mapStateToProps = (state) => ({
   
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  
+};
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Button));
