@@ -1,5 +1,5 @@
 import React from 'react';
 
-const ButtonComponent = () => (<span>123</span>);
+const ButtonComponent = ({ name }) => (<span>{name}</span>);
 
 export const Button = ButtonComponent;
