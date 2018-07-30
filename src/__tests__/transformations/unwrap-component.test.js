@@ -146,6 +146,18 @@ const tests = [
       name: 'connect',
       removeInvoked: false
     }
+  },
+  {
+    filename: 'button14',
+    unwrapOptions: {
+      name: 'connect',
+      removeInvoked: false,
+      import: {
+        module: 'react-redux',
+        removeImportIfEmpty: true,
+        subImports: [ 'connect' ]
+      }
+    }
   }
 ].map((test) => ({
   ...test,
