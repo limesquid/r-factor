@@ -165,9 +165,11 @@ class ReduxConnectBuilder {
   disconnect() {
     this.updateDetails();
     const { mapStateToPropsName, mapDispatchToPropsName, mergePropsName, scope } = this.details;
-    removeBinding(scope, mapStateToPropsName);
-    removeBinding(scope, mapDispatchToPropsName);
-    removeBinding(scope, mergePropsName);
+    if (scope) {
+      removeBinding(scope, mapStateToPropsName);
+      removeBinding(scope, mapDispatchToPropsName);
+      removeBinding(scope, mergePropsName);
+    }
     this.unwrapConnect();
     return this;
   }

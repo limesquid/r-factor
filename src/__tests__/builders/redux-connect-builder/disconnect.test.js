@@ -63,6 +63,10 @@ const tests = [
   {
     filename: 'disconnect4',
     actions: [ 'disconnect' ]
+  },
+  {
+    filename: 'disconnect-identity',
+    actions: [ 'disconnect' ]
   }
 ].map((test) => ({
   ...test,
