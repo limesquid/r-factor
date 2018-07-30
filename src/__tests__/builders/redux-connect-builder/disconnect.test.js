@@ -55,6 +55,14 @@ const tests = [
   {
     filename: 'disconnect2',
     actions: [ 'disconnect' ]
+  },
+  {
+    filename: 'disconnect3',
+    actions: [ 'disconnect' ]
+  },
+  {
+    filename: 'disconnect4',
+    actions: [ 'disconnect' ]
   }
 ].map((test) => ({
   ...test,
