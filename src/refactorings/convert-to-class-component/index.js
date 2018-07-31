@@ -57,7 +57,9 @@ class ConvertToClassComponent extends Refactoring {
       }
     });
 
-    return hasReactImport || isFunctionalComponent;
+    return moveDefaultPropsAndPropTypesToClass.canApply(code)
+      || hasReactImport
+      || isFunctionalComponent;
   }
 
   refactorComponent(code, ast) {
