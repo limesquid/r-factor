@@ -148,7 +148,7 @@ const isStaticPropertyDeclaration = (node, name) => node.type === 'ClassProperty
 
 const isUndefinedIdentifier = (node) => isIdentifier(node) && node.name === 'undefined';
 
-const getNodeIndent = (node) => node.loc.start.column;
+const getNodeIndent = (node) => node.loc && node.loc.start.column || 0;
 
 const getFunctionalComponentName = (node) => node.declarations[0].id.name;
 

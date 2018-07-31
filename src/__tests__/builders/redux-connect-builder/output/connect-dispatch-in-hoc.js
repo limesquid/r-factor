@@ -5,6 +5,8 @@ const mapStateToProps = (state) => ({
   name: 'test'
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  
+};
 
 export const hoc = (Component) => connect(mapStateToProps, mapDispatchToProps)(Component);

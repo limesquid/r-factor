@@ -95,10 +95,6 @@ class Settings {
     return this.get('map-dispatch-to-props-prefer-object');
   }
 
-  get mapToStatePreferOneLine() {
-    return this.get('map-state-to-props-prefer-one-line');
-  }
-
   get mergePropsName() {
     return this.get('merge-props-name');
   }
