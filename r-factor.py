@@ -50,7 +50,6 @@ class BaseCommand(sublime_plugin.TextCommand):
       'map-dispatch-to-props-name': self.get_setting('map-dispatch-to-props-name'),
       'map-state-to-props-name': self.get_setting('map-state-to-props-name'),
       'map-dispatch-to-props-prefer-object': self.get_setting('map-dispatch-to-props-prefer-object'),
-      'map-state-to-props-prefer-one-line': self.get_setting('map-state-to-props-prefer-one-line'),
       'merge-props-name': self.get_setting('merge-props-name'),
       'modules-order': self.get_setting('modules-order'),
       'quotes': self.get_setting('quotes'),

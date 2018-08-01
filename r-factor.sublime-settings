@@ -9,7 +9,6 @@
   "map-dispatch-to-props-name": "mapDispatchToProps",
   "map-dispatch-to-props-prefer-object": false,
   "map-state-to-props-name": "mapStateToProps",
-  "map-state-to-props-prefer-one-line": false,
   "merge-props-name": "mergeProps",
   "modules-order": [
     "react",

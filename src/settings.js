@@ -11,7 +11,6 @@ const DEFAULT_SETTINGS = {
   'map-dispatch-to-props-name': 'mapDispatchToProps',
   'map-dispatch-to-props-prefer-object': true,
   'map-state-to-props-name': 'mapStateToProps',
-  'map-state-to-props-prefer-one-line': true,
   'merge-props-name': 'mergeProps',
   'modules-order': [ 'react', 'prop-types', 'classnames' ],
   quotes: 'single',
