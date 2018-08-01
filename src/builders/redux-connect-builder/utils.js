@@ -42,10 +42,10 @@ const createMapStateToPropsFunctionAst = (functionName) => {
 };
 
 const createMapDispatchToPropsFunctionAst = (functionName) => {
-  const { doubleEndOfLine, endOfLine, mapToDispatchPreferObject, indent, semicolon } = settings;
+  const { doubleEndOfLine, endOfLine, useMapDispatchToPropsShorthand, indent, semicolon } = settings;
   let code = '';
   code += doubleEndOfLine;
-  if (mapToDispatchPreferObject) {
+  if (useMapDispatchToPropsShorthand) {
     code += `const ${functionName} = {${endOfLine}`;
     code += indentLine('', indent);
     code += endOfLine;

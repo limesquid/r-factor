@@ -49,12 +49,12 @@ class BaseCommand(sublime_plugin.TextCommand):
       'indent': self.get_setting('indent'),
       'map-dispatch-to-props-name': self.get_setting('map-dispatch-to-props-name'),
       'map-state-to-props-name': self.get_setting('map-state-to-props-name'),
-      'map-dispatch-to-props-prefer-object': self.get_setting('map-dispatch-to-props-prefer-object'),
       'merge-props-name': self.get_setting('merge-props-name'),
       'modules-order': self.get_setting('modules-order'),
       'quotes': self.get_setting('quotes'),
       'semicolons': self.get_setting('semicolons'),
-      'trailing-commas': self.get_setting('trailing-commas')
+      'trailing-commas': self.get_setting('trailing-commas'),
+      'use-map-dispatch-to-props-shorthand': self.get_setting('use-map-dispatch-to-props-shorthand')
     }
 
   def get_setting(self, key):

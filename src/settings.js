@@ -9,13 +9,13 @@ const DEFAULT_SETTINGS = {
   'functional-component-type': 'arrow',
   indent: 2,
   'map-dispatch-to-props-name': 'mapDispatchToProps',
-  'map-dispatch-to-props-prefer-object': true,
   'map-state-to-props-name': 'mapStateToProps',
   'merge-props-name': 'mergeProps',
   'modules-order': [ 'react', 'prop-types', 'classnames' ],
   quotes: 'single',
   semicolons: true,
-  'trailing-commas': false
+  'trailing-commas': false,
+  'use-map-dispatch-to-props-shorthand': true
 };
 
 class Settings {
@@ -91,8 +91,8 @@ class Settings {
     return this.get('map-state-to-props-name');
   }
 
-  get mapToDispatchPreferObject() {
-    return this.get('map-dispatch-to-props-prefer-object');
+  get useMapDispatchToPropsShorthand() {
+    return this.get('use-map-dispatch-to-props-shorthand');
   }
 
   get mergePropsName() {

@@ -7,7 +7,6 @@
   "functional-component-type": "arrow",
   "indent": 2,
   "map-dispatch-to-props-name": "mapDispatchToProps",
-  "map-dispatch-to-props-prefer-object": false,
   "map-state-to-props-name": "mapStateToProps",
   "merge-props-name": "mergeProps",
   "modules-order": [
@@ -31,5 +30,6 @@
   "quotes": "single",
   "semicolons": true,
   "trailing-commas": false,
+  "use-map-dispatch-to-props-shorthand": false,
   "NODE_BIN": "node"
 }
