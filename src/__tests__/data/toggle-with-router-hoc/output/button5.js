@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 
-export default hoc => {
+export default (hoc) => {
   const InnerComponent = ({ prop }) => (
     <div>{hoc}Test{prop}</div>
   );
