@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 const Component = () => (<span>123</span>);
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  
+});
 
 export default connect(mapStateToProps)(Component);

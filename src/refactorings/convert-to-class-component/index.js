@@ -7,14 +7,12 @@ const {
 } = require('../../utils/ast');
 const { Refactoring } = require('../../model');
 const ConvertFunctionToArrowComponent = require('../convert-function-to-arrow-component');
-const MoveDefaultPropsToClass = require('../move-default-props-to-class');
-const MovePropTypesToClass = require('../move-prop-types-to-class');
+const MoveDefaultPropsAndPropTypesToClass = require('../move-default-props-and-prop-types-to-class');
 const ComponentBuilder = require('./component-builder');
 const ReactImportBuilder = require('./react-import-builder');
 
 const convertFunctionToArrowComponent = new ConvertFunctionToArrowComponent();
-const moveDefaultPropsToClass = new MoveDefaultPropsToClass();
-const movePropTypesToClass = new MovePropTypesToClass();
+const moveDefaultPropsAndPropTypesToClass = new MoveDefaultPropsAndPropTypesToClass();
 
 class ConvertToClassComponent extends Refactoring {
   constructor() {
@@ -28,8 +26,7 @@ class ConvertToClassComponent extends Refactoring {
       },
       (code, ast) => this.refactorComponent(code, ast),
       (code, ast) => this.refactorReactImport(code, ast),
-      (code) => moveDefaultPropsToClass.refactor(code),
-      (code) => movePropTypesToClass.refactor(code)
+      (code) => moveDefaultPropsAndPropTypesToClass.refactor(code)
     ];
   }
 
@@ -60,7 +57,9 @@ class ConvertToClassComponent extends Refactoring {
       }
     });
 
-    return hasReactImport || isFunctionalComponent;
+    return moveDefaultPropsAndPropTypesToClass.canApply(code)
+      || hasReactImport
+      || isFunctionalComponent;
   }
 
   refactorComponent(code, ast) {

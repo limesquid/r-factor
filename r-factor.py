@@ -29,8 +29,9 @@ class BaseCommand(sublime_plugin.TextCommand):
     return True
 
   def execute(self, data, refactoring_name):
+    NODE_BIN = self.get_setting('NODE_BIN')
     try:
-      return node_bridge(data, BIN_PATH, [
+      return node_bridge(data, NODE_BIN, BIN_PATH, [
         '-r', refactoring_name,
         '-s', json.dumps(self.get_settings())
       ])
@@ -141,28 +142,16 @@ class GeneratePropTypes(BaseCommand):
     self.refactoring_name = 'generate-prop-types'
 
 
-class MoveDefaultPropsOutOfClass(BaseCommand):
+class MoveDefaultPropsAndPropTypesOutOfClass(BaseCommand):
   def __init__(self, arg):
-    super(MoveDefaultPropsOutOfClass, self).__init__(arg)
-    self.refactoring_name = 'move-default-props-out-of-class'
+    super(MoveDefaultPropsAndPropTypesOutOfClass, self).__init__(arg)
+    self.refactoring_name = 'move-default-props-and-prop-types-out-of-class'
 
 
-class MoveDefaultPropsToClass(BaseCommand):
+class MoveDefaultPropsAndPropTypesToClass(BaseCommand):
   def __init__(self, arg):
-    super(MoveDefaultPropsToClass, self).__init__(arg)
-    self.refactoring_name = 'move-default-props-to-class'
-
-
-class MovePropTypesOutOfClass(BaseCommand):
-  def __init__(self, arg):
-    super(MovePropTypesOutOfClass, self).__init__(arg)
-    self.refactoring_name = 'move-prop-types-out-of-class'
-
-
-class MovePropTypesToClass(BaseCommand):
-  def __init__(self, arg):
-    super(MovePropTypesToClass, self).__init__(arg)
-    self.refactoring_name = 'move-prop-types-to-class'
+    super(MoveDefaultPropsAndPropTypesToClass, self).__init__(arg)
+    self.refactoring_name = 'move-default-props-and-prop-types-to-class'
 
 
 class SortAttributes(BaseCommand):

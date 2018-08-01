@@ -1,6 +1,7 @@
 const { Builder } = require('../../model');
 const settings = require('../../settings');
 const { cleanUpCode, indentCode, sortPropTypes, squeezeCode } = require('../../utils');
+const { COMPONENT_TYPE } = require('../../constants');
 const { getNodeIndent } = require('../../utils/ast');
 const insertCodeBelowNode = require('../insert-code-below-node');
 const addImportDeclaration = require('../add-import-declaration');
@@ -51,7 +52,6 @@ class ClassBuilder extends Builder {
     const allPropTypesCode = sortPropTypes(allPropTypesLines)
       .map((propTypeLine) => squeezeCode(propTypeLine, indent, 0))
       .join(`,${settings.endOfLine}`);
-    const sameLines = propTypesFirstLine === propTypesLastLine + 1;
 
     let code = '';
     code += codeLines.slice(0, propTypesFirstLine).join(settings.endOfLine);
@@ -59,14 +59,16 @@ class ClassBuilder extends Builder {
     code += allPropTypesCode;
     code += settings.trailingComma;
     code += settings.endOfLine;
-    code += codeLines.slice(propTypesLastLine + (sameLines ? 1 : 0)).join(settings.endOfLine);
+    code += codeLines.slice(propTypesLastLine).join(settings.endOfLine);
 
     return code;
   }
 
   buildCodeWithNewPropTypes() {
     const propTypesContent = this.buildPropTypesContent(this.newPropTypes);
-    const indent = getNodeIndent(this.componentNode);
+    const indent = this.componentType === COMPONENT_TYPE.Class
+      ? getNodeIndent(this.componentNode.id)
+      : getNodeIndent(this.componentNode);
 
     let propTypesCode = '';
     propTypesCode += settings.endOfLine;

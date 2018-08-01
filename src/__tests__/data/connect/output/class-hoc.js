@@ -17,9 +17,13 @@ export default (hoc) => {
     }
   }
 
-  const mapStateToProps = (state) => ({});
+  const mapStateToProps = (state) => ({
+    
+  });
 
-  const mapDispatchToProps = {};
+  const mapDispatchToProps = {
+    
+  };
 
   return connect(mapStateToProps, mapDispatchToProps)(Button);
 };

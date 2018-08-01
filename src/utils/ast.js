@@ -148,7 +148,7 @@ const isStaticPropertyDeclaration = (node, name) => node.type === 'ClassProperty
 
 const isUndefinedIdentifier = (node) => isIdentifier(node) && node.name === 'undefined';
 
-const getNodeIndent = (node) => node.loc.start.column;
+const getNodeIndent = (node) => node.loc && node.loc.start.column || 0;
 
 const getFunctionalComponentName = (node) => node.declarations[0].id.name;
 
@@ -157,11 +157,14 @@ const getClassComponentName = (node) => node.id.name;
 const getSubImports = ({ specifiers }) => specifiers
   .filter((specifier) => isImportSpecifier(specifier))
   .reduce(
-    (result, specifier) => ({
+    (result, specifier) => [
       ...result,
-      [specifier.imported.name]: specifier.local.name
-    }),
-    {}
+      {
+        name: specifier.imported.name,
+        alias: specifier.local.name
+      }
+    ],
+    []
   );
 
 const getFurthestAncestorInScope = (path) => {

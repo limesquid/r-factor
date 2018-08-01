@@ -64,6 +64,7 @@ module.exports = {
   generateIndent,
   getIndent,
   indentCode,
+  indentLine,
   indentLines,
   isString,
   removeDoubleNewlines,

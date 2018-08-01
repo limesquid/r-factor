@@ -46,9 +46,12 @@ class ToggleWithRouterHoc extends Refactoring {
   wrap(code, ast) {
     return wrapComponent(code, ast, {
       name: 'withRouter',
+      outermost: true,
       import: {
         module: 'react-router',
-        subImports: { withRouter: 'withRouter' }
+        subImports: [
+          { name: 'withRouter' }
+        ]
       }
     });
   }

@@ -18,8 +18,12 @@ Button.propTypes = {
   name: PropTypes.string
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  
+});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  
+};
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Button));

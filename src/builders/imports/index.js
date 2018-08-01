@@ -27,7 +27,7 @@ class Imports {
     return this;
   }
 
-  add({ groupIndex = 0, module, identifier, subImports }) {
+  add({ groupIndex = 0, module, identifier, subImports = [] }) {
     if (!this.groups[groupIndex]) {
       this.groups.push(new Group());
     }

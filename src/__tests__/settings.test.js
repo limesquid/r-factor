@@ -15,9 +15,9 @@ describe('settings', () => {
       const ast = parser.parse(input);
       const result = addImportDeclaration(input, ast, {
         module: 'react',
-        subImports: {
-          PureComponent: 'PurestComponent'
-        }
+        subImports: [
+          { name: 'PureComponent', alias: 'PurestComponent' }
+        ]
       });
       settings.revert();
       expect(result).toEqual(output);
@@ -44,9 +44,9 @@ describe('settings', () => {
       const ast = parser.parse(input);
       const result = addImportDeclaration(input, ast, {
         module: 'react',
-        subImports: {
-          PureComponent: 'PurestComponent'
-        }
+        subImports: [
+          { name: 'PureComponent', alias: 'PurestComponent' }
+        ]
       });
       settings.revert();
       expect(result).toEqual(output);

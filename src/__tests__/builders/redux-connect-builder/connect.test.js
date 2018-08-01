@@ -21,6 +21,10 @@ const tests = [
     actions: [ 'connect', 'connectDispatch' ]
   },
   {
+    filename: 'connect-dispatch2',
+    actions: [ 'connectDispatch' ]
+  },
+  {
     filename: 'connect-hoc-complicated',
     actions: [ 'connect' ]
   },
@@ -107,6 +111,10 @@ const tests = [
   {
     filename: 'connect-mergeprops3',
     actions: [ 'connectMergeProps' ]
+  },
+  {
+    filename: 'connect-mergeprops4',
+    actions: [ 'connectMergeProps' ]
   }
 ].map((test) => ({
   ...test,
@@ -136,7 +144,6 @@ describe('ReduxConnectBuilder: settings', () => {
       'map-dispatch-to-props-name': 'mapDispatch',
       'map-state-to-props-name': 'mapState',
       'map-dispatch-to-props-prefer-object': false,
-      'map-state-to-props-prefer-one-line': false,
       'merge-props-name': 'mergeAllProps'
     });
   });

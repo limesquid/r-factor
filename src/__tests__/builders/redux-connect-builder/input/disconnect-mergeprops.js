@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const Button = () => (<span>123</span>);
+const Button = () => (<span>Text</span>);
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...stateProps,

@@ -10,6 +10,10 @@ const unwrapComponent = (source, ast = parser.parse(source), options) => {
   const { componentScope, outermostHocPath } = details;
   const { hocPath, withInvoke } = getHocPath(outermostHocPath, hocName);
 
+  if (!hocPath) {
+    return source;
+  }
+
   if (withInvoke && removeInvoked) {
     hocPath.node.callee.arguments
       .filter(isIdentifier)
@@ -21,7 +25,6 @@ const unwrapComponent = (source, ast = parser.parse(source), options) => {
   }
 
   hocPath.replaceWith(hocPath.node.arguments[0]);
-
   const codeWithoutHoc = parser.print(ast);
 
   if (importDetails) {
@@ -32,16 +35,34 @@ const unwrapComponent = (source, ast = parser.parse(source), options) => {
 };
 
 const getHocPath = (outermostHocPath, hocName) => {
-  let hocIdentifierPath = outermostHocPath;
-  outermostHocPath.traverse({
-    CallExpression(path) {
-      const { node } = path;
-      if (isIdentifier(node.callee) && node.callee.name === hocName) {
-        hocIdentifierPath = path;
-        path.stop();
+  if (!outermostHocPath) {
+    return {
+      hocPath: null,
+      withInvoke: false
+    };
+  }
+
+  let hocIdentifierPath = null;
+  if (outermostHocPath.node.callee.name === hocName) {
+    hocIdentifierPath = outermostHocPath;
+  } else {
+    outermostHocPath.parentPath.traverse({
+      CallExpression(path) {
+        const { node } = path;
+        if (isIdentifier(node.callee) && node.callee.name === hocName) {
+          hocIdentifierPath = path;
+          path.stop();
+        }
       }
-    }
-  });
+    });
+  }
+
+  if (!hocIdentifierPath) {
+    return {
+      hocPath: null,
+      withInvoke: false
+    };
+  }
 
   const isParentCallExpression = isCallExpression(hocIdentifierPath.parent);
   const withInvoke = isParentCallExpression && !hocIdentifierPath.parent.arguments.includes(

@@ -15,8 +15,12 @@ Button.propTypes = {
   className: PropTypes.string
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  
+});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Button);

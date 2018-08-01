@@ -21,9 +21,13 @@ export const withMyContext = Component => {
     </MyContext.Consumer>
   );
 
-  const mapStateToProps = (state) => ({});
+  const mapStateToProps = (state) => ({
+    
+  });
 
-  const mapDispatchToProps = {};
+  const mapDispatchToProps = {
+    
+  };
 
   return connect(mapStateToProps, mapDispatchToProps)(InnerComponent);
 };

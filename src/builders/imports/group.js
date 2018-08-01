@@ -62,10 +62,12 @@ class Group {
         code: existingImport.code,
         module,
         identifier: identifier || existingImport.identifier,
-        subImports: {
-          ...existingImport.subImports,
+        subImports: [
+          ...existingImport.subImports.filter(
+            ({ name }) => !subImports.find((subImport) => subImport.name === name)
+          ),
           ...subImports
-        }
+        ]
       };
       this.updateImportAtIndex(existingImportIndex, updatedImport);
     } else {
@@ -99,13 +101,9 @@ class Group {
     const existingImport = this.imports[existingImportIndex];
     const updatedImport = {
       ...existingImport,
-      subImports: Object.keys(existingImport.subImports).reduce((result, subImport) => {
-        if (!subImports.includes(subImport)) {
-          result[subImport] = existingImport.subImports[subImport];
-        }
-
-        return result;
-      }, {})
+      subImports: existingImport.subImports.filter(
+        (subImport) => !subImports.includes(subImport.name)
+      )
     };
     this.updateImportAtIndex(existingImportIndex, updatedImport, removeImportIfEmpty);
   }

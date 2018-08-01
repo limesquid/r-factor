@@ -5,8 +5,12 @@ const ButtonComponent = (props) => (
   <div>Button</div>
 );
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  
+});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  
+};
 
 export const Button = connect(mapStateToProps, mapDispatchToProps)(ButtonComponent);

@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 const ButtonComponent = () => (<span>123</span>);
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  
+};
 
 export const Button = withRouter(connect(null, mapDispatchToProps)(ButtonComponent));

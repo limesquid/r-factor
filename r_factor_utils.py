@@ -2,7 +2,7 @@ import os
 import platform
 import subprocess
 
-def node_bridge(data, bin, args=[]):
+def node_bridge(data, node_bin, bin, args=[]):
   env = None
   startupinfo = None
   os_name = get_os()
@@ -15,7 +15,7 @@ def node_bridge(data, bin, args=[]):
     startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
   try:
     p = subprocess.Popen(
-      ['node', bin] + args,
+      [node_bin, bin] + args,
       stdout=subprocess.PIPE,
       stdin=subprocess.PIPE,
       stderr=subprocess.PIPE,

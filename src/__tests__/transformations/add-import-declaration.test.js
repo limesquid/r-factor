@@ -10,20 +10,33 @@ describe('transformation:add-import-declaration', () => {
   it('should add sub import to existing module import', () => {
     const result = addImportDeclaration(code, ast, {
       module: 'react',
-      subImports: {
-        PureComponent: 'PureComponent'
-      }
+      subImports: [
+        { name: 'PureComponent', alias: 'PureComponent' }
+      ]
     });
     const expectedResult = readTransformationsFile('add-import-declaration/output/sub-import.js');
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('should add sub import to existing module import', () => {
+    const result = addImportDeclaration(code, ast, {
+      module: 'react-redux',
+      subImports: [
+        { name: 'a', alias: 'a' }
+      ]
+    });
+    const expectedResult = readTransformationsFile(
+      'add-import-declaration/output/sub-import-to-existing-sub-imports.js'
+    );
     expect(result).toEqual(expectedResult);
   });
 
   it('should add aliased sub import to existing module import', () => {
     const result = addImportDeclaration(code, ast, {
       module: 'react',
-      subImports: {
-        PureComponent: 'PurestComponent'
-      }
+      subImports: [
+        { name: 'PureComponent', alias: 'PurestComponent' }
+      ]
     });
     const expectedResult = readTransformationsFile('add-import-declaration/output/sub-import-alias.js');
     expect(result).toEqual(expectedResult);
@@ -51,9 +64,9 @@ describe('transformation:add-import-declaration', () => {
     const result = addImportDeclaration(code, ast, {
       module: 'prop-types',
       identifier: 'PropTypes',
-      subImports: {
-        Something: 'Something'
-      }
+      subImports: [
+        { name: 'Something' }
+      ]
     });
     const expectedResult = readTransformationsFile('add-import-declaration/output/new-import-with-alias.js');
     expect(result).toEqual(expectedResult);
@@ -62,19 +75,20 @@ describe('transformation:add-import-declaration', () => {
   it('should add new import with sub imports (trailing comma)', () => {
     settings.set({ 'trailing-commas': true });
     const trailingCommaCode = readTransformationsFile('add-import-declaration/input/trailing-comma.js');
-    const resultWithPropTypes = addImportDeclaration(trailingCommaCode, ast, {
+    const trailingCommaAst = parser.parse(trailingCommaCode);
+    const resultWithPropTypes = addImportDeclaration(trailingCommaCode, trailingCommaAst, {
       module: 'prop-types',
       identifier: 'PropTypes',
-      subImports: {
-        Something: 'Something'
-      }
+      subImports: [
+        { name: 'Something' }
+      ]
     });
     const astWithPropTypes = parser.parse(resultWithPropTypes);
     const resultWithLodash = addImportDeclaration(resultWithPropTypes, astWithPropTypes, {
       module: 'lodash',
-      subImports: {
-        flowRight: 'flowRight'
-      }
+      subImports: [
+        { name: 'flowRight' }
+      ]
     });
     const expectedResult = readTransformationsFile('add-import-declaration/output/trailing-comma.js');
     expect(resultWithLodash).toEqual(expectedResult);
