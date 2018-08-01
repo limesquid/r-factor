@@ -31,5 +31,6 @@
   ],
   "quotes": "single",
   "semicolons": true,
+  "trailing-commas": false,
   "NODE_BIN": "node"
 }

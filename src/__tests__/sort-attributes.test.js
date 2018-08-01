@@ -1,3 +1,4 @@
+const settings = require('../settings');
 const { range, readFile } = require('./test-utils');
 const SortAttributes = require('../refactorings/sort-attributes');
 
@@ -33,5 +34,13 @@ describe('sort-attributes:refactor', () => {
     it(`refactor "${name}"`, () => {
       expect(refactoring.refactor(input)).toBe(output);
     });
+  });
+
+  it('refactor with trailing commas enabled', () => {
+    settings.set({ 'trailing-commas': true });
+    const input = readFile('sort-attributes/input/trailing-comma.js');
+    const output = readFile('sort-attributes/output/trailing-comma.js');
+    expect(refactoring.refactor(input)).toBe(output);
+    settings.revert();
   });
 });

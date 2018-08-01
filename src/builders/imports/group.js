@@ -58,6 +58,7 @@ class Group {
     if (existingImportIndex >= 0) {
       const existingImport = this.imports[existingImportIndex];
       const updatedImport = {
+        ...existingImport,
         code: existingImport.code,
         module,
         identifier: identifier || existingImport.identifier,

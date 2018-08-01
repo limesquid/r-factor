@@ -1,5 +1,6 @@
 const { range, readFile } = require('./test-utils');
 const AddClassname = require('../refactorings/add-classname');
+const settings = require('../settings');
 
 const files = [
   ...range(1, 23).map((n) => `arrow/file${n}`),
@@ -50,5 +51,13 @@ describe('add-classname:refactor', () => {
     it(`should not modify refactored code "${name}"`, () => {
       expect(refactoring.refactor(output)).toBe(output);
     });
+  });
+
+  const input = readFile('add-classname/input/arrow/file21.js');
+  const output = readFile('add-classname/output/arrow/file21-with-trailing-comma.js');
+  it('with trailing comma', () => {
+    settings.set({ 'trailing-commas': true });
+    expect(refactoring.refactor(input)).toBe(output);
+    settings.revert();
   });
 });

@@ -53,6 +53,7 @@ class ComponentBuilder extends Builder {
           args.split(',').map((arg) => arg.trim()).join(`,${settings.endOfLine}`),
           settings.indent
         );
+        code += settings.trailingComma;
         code += `${settings.endOfLine})`;
         return squeezeCode(code, 0, indent);
       }

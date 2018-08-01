@@ -12,6 +12,7 @@ const sortObjectAttributes = (code, node, indentSize) => {
   if (node.properties.length > 0) {
     newCode += isMultiLine ? settings.endOfLine : ' ';
     newCode += buildProperties(node.properties, code, buildProperty);
+    newCode += isMultiLine ? settings.trailingComma : '';
     newCode += isMultiLine ? `${settings.endOfLine}${generateIndent(indentSize)}` : ' ';
   }
   newCode += '}';

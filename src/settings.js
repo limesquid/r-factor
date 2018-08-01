@@ -15,7 +15,8 @@ const DEFAULT_SETTINGS = {
   'merge-props-name': 'mergeProps',
   'modules-order': [ 'react', 'prop-types', 'classnames' ],
   quotes: 'single',
-  semicolons: true
+  semicolons: true,
+  'trailing-commas': false
 };
 
 class Settings {
@@ -116,6 +117,10 @@ class Settings {
 
   get semicolon() {
     return this.get('semicolons') ? ';' : '';
+  }
+
+  get trailingComma() {
+    return this.get('trailing-commas') ? ',' : '';
   }
 
   get tripleIndent() {

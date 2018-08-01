@@ -1,4 +1,5 @@
 const parser = require('../../utils/parser');
+const settings = require('../../settings');
 const { readTransformationsFile } = require('../test-utils');
 const addImportDeclaration = require('../../transformations/add-import-declaration');
 
@@ -69,5 +70,28 @@ describe('transformation:add-import-declaration', () => {
     });
     const expectedResult = readTransformationsFile('add-import-declaration/output/new-import-with-alias.js');
     expect(result).toEqual(expectedResult);
+  });
+
+  it('should add new import with sub imports (trailing comma)', () => {
+    settings.set({ 'trailing-commas': true });
+    const trailingCommaCode = readTransformationsFile('add-import-declaration/input/trailing-comma.js');
+    const trailingCommaAst = parser.parse(trailingCommaCode);
+    const resultWithPropTypes = addImportDeclaration(trailingCommaCode, trailingCommaAst, {
+      module: 'prop-types',
+      identifier: 'PropTypes',
+      subImports: [
+        { name: 'Something' }
+      ]
+    });
+    const astWithPropTypes = parser.parse(resultWithPropTypes);
+    const resultWithLodash = addImportDeclaration(resultWithPropTypes, astWithPropTypes, {
+      module: 'lodash',
+      subImports: [
+        { name: 'flowRight' }
+      ]
+    });
+    const expectedResult = readTransformationsFile('add-import-declaration/output/trailing-comma.js');
+    expect(resultWithLodash).toEqual(expectedResult);
+    settings.revert();
   });
 });

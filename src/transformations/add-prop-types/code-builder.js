@@ -57,6 +57,7 @@ class ClassBuilder extends Builder {
     code += codeLines.slice(0, propTypesFirstLine).join(settings.endOfLine);
     code += settings.endOfLine;
     code += allPropTypesCode;
+    code += settings.trailingComma;
     code += settings.endOfLine;
     code += codeLines.slice(propTypesLastLine).join(settings.endOfLine);
 
