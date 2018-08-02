@@ -1,8 +1,8 @@
 module.exports = {
   'add-classname': require('./add-classname'),
   connect: require('./connect'),
-  'connect-map-state-to-props': require('./connect-map-state-to-props'),
   'connect-map-dispatch-to-props': require('./connect-map-dispatch-to-props'),
+  'connect-map-state-to-props': require('./connect-map-state-to-props'),
   'connect-merge-props': require('./connect-merge-props'),
   'convert-to-class-component': require('./convert-to-class-component'),
   'convert-to-arrow-component': require('./convert-to-arrow-component'),
