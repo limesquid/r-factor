@@ -16,6 +16,7 @@
   "scripts": {
     "analyze-bundle": "better-npm-run analyze-bundle",
     "build": "better-npm-run build",
+    "build:dev": "better-npm-run build:dev",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
     "test": "jest --no-cache --coverage",
@@ -34,6 +35,12 @@
       "command": "webpack",
       "env": {
         "NODE_ENV": "production"
+      }
+    },
+    "build:dev": {
+      "command": "webpack",
+      "env": {
+        "NODE_ENV": "development"
       }
     }
   },

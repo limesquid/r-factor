@@ -8,7 +8,7 @@ const DIST_DIR = path.resolve(__dirname, 'dist');
 const BUNDLE_DIST = 'index.js';
 
 const webpackConfig = {
-  mode: 'production',
+  mode: process.env.NODE_ENV,
   target: 'node',
   output: {
     path: DIST_DIR,
