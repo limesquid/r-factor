@@ -72,7 +72,7 @@
     "command": "toggle_component_type"
   },
   {
-    "caption": "R-Factor: Toggle withRouter HoC",
+    "caption": "R-Factor: Toggle withRouter HOC",
     "command": "toggle_with_router_hoc"
   }
 ]
