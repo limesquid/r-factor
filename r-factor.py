@@ -33,7 +33,8 @@ class BaseCommand(sublime_plugin.TextCommand):
     try:
       return node_bridge(data, NODE_BIN, BIN_PATH, [
         '-r', refactoring_name,
-        '-s', json.dumps(self.get_settings())
+        '-s', json.dumps(self.get_settings()),
+        '-l', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsbmFtZSI6Ill1cml5IFlha3ltIiwiZW1haWwiOiJ5YWt5bS55dXJpeUBnbWFpbC5jb20iLCJrZXkiOiIwZjEyMjBlOGUxMWM3M2IxNGYzYzEwZjQxNDdhYWUyMiIsImlhdCI6MTUzMzU2MjQ5NH0.LV-rQ6ZXbAaxAbFVsFpIHRcrh6ZW_fsn0E07g-Q67BQ'
       ])
     except Exception as e:
       return str(e)

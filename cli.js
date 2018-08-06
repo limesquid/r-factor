@@ -8,6 +8,12 @@ const { argv } = yargs
     describe: 'Refactoring name',
     type: 'string'
   })
+  .option('license', {
+    alias: 'l',
+    demandOption: true,
+    describe: 'License key',
+    type: 'string'
+  })
   .option('settings', {
     alias: 's',
     demandOption: true,

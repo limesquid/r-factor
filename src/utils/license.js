@@ -10,7 +10,7 @@ const verifyLicense = (license) => {
   try {
     const details = jwt.verify(license, LICENSE_SECRET);
     const { fullname, email, key } = details;
-    return key === md5(`${fullname}:${process.env.LICENSE_SECRET}:${email}`);
+    return key === md5(`${fullname}:${LICENSE_SECRET}:${email}`);
   } catch (error) {
     return false;
   }
