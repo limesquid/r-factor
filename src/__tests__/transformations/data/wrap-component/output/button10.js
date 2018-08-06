@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 
-export default Component => {
+export default (Component) => {
   const InnerComponent = ({ name }) => (
     <div>
       {name}

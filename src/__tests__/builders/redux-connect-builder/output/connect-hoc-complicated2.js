@@ -6,7 +6,7 @@ import pluralize from 'app/lib/pluralize';
 
 const MyContext = createContext({});
 
-export const withMyContext = Component => {
+export const withMyContext = (Component) => {
   const InnerComponent = (props) => (
     <MyContext.Consumer>
       {(my) => (
