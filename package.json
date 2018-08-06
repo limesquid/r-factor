@@ -66,6 +66,7 @@
     "eslint": "^5.1.0",
     "eslint-plugin-react": "^7.10.0",
     "get-stdin": "6.0.0",
+    "jsonwebtoken": "^8.3.0",
     "lodash.difference": "4.5.0",
     "recast": "git+https://github.com/yuriyyakym/recast.git#newest",
     "stable": "0.1.8",
