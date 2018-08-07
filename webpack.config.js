@@ -49,6 +49,9 @@ const webpackConfig = {
   plugins: [
     new webpack.NormalModuleReplacementPlugin(/@babel-parser/, (resource) => {
       resource.request = '@babel-parser';
+    }),
+    new webpack.DefinePlugin({
+      LICENSE_PUBLIC_KEY: fs.readFileSync(path.resolve(__dirname, 'license.pub'))
     })
   ]
 };
