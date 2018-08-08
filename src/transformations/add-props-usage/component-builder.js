@@ -1,6 +1,6 @@
 const { Builder } = require('../../model');
 const settings = require('../../settings');
-const { cleanUpCode, generateIndent, squeezeCode } = require('../../utils');
+const { cleanUpCode, generateIndent } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
 const sortObjectAttributes = require('../sort-object-attributes');
 
@@ -20,8 +20,7 @@ class ComponentBuilder extends Builder {
       if (destructuringNode.type === 'Identifier') {
         code += `{ ${this.getProps()}, ...${destructuringNode.name} }`;
       } else {
-        const props = this.getProps(destructuringNode);
-        code += squeezeCode(props, 0, getNodeIndent(renderDefinition) + settings.indent);
+        code += this.getProps(destructuringNode);
       }
       code += this.code.substring(destructuringNode.end);
     } else {
@@ -71,18 +70,15 @@ class ComponentBuilder extends Builder {
       const extendedNode = {
         ...destructuringNode,
         properties: [
-          ...destructuringNode.properties.filter(
-            (property) => {
-              if (!property.value) {
-                return true;
-              }
-              return !this.props.includes(property.value.name);
-            }
-          ),
-          ...this.props.map((prop) => ({ code: prop, name: prop }))
+          ...destructuringNode.properties,
+          ...this.props
+            .filter((prop) => !destructuringNode.properties.find(
+              (property) => property.value && property.value.name === prop
+            ))
+            .map((prop) => ({ code: prop, name: prop }))
         ]
       };
-      return sortObjectAttributes(this.code, extendedNode, 0);
+      return sortObjectAttributes(this.code, extendedNode, extendedNode.loc.indent);
     }
 
     return this.props.join(',');

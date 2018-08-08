@@ -1,5 +1,4 @@
-const { cleanUpCode, squeezeCode } = require('../../utils');
-const { getNodeIndent } = require('../../utils/ast');
+const { cleanUpCode } = require('../../utils');
 const ComponentBuilder = require('./component-builder');
 
 class FunctionalComponentBuilder extends ComponentBuilder {
@@ -17,8 +16,7 @@ class FunctionalComponentBuilder extends ComponentBuilder {
       if (destructuringNode.type === 'Identifier') {
         code += `{ ${this.getProps()}, ...${destructuringNode.name} }`;
       } else {
-        const props = this.getProps(destructuringNode);
-        code += squeezeCode(props, 0, getNodeIndent(this.node));
+        code += this.getProps(destructuringNode);
       }
       code += this.code.substring(destructuringNode.end);
     } else {

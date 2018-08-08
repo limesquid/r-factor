@@ -57,16 +57,19 @@ const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index
   let propertyCode = '';
 
   if (isMultiLine) {
-    // propertyCode += innerIndent;
-    const { codeBefore } = property;
-    if (property.originalIndex === 0) {
-      if (codeBefore.code) {
-        propertyCode += codeBefore.code + settings.endOfLine + codeBefore.linePrefix;
-      } else {
-        propertyCode += codeBefore.linePrefix;
-      }
+    if (property.code) {
+      propertyCode += innerIndent;
     } else {
-      propertyCode += codeBefore.code + codeBefore.linePrefix;
+      const { codeBefore } = property;
+      if (property.originalIndex === 0) {
+        if (codeBefore.code) {
+          propertyCode += codeBefore.code + settings.endOfLine + codeBefore.linePrefix;
+        } else {
+          propertyCode += codeBefore.linePrefix;
+        }
+      } else {
+        propertyCode += codeBefore.code + codeBefore.linePrefix;
+      }
     }
   }
 
@@ -96,7 +99,12 @@ const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index
 
   const hasCommaAfter = property.codeAfter.trim().startsWith(',');
   const comma = hasCommaAfter ? '' : ',';
-  if (index < properties.length - 1) {
+
+  if (property.code) {
+    if (index < properties.length - 1) {
+      propertyCode += `,${isMultiLine ? settings.endOfLine : ' '}`;
+    }
+  } else if (index < properties.length - 1) {
     propertyCode += `${comma}${property.codeAfter}${isMultiLine ? settings.endOfLine : ' '}`;
   } else {
     propertyCode += hasCommaAfter ? property.codeAfter.replace(',', '') : property.codeAfter;
@@ -117,6 +125,12 @@ const mapNodeProperties = (node, lines) => {
 
 const getCodeBeforeProperty = (node, lines, index) => {
   const { property, previousProperty } = getPropertiesNeighborhood(node, index);
+  if (property.code) {
+    return {
+      code: '',
+      linePrefix: ''
+    };
+  }
   const line = lines[property.loc.start.line - 1];
   const linePrefix = line.substring(0, property.loc.start.column);
 
@@ -137,6 +151,9 @@ const getCodeBeforeProperty = (node, lines, index) => {
 
 const getCodeAfterProperty = (node, lines, index) => {
   const { property } = getPropertiesNeighborhood(node, index);
+  if (property.code) {
+    return '';
+  }
   const line = lines[property.loc.end.line - 1];
   const lineSuffix = line.substring(property.loc.end.column);
   return lineSuffix;
