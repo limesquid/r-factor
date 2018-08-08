@@ -1,5 +1,7 @@
 const parser = require('../utils/parser');
 
+const CODE_SEPARATOR = '\n================================\n';
+
 class Refactoring {
   constructor(transformations = []) {
     this.transformations = transformations;
@@ -33,7 +35,7 @@ class Refactoring {
         return [
           'Exception occured while performing a transformation.',
           process.env.NODE_ENV !== 'production' && error.stack,
-          process.env.NODE_ENV !== 'production' && `Code: ${nextCode}`
+          process.env.NODE_ENV !== 'production' && `Code:${CODE_SEPARATOR}${nextCode}${CODE_SEPARATOR}`
         ].filter(Boolean).join('\n\n');
       }
     }

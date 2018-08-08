@@ -11,7 +11,7 @@ const sortObjectAttributes = (code, node, indentSize) => {
   let newCode = '{';
   if (node.properties.length > 0) {
     newCode += isMultiLine ? settings.endOfLine : ' ';
-    newCode += buildProperties(node.properties, code, buildProperty);
+    newCode += buildProperties(node, code, buildProperty);
     newCode += isMultiLine ? settings.trailingComma : '';
     newCode += isMultiLine ? `${settings.endOfLine}${generateIndent(indentSize)}` : ' ';
   }
@@ -19,7 +19,9 @@ const sortObjectAttributes = (code, node, indentSize) => {
   return newCode;
 };
 
-const buildProperties = (properties, code, buildProperty) => {
+const buildProperties = (node, code, buildProperty) => {
+  const lines = code.split('\n');
+  const properties = mapNodeProperties(node, lines);
   let propertiesCode = '';
   let propertiesToSort = [];
   let lastSpreadElementIndex = -1;
@@ -55,7 +57,17 @@ const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index
   let propertyCode = '';
 
   if (isMultiLine) {
-    propertyCode += innerIndent;
+    // propertyCode += innerIndent;
+    const { codeBefore } = property;
+    if (property.originalIndex === 0) {
+      if (codeBefore.code) {
+        propertyCode += codeBefore.code + settings.endOfLine + codeBefore.linePrefix;
+      } else {
+        propertyCode += codeBefore.linePrefix;
+      }
+    } else {
+      propertyCode += codeBefore.code + codeBefore.linePrefix;
+    }
   }
 
   if (property.computed) {
@@ -82,12 +94,58 @@ const createBuildProperty = (code, innerIndent, isMultiLine) => (property, index
     propertyCode += code.substring(property.value.start, property.value.end);
   }
 
+  const hasCommaAfter = property.codeAfter.trim().startsWith(',');
+  const comma = hasCommaAfter ? '' : ',';
   if (index < properties.length - 1) {
-    propertyCode += `,${isMultiLine ? settings.endOfLine : ' '}`;
+    propertyCode += `${comma}${property.codeAfter}${isMultiLine ? settings.endOfLine : ' '}`;
+  } else {
+    propertyCode += hasCommaAfter ? property.codeAfter.replace(',', '') : property.codeAfter;
   }
 
   return propertyCode;
 };
+
+const mapNodeProperties = (node, lines) => {
+  const isMultiLine = !isSingleLine(node);
+  return node.properties.map((property, index) => ({
+    ...property,
+    originalIndex: index,
+    codeBefore: isMultiLine ? getCodeBeforeProperty(node, lines, index) : '',
+    codeAfter: isMultiLine ? getCodeAfterProperty(node, lines, index) : ''
+  }));
+};
+
+const getCodeBeforeProperty = (node, lines, index) => {
+  const { property, previousProperty } = getPropertiesNeighborhood(node, index);
+  const line = lines[property.loc.start.line - 1];
+  const linePrefix = line.substring(0, property.loc.start.column);
+
+  const previousPropertyEndsOnPreviousLine = previousProperty.loc.end.line === property.loc.start.line - 1;
+  if (!previousPropertyEndsOnPreviousLine || index === 0) {
+    const endOfLine = index === 0 ? '' : settings.endOfLine;
+    return {
+      code: lines.slice(previousProperty.loc.end.line, property.loc.start.line - 1).join('\n') + endOfLine,
+      linePrefix
+    };
+  }
+
+  return {
+    code: '',
+    linePrefix
+  };
+};
+
+const getCodeAfterProperty = (node, lines, index) => {
+  const { property } = getPropertiesNeighborhood(node, index);
+  const line = lines[property.loc.end.line - 1];
+  const lineSuffix = line.substring(property.loc.end.column);
+  return lineSuffix;
+};
+
+const getPropertiesNeighborhood = ({ properties, loc }, index) => ({
+  property: properties[index],
+  previousProperty: properties[index - 1] || { loc: { end: { line: loc.start.line } } }
+});
 
 const sortProperties = (code, properties) => {
   const propertiesWithNames = properties.map((property) => ({
