@@ -6,6 +6,7 @@ const types = [ 'arrow', 'function' ];
 const files = [
   ...[ ...range(1, 6), ...range(10, 13) ].map((n) => createFileDetails(`button${n}`)),
   createFileDetails('contact-us'),
+  createFileDetails('meet-our-team'),
   createFileDetails('image-header', { indent: 4 }),
   createFileDetails('empty-indent-2'),
   createFileDetails('empty-indent-4', { indent: 4 })

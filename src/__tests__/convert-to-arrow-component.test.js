@@ -6,6 +6,7 @@ const types = [ 'class', 'function' ];
 const files = [
   ...range(1, 14).map((n) => createFileDetails(`button${n}`)),
   createFileDetails('contact-us'),
+  createFileDetails('meet-our-team'),
   createFileDetails('image-header', { indent: 4 }),
   createFileDetails('empty-indent-2'),
   createFileDetails('empty-indent-4', { indent: 4 })
