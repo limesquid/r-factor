@@ -1,9 +1,10 @@
-const parser = require('../utils/parser');
+const defaultParser = require('../utils/parser');
 
 const CODE_SEPARATOR = '\n================================\n';
 
 class Refactoring {
-  constructor(transformations = []) {
+  constructor(parser = defaultParser, transformations = []) {
+    this.parser = parser;
     this.transformations = transformations;
   }
 
@@ -17,7 +18,7 @@ class Refactoring {
 
   refactor(code) {
     try {
-      parser.parse(code);
+      this.parser.parse(code);
     } catch (error) {
       return [
         'Parsing failure - syntax error'
@@ -29,7 +30,7 @@ class Refactoring {
 
     for (const transformation of transformations) {
       try {
-        const ast = parser.parse(nextCode);
+        const ast = this.parser.parse(nextCode);
         nextCode = transformation(nextCode, ast);
       } catch (error) {
         return [
