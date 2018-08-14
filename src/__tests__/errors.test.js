@@ -1,4 +1,5 @@
 const { Refactoring } = require('../model');
+const parser = require('../utils/parser');
 
 describe('errors', () => {
   const transformation = (code) => code;
@@ -8,7 +9,7 @@ describe('errors', () => {
 
   it('returns custom error message when unable to parse code', () => {
     const code = 'const invalidJs = {';
-    const refactoring = new Refactoring([ transformation ]);
+    const refactoring = new Refactoring(parser, [ transformation ]);
     expect(refactoring.refactor(code)).toEqual(
       expect.stringContaining('Parsing failure - syntax error')
     );
@@ -16,7 +17,7 @@ describe('errors', () => {
 
   it('returns error message transformation fails', () => {
     const code = 'const validJs = {};';
-    const refactoring = new Refactoring([ brokenTransformation ]);
+    const refactoring = new Refactoring(parser, [ brokenTransformation ]);
     expect(refactoring.refactor(code)).toEqual(
       expect.stringContaining('transformation error')
     );

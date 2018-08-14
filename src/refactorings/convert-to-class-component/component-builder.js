@@ -59,9 +59,6 @@ class ComponentBuilder extends Builder {
   buildName() {
     if (this.getDeclaration()) {
       const name = this.getDeclaration().id.name;
-      if (name === 'Component') {
-        return settings.componentNameCollisionPattern.replace('${name}', name);
-      }
       return name;
     }
     return '';

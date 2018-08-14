@@ -6,6 +6,7 @@ const {
   isReactImport
 } = require('../../utils/ast');
 const { Refactoring } = require('../../model');
+const settings = require('../../settings');
 const ConvertFunctionToArrowComponent = require('../convert-function-to-arrow-component');
 const MoveDefaultPropsAndPropTypesToClass = require('../move-default-props-and-prop-types-to-class');
 const ComponentBuilder = require('./component-builder');
@@ -24,6 +25,7 @@ class ConvertToClassComponent extends Refactoring {
         }
         return code;
       },
+      (code, ast) => this.refactorComponentNameCollision(code, ast),
       (code, ast) => this.refactorComponent(code, ast),
       (code, ast) => this.refactorReactImport(code, ast),
       (code) => moveDefaultPropsAndPropTypesToClass.refactor(code)
@@ -60,6 +62,36 @@ class ConvertToClassComponent extends Refactoring {
     return moveDefaultPropsAndPropTypesToClass.canApply(code)
       || hasReactImport
       || isFunctionalComponent;
+  }
+
+  refactorComponentNameCollision(code, ast) {
+    let hasNameCollision = false;
+
+    traverse(ast, {
+      VariableDeclaration(path) {
+        const { node } = path;
+        if (isArrowComponentDeclaration(node)) {
+          const { name } = node.declarations[0].id;
+          if (name === 'Component') {
+            hasNameCollision = true;
+          }
+        }
+      }
+    });
+
+    if (hasNameCollision) {
+      traverse(ast, {
+        Program(path) {
+          path.scope.rename(
+            'Component',
+            settings.componentNameCollisionPattern.replace('${name}', 'Component')
+          );
+          path.stop();
+        }
+      });
+    }
+
+    return parser.print(ast);
   }
 
   refactorComponent(code, ast) {
