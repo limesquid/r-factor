@@ -14,14 +14,17 @@ class ConvertSvgToComponent extends Refactoring {
     super(xmlParser);
     this.transformations = [
       (code, jsXml) => {
-        const result = this.refactorSvg(code, jsXml);
+        const arrowComponentCode = this.refactorSvg(code, jsXml);
+
         if (settings.svgComponentType === 'class') {
-          return convertToClassComponent.refactor(result);
+          return convertToClassComponent.refactor(arrowComponentCode);
         }
+
         if (settings.svgComponentType === 'function') {
-          return convertToFunctionComponent.refactor(result);
+          return convertToFunctionComponent.refactor(arrowComponentCode);
         }
-        return result;
+
+        return arrowComponentCode;
       }
     ];
   }
@@ -49,9 +52,11 @@ class ConvertSvgToComponent extends Refactoring {
     const children = this.buildChildren(node, level + 1);
 
     let builder = `<${name}`;
+
     if (attributes) {
       builder += ` ${attributes}`;
     }
+
     if (children) {
       const indent = generateIndent(level * settings.indent);
       builder += `>${settings.endOfLine}${children}${settings.endOfLine}${indent}</${name}>`;
@@ -64,6 +69,7 @@ class ConvertSvgToComponent extends Refactoring {
 
   buildAttributes(node) {
     const attributesObject = node.$ || {};
+
     return Object.keys(attributesObject).map((key) => {
       const value = attributesObject[key];
       return `${SVG_ATTRIBUTES[key] || key}="${value}"`;
@@ -72,17 +78,24 @@ class ConvertSvgToComponent extends Refactoring {
 
   buildChildren(node, level) {
     const childrenTags = Object.keys(node).filter((key) => key !== '$');
+
     return childrenTags.map((tag) => {
       const tagValue = node[tag];
+
       if (Array.isArray(tagValue)) {
         const firstElement = tagValue[0];
+
         if (typeof firstElement === 'string') {
           return `${generateIndent(level * settings.indent)}<${tag}>${firstElement}</${tag}>`;
         }
+
         return `${generateIndent(level * settings.indent)}${this.buildNode(tag, firstElement, level)}`;
-      } else if (typeof tagValue === 'object') {
+      }
+
+      if (typeof tagValue === 'object') {
         return this.buildNode(tag, node, level + 1);
       }
+
       return '';
     }).join(settings.endOfLine);
   }
