@@ -14,6 +14,7 @@ const DEFAULT_SETTINGS = {
   'modules-order': [ 'react', 'prop-types', 'classnames' ],
   quotes: 'single',
   semicolons: true,
+  'svg-component-type': 'arrow',
   'trailing-commas': false,
   'use-map-dispatch-to-props-shorthand': true
 };
@@ -93,6 +94,10 @@ class Settings {
 
   get useMapDispatchToPropsShorthand() {
     return this.get('use-map-dispatch-to-props-shorthand');
+  }
+
+  get svgComponentType() {
+    return this.get('svg-component-type');
   }
 
   get mergePropsName() {

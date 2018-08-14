@@ -3,15 +3,29 @@
 
 const { Refactoring } = require('../../model');
 const settings = require('../../settings');
-const { generateIndent } = require('../../utils');
+const { generateIndent, indentCode } = require('../../utils');
 const xmlParser = require('../../utils/xml-parser');
+const ConvertToFunctionComponent = require('../convert-to-function-component');
+const ConvertToClassComponent = require('../convert-to-class-component');
 const SVG_ATTRIBUTES = require('./svg-attributes');
+
+const convertToFunctionComponent = new ConvertToFunctionComponent();
+const convertToClassComponent = new ConvertToClassComponent();
 
 class ConvertSvgToComponent extends Refactoring {
   constructor() {
     super(xmlParser);
     this.transformations = [
-      (code, jsXml) => this.refactorSvg(code, jsXml)
+      (code, jsXml) => {
+        const result = this.refactorSvg(code, jsXml);
+        if (settings.svgComponentType === 'class') {
+          return convertToClassComponent.refactor(result);
+        }
+        if (settings.svgComponentType === 'function') {
+          return convertToFunctionComponent.refactor(result);
+        }
+        return result;
+      }
     ];
   }
 
@@ -20,7 +34,17 @@ class ConvertSvgToComponent extends Refactoring {
   }
 
   refactorSvg(code, jsXml) {
-    return this.buildNode('svg', jsXml.svg);
+    let component = 'import React from \'react\';';
+    component += '\n\n';
+    component += `const ${settings.defaultComponentName} = () => (`;
+    component += '\n';
+    component += indentCode(this.buildNode('svg', jsXml.svg), settings.indent);
+    component += '\n';
+    component += ');';
+    component += '\n\n';
+    component += `export default ${settings.defaultComponentName};`;
+    component += '\n';
+    return component;
   }
 
   buildNode(name, node, level = 0) {

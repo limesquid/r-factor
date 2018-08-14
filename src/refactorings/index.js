@@ -4,6 +4,7 @@ module.exports = {
   'connect-map-dispatch-to-props': require('./connect-map-dispatch-to-props'),
   'connect-map-state-to-props': require('./connect-map-state-to-props'),
   'connect-merge-props': require('./connect-merge-props'),
+  'convert-svg-to-component': require('./convert-svg-to-component'),
   'convert-to-arrow-component': require('./convert-to-arrow-component'),
   'convert-to-class-component': require('./convert-to-class-component'),
   'convert-to-function-component': require('./convert-to-function-component'),
