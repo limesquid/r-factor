@@ -1,6 +1,3 @@
-/* TODO */
-// specjalne handlowanie atrybutu "style" - string na obiekt
-
 const { Refactoring } = require('../../model');
 const settings = require('../../settings');
 const { generateIndent, indentCode } = require('../../utils');
