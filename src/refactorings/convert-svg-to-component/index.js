@@ -40,9 +40,9 @@ class ConvertSvgToComponent extends Refactoring {
     component += '\n';
     component += indentCode(this.buildNode('svg', jsXml.svg), settings.indent);
     component += '\n';
-    component += ');';
+    component += `)${settings.semicolon}`;
     component += '\n\n';
-    component += `export default ${settings.defaultComponentName};`;
+    component += `export default ${settings.defaultComponentName}${settings.semicolon}`;
     component += '\n';
     return component;
   }
