@@ -83,13 +83,15 @@ class ConvertSvgToComponent extends Refactoring {
       const tagValue = node[tag];
 
       if (Array.isArray(tagValue)) {
-        const firstElement = tagValue[0];
+        const indent = generateIndent(level * settings.indent);
 
-        if (typeof firstElement === 'string') {
-          return `${generateIndent(level * settings.indent)}<${tag}>${firstElement}</${tag}>`;
-        }
+        return tagValue.map((element) => {
+          if (typeof element === 'string') {
+            return `${indent}<${tag}>${element}</${tag}>`;
+          }
 
-        return `${generateIndent(level * settings.indent)}${this.buildNode(tag, firstElement, level)}`;
+          return `${indent}${this.buildNode(tag, element, level)}`;
+        }).join(settings.endOfLine);
       }
 
       if (typeof tagValue === 'object') {
