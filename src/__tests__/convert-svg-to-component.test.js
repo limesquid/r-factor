@@ -4,7 +4,8 @@ const ConvertSvgToComponent = require('../refactorings/convert-svg-to-component'
 
 const files = [
   createFileDetails('file1'),
-  createFileDetails('file2', { 'svg-component-type': 'class' })
+  createFileDetails('file2', { 'svg-component-type': 'class' }),
+  createFileDetails('file3', { 'svg-component-type': 'function' })
 ];
 
 const tests = files.map(({ file, additionalSettings }) => ({
