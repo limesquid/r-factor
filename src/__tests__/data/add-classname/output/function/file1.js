@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-function Header({ children, className, onClick }) {
+function Header({ onClick, children, className }) {
   return (
     <div className={classNames('header', className)} onClick={_.debounce(onClick, 100)}>
       {children}
