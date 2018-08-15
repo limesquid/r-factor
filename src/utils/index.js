@@ -43,6 +43,10 @@ const sortPropTypes = (propTypesLines) => stable(
   stable(propTypesLines),
   (prop1, prop2) => prop1.startsWith('on') && !prop2.startsWith('on') ? 1 : 0
 );
+const arePropTypesSorted = (propTypesLines) => {
+  const sorted = sortPropTypes(propTypesLines);
+  return sorted.every((line, index) => line === propTypesLines[index]);
+};
 const isString = (value) => {
   if (value.length >= 2) {
     return typeof value === 'string' && [
@@ -60,6 +64,7 @@ const getIndent = (code, start) => {
 };
 
 module.exports = {
+  arePropTypesSorted,
   cleanUpCode,
   generateIndent,
   getIndent,

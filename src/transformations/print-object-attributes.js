@@ -3,7 +3,7 @@ const settings = require('../settings');
 const { isSingleLine } = require('../utils/ast');
 const { generateIndent } = require('../utils');
 
-const sortObjectAttributes = (code, node, indentSize) => {
+const printObjectAttributes = (code, node, { indentSize, sort }) => {
   const innerIndent = generateIndent(indentSize + settings.indent);
   const isMultiLine = !isSingleLine(node);
   const buildProperty = createBuildProperty(code, innerIndent, isMultiLine);
@@ -11,7 +11,7 @@ const sortObjectAttributes = (code, node, indentSize) => {
   let newCode = '{';
   if (node.properties.length > 0) {
     newCode += isMultiLine ? settings.endOfLine : ' ';
-    newCode += buildProperties(node, code, buildProperty);
+    newCode += buildProperties(node, code, buildProperty, sort);
     newCode += isMultiLine ? settings.trailingComma : '';
     newCode += isMultiLine ? `${settings.endOfLine}${generateIndent(indentSize)}` : ' ';
   }
@@ -19,7 +19,7 @@ const sortObjectAttributes = (code, node, indentSize) => {
   return newCode;
 };
 
-const buildProperties = (node, code, buildProperty) => {
+const buildProperties = (node, code, buildProperty, sort) => {
   const lines = code.split('\n');
   const properties = mapNodeProperties(node, lines);
   let propertiesCode = '';
@@ -27,7 +27,7 @@ const buildProperties = (node, code, buildProperty) => {
   let lastSpreadElementIndex = -1;
   properties.forEach((property, index) => {
     if (property.type === 'SpreadElement') {
-      const sortedProperties = sortProperties(code, propertiesToSort);
+      const sortedProperties = sortPropertiesIfNeeded(code, propertiesToSort, sort);
       const indexOffset = lastSpreadElementIndex + 1;
       propertiesCode += sortedProperties.map(
         (sortedProperty, sortedPropertyIndex) => buildProperty(
@@ -44,7 +44,7 @@ const buildProperties = (node, code, buildProperty) => {
     }
   });
   if (propertiesToSort.length > 0) {
-    const sortedProperties = sortProperties(code, propertiesToSort);
+    const sortedProperties = sortPropertiesIfNeeded(code, propertiesToSort, sort);
     const indexOffset = lastSpreadElementIndex + 1;
     propertiesCode += sortedProperties.map(
       (property, index) => buildProperty(property, indexOffset + index, properties)
@@ -164,16 +164,20 @@ const getPropertiesNeighborhood = ({ properties, loc }, index) => ({
   previousProperty: properties[index - 1] || { loc: { end: { line: loc.start.line } } }
 });
 
-const sortProperties = (code, properties) => {
+const sortPropertiesIfNeeded = (code, properties, sort) => {
   const propertiesWithNames = properties.map((property) => ({
     ...property,
     name: getName(code, property)
   }));
 
-  return stable(
-    stable(propertiesWithNames, propertyComparator),
-    restPropertyComparator
-  );
+  if (sort) {
+    return stable(
+      stable(propertiesWithNames, propertyComparator),
+      restPropertyComparator
+    );
+  }
+
+  return propertiesWithNames;
 };
 
 const propertyComparator = (a, b) => {
@@ -214,4 +218,4 @@ const getName = (code, { code: name, end, key, start, type, value }) => {
   return code.substring(key.start, key.end);
 };
 
-module.exports = sortObjectAttributes;
+module.exports = printObjectAttributes;

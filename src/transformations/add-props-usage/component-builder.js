@@ -2,7 +2,7 @@ const { Builder } = require('../../model');
 const settings = require('../../settings');
 const { cleanUpCode, generateIndent } = require('../../utils');
 const { getNodeIndent } = require('../../utils/ast');
-const sortObjectAttributes = require('../sort-object-attributes');
+const printObjectAttributes = require('../print-object-attributes');
 
 class ComponentBuilder extends Builder {
   constructor(code, node) {
@@ -78,10 +78,24 @@ class ComponentBuilder extends Builder {
             .map((prop) => ({ code: prop, name: prop }))
         ]
       };
-      return sortObjectAttributes(this.code, extendedNode, extendedNode.loc.indent);
+
+      const currentProperties = printObjectAttributes(this.code, destructuringNode, {
+        indentSize: destructuringNode.loc.indent,
+        sort: false
+      });
+      const sortedProperties = printObjectAttributes(this.code, destructuringNode, {
+        indentSize: destructuringNode.loc.indent,
+        sort: true
+      });
+      const areCurrentPropertiesSorted = currentProperties === sortedProperties;
+
+      return printObjectAttributes(this.code, extendedNode, {
+        indentSize: extendedNode.loc.indent,
+        sort: areCurrentPropertiesSorted
+      });
     }
 
-    return this.props.join(',');
+    return this.props.join(', ');
   }
 
   setProps(props) {
