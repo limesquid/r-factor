@@ -35,15 +35,15 @@ class ConvertSvgToComponent extends Refactoring {
 
   refactorSvg(code, jsXml) {
     let component = 'import React from \'react\';';
-    component += '\n\n';
+    component += settings.doubleEndOfLine;
     component += `const ${settings.defaultComponentName} = () => (`;
-    component += '\n';
+    component += settings.endOfLine;
     component += indentCode(this.buildNode('svg', jsXml.svg), settings.indent);
-    component += '\n';
+    component += settings.endOfLine;
     component += `)${settings.semicolon}`;
-    component += '\n\n';
+    component += settings.doubleEndOfLine;
     component += `export default ${settings.defaultComponentName}${settings.semicolon}`;
-    component += '\n';
+    component += settings.endOfLine;
     return component;
   }
 

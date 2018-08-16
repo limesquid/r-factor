@@ -20,7 +20,7 @@ const printObjectAttributes = (code, node, { indentSize, sort }) => {
 };
 
 const buildProperties = (node, code, buildProperty, sort) => {
-  const lines = code.split('\n');
+  const lines = code.split(settings.endOfLine);
   const properties = mapNodeProperties(node, lines);
   let propertiesCode = '';
   let propertiesToSort = [];
@@ -138,7 +138,7 @@ const getCodeBeforeProperty = (node, lines, index) => {
   if (!previousPropertyEndsOnPreviousLine || index === 0) {
     const endOfLine = index === 0 ? '' : settings.endOfLine;
     return {
-      code: lines.slice(previousProperty.loc.end.line, property.loc.start.line - 1).join('\n') + endOfLine,
+      code: lines.slice(previousProperty.loc.end.line, property.loc.start.line - 1).join(settings.endOfLine) + endOfLine,
       linePrefix
     };
   }
