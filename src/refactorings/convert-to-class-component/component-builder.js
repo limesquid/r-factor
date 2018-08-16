@@ -58,7 +58,8 @@ class ComponentBuilder extends Builder {
 
   buildName() {
     if (this.getDeclaration()) {
-      return this.getDeclaration().id.name;
+      const name = this.getDeclaration().id.name;
+      return name;
     }
     return '';
   }

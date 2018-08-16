@@ -30,6 +30,7 @@
   ],
   "quotes": "single",
   "semicolons": true,
+  "svg-component-type": "arrow",
   "trailing-commas": false,
   "use-map-dispatch-to-props-shorthand": false,
   "NODE_BIN": "node"

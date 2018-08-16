@@ -20,6 +20,10 @@
     "command": "connect_merge_props"
   },
   {
+    "caption": "R-Factor: Convert SVG to component",
+    "command": "convert_svg_to_component"
+  },
+  {
     "caption": "R-Factor: Convert to arrow component",
     "command": "convert_to_arrow_component"
   },
