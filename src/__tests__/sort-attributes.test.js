@@ -2,7 +2,10 @@ const settings = require('../settings');
 const { range, readFile } = require('./test-utils');
 const SortAttributes = require('../refactorings/sort-attributes');
 
-const files = range(1, 16).map((n) => `file${n}`);
+const files = [
+  ...range(1, 16).map((n) => `file${n}`),
+  ...range(1, 1).map((n) => `preserve-comments${n}`)
+];
 
 describe('sort-attributes:canApply', () => {
   const refactoring = new SortAttributes();

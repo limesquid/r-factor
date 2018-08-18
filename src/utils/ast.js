@@ -8,20 +8,26 @@ const {
   isProgram
 } = require('@babel/types');
 
+const returnFalse = () => false;
+
 const classExtendsSomething = (node) => Boolean(node.superClass);
 
-const containsNode = (ast, condition) => {
-  if (condition(ast)) {
+const containsNode = (ast, predicate, stopPredicate = returnFalse) => {
+  if (stopPredicate(ast)) {
+    return false;
+  }
+
+  if (predicate(ast)) {
     return true;
   }
 
   return Object.keys(ast).some((key) => {
     const value = ast[key];
     if (Array.isArray(value)) {
-      return value.some((node) => containsNode(node, condition));
+      return value.some((node) => containsNode(node, predicate, stopPredicate));
     }
     if (value && value.type) {
-      return containsNode(value, condition);
+      return containsNode(value, predicate, stopPredicate);
     }
     return false;
   });
@@ -41,8 +47,8 @@ const isArrowFunctionDeclaration = (node) => node.type === 'VariableDeclaration'
 
 const isArrowComponentExpression = (node) => isArrowFunctionExpression(node)
   && isFunctionalComponentBody(node.body)
-  && !containsNode(node.body, isArrowFunctionExpression)
-  && !containsNode(node.body, isFunctionComponentDeclaration);
+  && !containsNode(node.body, isArrowFunctionExpression, isJsxNode)
+  && !containsNode(node.body, isFunctionComponentDeclaration, isJsxNode);
 
 const isArrowComponentExpressionPath = (path) => {
   let isComponent = false;
@@ -103,13 +109,12 @@ const isArrowComponentDeclarationPath = (path) => {
 
 const isFunctionComponentDeclaration = (node) => isFunctionDeclaration(node)
   && isFunctionalComponentBody(node.body)
-  && !containsNode(node.body, isArrowComponentExpression)
-  && !containsNode(node.body, isFunctionComponentDeclaration);
+  && !containsNode(node.body, isArrowComponentExpression, isJsxNode)
+  && !containsNode(node.body, isFunctionComponentDeclaration, isJsxNode);
 
-const isFunctionalComponentBody = (node) => containsNode(
-  node,
-  ({ type }) => [ 'JSXElement', 'JSXFragment' ].includes(type)
-);
+const isFunctionalComponentBody = (node) => containsNode(node, isJsxNode);
+
+const isJsxNode = ({ type }) => [ 'JSXElement', 'JSXFragment' ].includes(type);
 
 const isMemberOfDeclaration = (node, objectName, name) => isMemberDeclaration(node, name)
   && node.expression.left.object.type === 'Identifier'
@@ -131,6 +136,8 @@ const isPropsDeclaration = (declaration) => declaration.type === 'VariableDeclar
 const isPropTypesDeclaration = (node) => isMemberDeclaration(node, 'propTypes');
 
 const createIsDefaultImport = (name) => (node) => node.type === 'ImportDeclaration'
+  && node.specifiers
+  && node.specifiers.length > 0
   && node.specifiers[0].type === 'ImportDefaultSpecifier'
   && node.specifiers[0].local.type === 'Identifier'
   && node.specifiers[0].local.name === name;

@@ -72,6 +72,7 @@ class BaseCommand(sublime_plugin.TextCommand):
       'modules-order': self.get_setting('modules-order'),
       'quotes': self.get_setting('quotes'),
       'semicolons': self.get_setting('semicolons'),
+      'svg-component-type': self.get_setting('svg-component-type'),
       'trailing-commas': self.get_setting('trailing-commas'),
       'use-map-dispatch-to-props-shorthand': self.get_setting('use-map-dispatch-to-props-shorthand')
     }
@@ -110,6 +111,12 @@ class ConnectMergeProps(BaseCommand):
   def __init__(self, arg):
     super(ConnectMergeProps, self).__init__(arg)
     self.refactoring_name = 'connect-merge-props'
+
+
+class ConvertSvgToComponent(BaseCommand):
+  def __init__(self, arg):
+    super(ConvertSvgToComponent, self).__init__(arg)
+    self.refactoring_name = 'convert-svg-to-component'
 
 
 class ConvertToClassComponent(BaseCommand):
