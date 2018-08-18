@@ -1,7 +1,7 @@
 const yargs = require('yargs');
 
 const { argv } = yargs
-  .usage('$0 --refactoring=[string] --settings=[string]')
+  .usage('$0 --refactoring=[string] --settings=[string] --license=[string]')
   .option('refactoring', {
     alias: 'r',
     demandOption: true,

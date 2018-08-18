@@ -2,7 +2,7 @@ const getStdin = require('get-stdin');
 const argv = require('./cli');
 const settings = require('./src/settings');
 const refactorings = require('./src/refactorings');
-const { verifyLicense } = require('./src/utils/license');
+const verifyLicense = require('./src/license/verify');
 
 settings.set(JSON.parse(argv.settings));
 const refactoring = new refactorings[argv.refactoring]();
