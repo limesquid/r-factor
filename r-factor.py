@@ -34,20 +34,11 @@ class BaseCommand(sublime_plugin.TextCommand):
   def is_enabled(self):
     return True
 
-  def get_license(self):
-    try:
-      file = open(LICENSE_PATH, 'r')
-      license = file.read()
-      file.close()
-      return license
-    except:
-      return None
-
   def execute(self, data, refactoring_name):
     NODE_BIN = self.get_setting('NODE_BIN')
     try:
       if not self.get_license():
-        return 'Please buy your R-Facotr license at http://r-factor.io/buy'
+        return 'Please buy your R-Factor license at https://r-factor.io/buy'
 
       return node_bridge(data, NODE_BIN, BIN_PATH, [
         '-r', refactoring_name,
@@ -82,6 +73,29 @@ class BaseCommand(sublime_plugin.TextCommand):
     if settings is None:
       settings = sublime.load_settings('r-factor.sublime-settings')
     return settings.get(key)
+
+  def get_license(self):
+    try:
+      file = open(LICENSE_PATH, 'r')
+      license = file.read()
+      file.close()
+      return license
+    except:
+      return None
+
+
+class EnterLicense(sublime_plugin.WindowCommand):
+  def run(self):
+    self.window.show_input_panel("R-Factor license key:", "", self.on_done, None, None)
+
+  def on_done(self, license):
+    try:
+      file = open(LICENSE_PATH, 'w', encoding='utf-8')
+      file.write(license)
+      file.close()
+    except ValueError as e:
+      pass
+
 
 class AddClassname(BaseCommand):
   def __init__(self, arg):
@@ -201,17 +215,3 @@ class ToggleWithRouterHoc(BaseCommand):
   def __init__(self, arg):
     super(ToggleWithRouterHoc, self).__init__(arg)
     self.refactoring_name = 'toggle-with-router-hoc'
-
-
-class EnterLicense(sublime_plugin.WindowCommand):
-  def run(self):
-    self.window.show_input_panel("R-Factor license:", "", self.on_done, None, None)
-    pass
-
-  def on_done(self, license):
-    try:
-      file = open(LICENSE_PATH, 'w', encoding='utf-8')
-      file.write(license)
-      file.close()
-    except ValueError as e:
-      pass
