@@ -13,6 +13,12 @@ BIN_PATH = os.path.join(
   'index.js'
 )
 
+LICENSE_PATH = os.path.join(
+  sublime.packages_path(),
+  os.path.dirname(os.path.realpath(__file__)),
+  'user_license'
+)
+
 class BaseCommand(sublime_plugin.TextCommand):
   def run(self, edit):
     selection = self.view.sel()
@@ -31,9 +37,13 @@ class BaseCommand(sublime_plugin.TextCommand):
   def execute(self, data, refactoring_name):
     NODE_BIN = self.get_setting('NODE_BIN')
     try:
+      if not self.get_license():
+        return 'Please buy your R-Factor license at https://r-factor.io/buy'
+
       return node_bridge(data, NODE_BIN, BIN_PATH, [
         '-r', refactoring_name,
-        '-s', json.dumps(self.get_settings())
+        '-s', json.dumps(self.get_settings()),
+        '-l', self.get_license()
       ])
     except Exception as e:
       return str(e)
@@ -63,6 +73,29 @@ class BaseCommand(sublime_plugin.TextCommand):
     if settings is None:
       settings = sublime.load_settings('r-factor.sublime-settings')
     return settings.get(key)
+
+  def get_license(self):
+    try:
+      file = open(LICENSE_PATH, 'r')
+      license = file.read()
+      file.close()
+      return license
+    except:
+      return None
+
+
+class EnterLicense(sublime_plugin.WindowCommand):
+  def run(self):
+    self.window.show_input_panel("R-Factor license key:", "", self.on_done, None, None)
+
+  def on_done(self, license):
+    try:
+      file = open(LICENSE_PATH, 'w', encoding='utf-8')
+      file.write(license)
+      file.close()
+    except ValueError as e:
+      pass
+
 
 class AddClassname(BaseCommand):
   def __init__(self, arg):
