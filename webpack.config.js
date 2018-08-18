@@ -37,7 +37,7 @@ const webpackConfig = {
         }
       },
       {
-        test: /license\.pub$/,
+        test: /\.pub$/,
         exclude: /node_modules/,
         use: 'raw-loader'
       }
