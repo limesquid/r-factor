@@ -1,7 +1,10 @@
 const { range, readFile } = require('./test-utils');
 const MovePropTypesOutOfClass = require('../refactorings/move-prop-types-out-of-class');
 
-const files = range(1, 4).map((n) => `button${n}`);
+const files = [
+  ...range(1, 5).map((n) => `button${n}`),
+  'dashboard'
+];
 
 describe('move-prop-types-out-of-class:canApply', () => {
   const refactoring = new MovePropTypesOutOfClass();
