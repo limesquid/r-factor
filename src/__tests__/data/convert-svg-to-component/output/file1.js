@@ -4,7 +4,7 @@ const Component = () => (
   <svg width="16px" height="14px" viewBox="0 0 16 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
     <title>Icons/16x16/toolbar/green/img-contained</title>
     <desc>Created with Sketch.</desc>
-    <defs></defs>
+    <defs />
     <g id="Brand" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="Artboard" transform="translate(-9.000000, -48.000000)">
         <g id="Icons/16x16/toolbar/green/img-contained" transform="translate(9.000000, 47.000000)">

@@ -87,7 +87,11 @@ class ConvertSvgToComponent extends Refactoring {
 
         return tagValue.map((element) => {
           if (typeof element === 'string') {
-            return `${indent}<${tag}>${element}</${tag}>`;
+            const trimmed = element.trim();
+            if (trimmed.length > 0) {
+              return `${indent}<${tag}>${trimmed}</${tag}>`;
+            }
+            return `${indent}<${tag} />`;
           }
 
           return `${indent}${this.buildNode(tag, element, level)}`;

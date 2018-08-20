@@ -6,7 +6,9 @@ const files = [
   createFileDetails('file1'),
   createFileDetails('file2', { 'svg-component-type': 'class' }),
   createFileDetails('file3', { 'svg-component-type': 'function' }),
-  createFileDetails('file4')
+  createFileDetails('file4'),
+  createFileDetails('file5'),
+  createFileDetails('file6')
 ];
 
 const tests = files.map(({ file, additionalSettings }) => ({
