@@ -137,8 +137,9 @@ const getCodeBeforeProperty = (node, lines, index) => {
   const previousPropertyEndsOnPreviousLine = previousProperty.loc.end.line === property.loc.start.line - 1;
   if (!previousPropertyEndsOnPreviousLine || index === 0) {
     const endOfLine = index === 0 ? '' : settings.endOfLine;
+    const codeLines = lines.slice(previousProperty.loc.end.line, property.loc.start.line - 1);
     return {
-      code: lines.slice(previousProperty.loc.end.line, property.loc.start.line - 1).join(settings.endOfLine) + endOfLine,
+      code: codeLines.join(settings.endOfLine) + endOfLine,
       linePrefix
     };
   }

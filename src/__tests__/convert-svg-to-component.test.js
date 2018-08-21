@@ -9,7 +9,8 @@ const files = [
   createFileDetails('file4'),
   createFileDetails('file5'),
   createFileDetails('file6'),
-  createFileDetails('file7')
+  createFileDetails('file7'),
+  createFileDetails('file8')
 ];
 
 const tests = files.map(({ file, additionalSettings }) => ({
