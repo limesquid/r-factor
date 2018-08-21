@@ -111,9 +111,12 @@ class ConvertSvgToComponent extends Refactoring {
   }
 
   getCssPropertyName(name) {
-    if (/^-ms-/.test(name)) {
-      return hyphenToCamelCase(name.substring(1));
+    const matches = name.match(/^-(moz|webkit|ms)-/);
+    const prefix = matches && matches[1];
+    if (prefix === 'ms') {
+      return `ms${hyphenToCamelCase(name.substring('-ms'.length))}`;
     }
+
     return hyphenToCamelCase(name);
   }
 

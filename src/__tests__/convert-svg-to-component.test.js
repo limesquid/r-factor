@@ -10,7 +10,8 @@ const files = [
   createFileDetails('file5'),
   createFileDetails('file6'),
   createFileDetails('file7'),
-  createFileDetails('file8')
+  createFileDetails('file8'),
+  createFileDetails('invalid-xml')
 ];
 
 const tests = files.map(({ file, additionalSettings }) => ({

@@ -6,7 +6,7 @@ const Component = () => (
     <desc>Created with Sketch.</desc>
     <defs />
     <g id="Brand" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
-      <g id="Artboard" transform="translate(-9.000000, -48.000000)">
+      <g id="Artboard" transform="translate(-9.000000, -48.000000)" style={{ WebkitFlex: 1, msFlex: 1 }}>
         <g id="Icons/16x16/toolbar/green/img-contained" transform="translate(9.000000, 47.000000)">
           <g>
             <rect id="shape-hold" x={0} y={0} width={16} height={16} />

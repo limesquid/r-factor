@@ -5,7 +5,7 @@
   <desc>Created with Sketch.</desc>
   <defs></defs>
   <g id="Brand" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-    <g id="Artboard" transform="translate(-9.000000, -48.000000)">
+    <g id="Artboard" transform="translate(-9.000000, -48.000000)" style="-webkit-flex: 1;-ms-flex: 1;">
       <g id="Icons/16x16/toolbar/green/img-contained" transform="translate(9.000000, 47.000000)">
         <g>
           <rect id="shape-hold" x="0" y="0" width="16" height="16"></rect>

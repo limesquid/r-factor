@@ -52,7 +52,7 @@ class Group {
     ];
   }
 
-  add({ module, identifier, subImports = {} }) {
+  add({ module, identifier, subImports }) {
     const existingImportIndex = this.findImportIndex(module);
 
     if (existingImportIndex >= 0) {
