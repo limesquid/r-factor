@@ -8,7 +8,8 @@ const files = [
   createFileDetails('file3', { 'svg-component-type': 'function' }),
   createFileDetails('file4'),
   createFileDetails('file5'),
-  createFileDetails('file6')
+  createFileDetails('file6'),
+  createFileDetails('file7')
 ];
 
 const tests = files.map(({ file, additionalSettings }) => ({
