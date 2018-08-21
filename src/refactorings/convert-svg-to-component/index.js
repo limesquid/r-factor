@@ -1,6 +1,6 @@
 const { Refactoring } = require('../../model');
 const settings = require('../../settings');
-const { generateIndent, indentCode } = require('../../utils');
+const { generateIndent, hyphenToCamelCase, indentCode } = require('../../utils');
 const xmlParser = require('../../utils/xml-parser');
 const ConvertToFunctionComponent = require('../convert-to-function-component');
 const ConvertToClassComponent = require('../convert-to-class-component');
@@ -67,11 +67,62 @@ class ConvertSvgToComponent extends Refactoring {
     return key.substring(key.indexOf(':') + 1);
   }
 
+  getAttributeValue(attributesObject, key) {
+    const attributeValue = attributesObject[key];
+
+    if (key === 'version') {
+      return `"${attributeValue}"`;
+    }
+
+    if (key === 'style') {
+      const properties = attributeValue
+        .split(';')
+        .filter((pair) => Boolean(pair.trim()))
+        .map(
+          (pair) => pair
+            .split(':')
+            .map((value) => value.trim())
+        )
+        .map(([ name, value ]) => {
+          const propertyName = this.getCssPropertyName(name);
+          const stringValue = `${settings.quote}${value}${settings.quote}`;
+          const numberValue = Number(value);
+
+          if (String(numberValue) === String(value)) {
+            return `${propertyName}: ${numberValue}`;
+          }
+
+          return `${propertyName}: ${stringValue}`;
+        })
+        .join(', ');
+      return `{{ ${properties} }}`;
+    }
+
+    if (SVG_ATTRIBUTES[key] && SVG_ATTRIBUTES[key].type === 'number') {
+      if (/^-?(\d*\.)?\d+px$/.test(attributeValue)) {
+        return `{${attributeValue.replace(/px$/, '')}}`;
+      }
+      if (String(Number(attributeValue)) === String(attributeValue)) {
+        return `{${attributeValue}}`;
+      }
+    }
+
+    return `"${attributeValue}"`;
+  }
+
+  getCssPropertyName(name) {
+    if (/^-ms-/.test(name)) {
+      return hyphenToCamelCase(name.substring(1));
+    }
+    return hyphenToCamelCase(name);
+  }
+
   isKeySupported(namespace, key) {
     const keyNamespace = this.getKeyNamespace(key);
     if (keyNamespace && keyNamespace !== namespace) {
       return key in SVG_ATTRIBUTES;
     }
+
     return true;
   }
 
@@ -104,12 +155,14 @@ class ConvertSvgToComponent extends Refactoring {
     const attributesObject = node.$ || {};
 
     return Object.keys(attributesObject).map((key) => {
-      const value = attributesObject[key];
       if (!this.isKeySupported(namespace, key)) {
         return '';
       }
+      const value = this.getAttributeValue(attributesObject, key);
       const keyName = this.getKeyName(key);
-      return `${SVG_ATTRIBUTES[key] || keyName}="${value}"`;
+      const attributeName = (SVG_ATTRIBUTES[key] && SVG_ATTRIBUTES[key].name)
+        || (SVG_ATTRIBUTES[keyName] && SVG_ATTRIBUTES[keyName].name);
+      return `${attributeName || keyName}=${value}`;
     }).filter(Boolean).join(' ');
   }
 

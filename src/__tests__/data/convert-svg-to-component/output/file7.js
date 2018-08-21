@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Component = () => (
-  <svg version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 40 40" enableBackground="new 0 0 40 40" xmlSpace="preserve">
+  <svg version="1.1" id="레이어_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x={0} y={0} viewBox="0 0 40 40" enableBackground="new 0 0 40 40" xmlSpace="preserve">
     <path fill="#363636" d="M20-0.083C8.908-0.083-0.083,8.908-0.083,20c0,11.093,8.992,20.083,20.083,20.083
       c11.093,0,20.083-8.99,20.083-20.083C40.083,8.908,31.093-0.083,20-0.083z M30.063,15.384c0.165,2.41-0.589,7.562-4.397,11.425
       c-3.81,3.864-9.767,3.753-9.767,3.753c-5.792,0-8.374-2.097-8.374-2.097c4.967,0.091,7.359-2.115,7.359-2.115

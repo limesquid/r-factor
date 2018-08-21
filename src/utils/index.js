@@ -62,12 +62,14 @@ const getIndent = (code, start) => {
   const matches = lastLine.match(/^(\s+)/);
   return (matches && matches[0] || '').length;
 };
+const hyphenToCamelCase = (string) => string.replace(/-(.)/g, (match, character) => character.toUpperCase());
 
 module.exports = {
   arePropTypesSorted,
   cleanUpCode,
   generateIndent,
   getIndent,
+  hyphenToCamelCase,
   indentCode,
   indentLine,
   indentLines,
