@@ -63,7 +63,7 @@
     "@babel/traverse": "7.0.0",
     "@babel/types": "7.0.0",
     "babel-eslint": "9.0.0",
-    "eslint": "5.2.0",
+    "eslint": "^5.4.0",
     "eslint-plugin-react": "7.10.0",
     "get-stdin": "6.0.0",
     "jsonwebtoken": "^8.3.0",
