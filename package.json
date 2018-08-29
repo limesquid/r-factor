@@ -45,7 +45,6 @@
     }
   },
   "jest": {
-    "testURL": "http://localhost",
     "moduleFileExtensions": [
       "js",
       "json"
