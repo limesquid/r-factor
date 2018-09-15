@@ -1,23 +1,15 @@
 const getStdin = require('get-stdin');
 const argv = require('./cli');
-const settings = require('./src/settings');
-const refactorings = require('./src/refactorings');
-const verifyLicense = require('./src/license/verify');
+const rfactor = require('./r-factor');
 
-settings.set(JSON.parse(argv.settings));
-const refactoring = new refactorings[argv.refactoring]();
-
-getStdin().then((data) => {
+getStdin().then((code) => {
   try {
-    if (!verifyLicense(argv.license)) {
-      throw 'Invalid license';
-    }
-    if (refactoring.canApply(data)) {
-      const code = refactoring.refactor(data);
-      process.stdout.write(code);
-    } else {
-      process.stdout.write(data);
-    }
+    process.stdout.write(rfactor({
+      code,
+      license: argv.license,
+      refactoring: argv.refactoring,
+      settings: JSON.parse(argv.settings)
+    }));
   } catch (error) {
     process.stderr.write(error);
   }
