@@ -10,7 +10,7 @@ BIN_PATH = os.path.join(
   sublime.packages_path(),
   os.path.dirname(os.path.realpath(__file__)),
   'dist',
-  'index.js'
+  'cli.js'
 )
 
 LICENSE_PATH = os.path.join(

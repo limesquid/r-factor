@@ -4,17 +4,19 @@ const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const ENTRY_FILE = path.resolve(__dirname, 'index.js');
+const CLI_ENTRY_FILE = path.resolve(__dirname, 'cli.js');
 const DIST_DIR = path.resolve(__dirname, 'dist');
-const BUNDLE_DIST = 'index.js';
 
 const webpackConfig = {
   mode: process.env.NODE_ENV,
   target: 'node',
   output: {
-    path: DIST_DIR,
-    filename: BUNDLE_DIST
+    path: DIST_DIR
   },
-  entry: ENTRY_FILE,
+  entry: {
+    index: ENTRY_FILE,
+    cli: CLI_ENTRY_FILE
+  },
   module: {
     rules: [
       {

@@ -1,16 +1,20 @@
-const getStdin = require('get-stdin');
-const argv = require('./cli');
-const rfactor = require('./r-factor');
+const globalSettings = require('./src/settings');
+const refactorings = require('./src/refactorings');
+const verifyLicense = require('./src/license/verify');
 
-getStdin().then((code) => {
-  try {
-    process.stdout.write(rfactor({
-      code,
-      license: argv.license,
-      refactoring: argv.refactoring,
-      settings: JSON.parse(argv.settings)
-    }));
-  } catch (error) {
-    process.stderr.write(error);
+module.exports = ({ code, license, refactoring, settings }) => {
+  if (!verifyLicense(license)) {
+    throw 'Invalid license';
   }
-});
+
+  const refactoringMethod = new refactorings[refactoring]();
+
+  globalSettings.revert();
+  globalSettings.set(settings);
+
+  if (refactoringMethod.canApply(code)) {
+    return refactoringMethod.refactor(code);
+  }
+
+  return code;
+};
