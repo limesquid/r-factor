@@ -8,8 +8,8 @@ const sha256 = (string) => crypto.createHash('sha256').update(string).digest('he
 const verifyLicense = (license) => {
   try {
     const details = jwt.verify(license, LICENSE_PUBLIC_KEY);
-    const { fullname, email, key } = details;
-    return key === sha256(`${fullname}:${process.env.LICENSE_SECRET}:${email}`);
+    const { fullName, email, key } = details;
+    return key === sha256(`${fullName}:${process.env.LICENSE_SECRET}:${email}`);
   } catch (error) {
     return false;
   }
