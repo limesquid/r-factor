@@ -7,15 +7,11 @@ const ENTRY_FILE = path.resolve(__dirname, 'index.js');
 const CLI_ENTRY_FILE = path.resolve(__dirname, 'cli.js');
 const DIST_DIR = path.resolve(__dirname, 'dist');
 
-const webpackConfig = {
+const getWebpackConfig = (override) => override({
   mode: process.env.NODE_ENV,
   target: 'node',
   output: {
     path: DIST_DIR
-  },
-  entry: {
-    index: ENTRY_FILE,
-    cli: CLI_ENTRY_FILE
   },
   module: {
     rules: [
@@ -61,10 +57,33 @@ const webpackConfig = {
       'process.env.LICENSE_SECRET': JSON.stringify(process.env.LICENSE_SECRET)
     })
   ]
-};
+});
+
+const libraryWebpackConfig = getWebpackConfig((webpackConfig) => ({
+  ...webpackConfig,
+  output: {
+    ...webpackConfig.output,
+    library: 'r-factor',
+    libraryTarget: 'umd'
+  },
+  entry: {
+    index: ENTRY_FILE
+  }
+}));
+
+const cliWebpackConfig = getWebpackConfig((webpackConfig) => ({
+  ...webpackConfig,
+  entry: {
+    cli: CLI_ENTRY_FILE
+  }
+}));
 
 if (process.env.ANALYZE_BUNDLE) {
-  webpackConfig.plugins.push(new BundleAnalyzerPlugin());
+  libraryWebpackConfig.plugins.push(new BundleAnalyzerPlugin());
+  module.exports = libraryWebpackConfig;
+} else {
+  module.exports = [
+    libraryWebpackConfig,
+    cliWebpackConfig
+  ];
 }
-
-module.exports = webpackConfig;
