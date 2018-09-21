@@ -3,24 +3,32 @@ const refactorings = require('./src/refactorings');
 const verifyLicense = require('./src/license/verify');
 
 const WARMUP_CODE = `
-import React from 'react';
+import React, { Component } from 'react';
 
-const Component = ({ children, onClick }) => (
-  <div onClick={onClick}>
-    {children}
-  </div>
-);
+class WarmUp extends Component {
+  componentDidMount() {
+    this.props.onMount();
+  }
 
-export default Component;
+  render() {
+    const { children } = this.props;
+
+    return (
+      <div>{children}</div>
+    );
+  }
+}
+
+export default WarmUp;
 `;
 
-const warmup = () => {
+const warmUp = () => {
   const GeneratePropTypes = refactorings['generate-prop-types'];
   const generatePropTypes = new GeneratePropTypes();
   return generatePropTypes.refactor(WARMUP_CODE);
 };
 
-warmup();
+warmUp();
 
 module.exports = ({ code, license, refactoring, settings }) => {
   if (!verifyLicense(license)) {
