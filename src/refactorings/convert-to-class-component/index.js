@@ -19,13 +19,13 @@ class ConvertToClassComponent extends Refactoring {
   constructor() {
     super();
     this.transformations = [
+      (code, ast) => this.refactorComponentNameCollision(code, ast),
       (code, ast) => {
         if (convertFunctionToArrowComponent.canApply(code)) {
           return convertFunctionToArrowComponent.refactor(code, ast);
         }
         return code;
       },
-      (code, ast) => this.refactorComponentNameCollision(code, ast),
       (code, ast) => this.refactorComponent(code, ast),
       (code, ast) => this.refactorReactImport(code, ast),
       (code) => moveDefaultPropsAndPropTypesToClass.refactor(code)
@@ -65,31 +65,17 @@ class ConvertToClassComponent extends Refactoring {
   }
 
   refactorComponentNameCollision(code, ast) {
-    let hasNameCollision = false;
-
     traverse(ast, {
-      VariableDeclaration(path) {
+      Identifier(path) {
         const { node } = path;
-        if (isArrowComponentDeclaration(node)) {
-          const { name } = node.declarations[0].id;
-          if (name === 'Component') {
-            hasNameCollision = true;
-          }
+        if (node.name === settings.componentSuperclass) {
+          path.scope.rename(
+            settings.componentSuperclass,
+            settings.componentNameCollisionPattern.replace('${name}', 'Component')
+          );
         }
       }
     });
-
-    if (hasNameCollision) {
-      traverse(ast, {
-        Program(path) {
-          path.scope.rename(
-            'Component',
-            settings.componentNameCollisionPattern.replace('${name}', 'Component')
-          );
-          path.stop();
-        }
-      });
-    }
 
     return parser.print(ast);
   }

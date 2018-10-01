@@ -91,7 +91,9 @@ const isExportDefaultArrowComponentDeclaration = (node) => node.type === 'Export
 
 const isExportDefaultFunctionComponentDeclaration = (node) => node.type === 'ExportDefaultDeclaration'
   && node.declaration.type === 'FunctionDeclaration'
-  && isFunctionalComponentBody(node.declaration.body);
+  && isFunctionalComponentBody(node.declaration.body)
+  && !containsNode(node.declaration.body, isFunctionComponentDeclaration)
+  && !containsNode(node.declaration.body, isArrowComponentDeclaration);
 
 const isArrowComponentDeclaration = (node) => {
   if (!isArrowFunctionDeclaration(node)) {

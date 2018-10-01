@@ -11,7 +11,8 @@ const files = [
   createFileDetails('empty-indent-2'),
   createFileDetails('empty-indent-4', { indent: 4 }),
   createFileDetails('svg-icon', { indent: 4, 'trailing-commas': true }),
-  createFileDetails('embed-node', { indent: 4, 'trailing-commas': true })
+  createFileDetails('embed-node', { indent: 4, 'trailing-commas': true }),
+  createFileDetails('with-user-context-hoc', { indent: 4, 'trailing-commas': true })
 ];
 
 describe('convert-to-class-component:refactor:react-imports', () => {

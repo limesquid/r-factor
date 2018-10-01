@@ -10,7 +10,7 @@ const files = [
   createFileDetails('image-header', { indent: 4 }),
   createFileDetails('empty-indent-2'),
   createFileDetails('empty-indent-4', { indent: 4 }),
-  createFileDetails('svg-icon', { indent: 4, 'trailing-commas': true })
+  createFileDetails('svg-icon', { indent: 4, 'trailing-commas': true }),
 ];
 
 describe('convert-to-arrow-component:refactor:react-imports', () => {
