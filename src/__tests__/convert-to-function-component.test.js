@@ -9,7 +9,7 @@ const files = [
   createFileDetails('meet-our-team'),
   createFileDetails('image-header', { indent: 4 }),
   createFileDetails('empty-indent-2'),
-  createFileDetails('empty-indent-4', { indent: 4 }),
+  createFileDetails('empty-indent-4', { indent: 4 })
 ];
 
 describe('convert-to-function-component:refactor:react-imports', () => {

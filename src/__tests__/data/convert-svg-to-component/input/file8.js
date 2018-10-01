@@ -2,6 +2,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg:svg
+   x1:not-supported="whatever"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://web.resource.org/cc/"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -119,6 +120,7 @@
     <svg:foreignObject
    requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/"
    x="0"
+   x:x="2"
    y="0"
    width="1"
    height="1"
@@ -172,6 +174,7 @@
    x2="196.11844"
    y2="145.78879" />
 </svg:defs>
+  <svgg:asd x="7" />
   <svg:g
      id="g2191">
     <svg:g

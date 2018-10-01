@@ -122,6 +122,7 @@ class ConvertSvgToComponent extends Refactoring {
 
   isKeySupported(namespace, key) {
     const keyNamespace = this.getKeyNamespace(key);
+
     if (keyNamespace && keyNamespace !== namespace) {
       return key in SVG_ATTRIBUTES;
     }
@@ -130,10 +131,6 @@ class ConvertSvgToComponent extends Refactoring {
   }
 
   buildNode(namespace, key, node, level = 0) {
-    if (!this.isKeySupported(namespace, key)) {
-      return '';
-    }
-
     const name = this.getKeyName(key);
     const attributes = this.buildAttributes(namespace, node);
     const children = this.buildChildren(namespace, node, level + 1);
@@ -162,10 +159,8 @@ class ConvertSvgToComponent extends Refactoring {
         return '';
       }
       const value = this.getAttributeValue(attributesObject, key);
-      const keyName = this.getKeyName(key);
-      const attributeName = (SVG_ATTRIBUTES[key] && SVG_ATTRIBUTES[key].name)
-        || (SVG_ATTRIBUTES[keyName] && SVG_ATTRIBUTES[keyName].name);
-      return `${attributeName || keyName}=${value}`;
+      const attributeName = SVG_ATTRIBUTES[key] && SVG_ATTRIBUTES[key].name;
+      return `${attributeName}=${value}`;
     }).filter(Boolean).join(' ');
   }
 
@@ -186,27 +181,19 @@ class ConvertSvgToComponent extends Refactoring {
       return '';
     }
 
-    if (Array.isArray(tagValue)) {
-      const indent = generateIndent(level * settings.indent);
+    const indent = generateIndent(level * settings.indent);
 
-      return tagValue.map((element) => {
-        if (typeof element === 'string') {
-          const trimmed = element.trim();
-          if (trimmed.length > 0) {
-            return `${indent}<${tagName}>${trimmed}</${tagName}>`;
-          }
-          return `${indent}<${tagName} />`;
+    return tagValue.map((element) => {
+      if (typeof element === 'string') {
+        const trimmed = element.trim();
+        if (trimmed.length > 0) {
+          return `${indent}<${tagName}>${trimmed}</${tagName}>`;
         }
+        return `${indent}<${tagName} />`;
+      }
 
-        return `${indent}${this.buildNode(namespace, key, element, level)}`;
-      }).join(settings.endOfLine);
-    }
-
-    if (typeof tagValue === 'object') {
-      return this.buildNode(namespace, key, node, level + 1);
-    }
-
-    return '';
+      return `${indent}${this.buildNode(namespace, key, element, level)}`;
+    }).join(settings.endOfLine);
   }
 }
 
