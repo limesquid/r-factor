@@ -14,6 +14,7 @@ class ComponentBuilder extends Builder {
     code += indentCode(this.isSingleReturnStatement() ? ')' : '}', indent);
     code += settings.semicolon;
     code += this.buildSuffix();
+    code = this.ensureProperExport(code);
     code = cleanUpCode(code);
     return code;
   }
@@ -58,6 +59,20 @@ class ComponentBuilder extends Builder {
     const lastParam = params[params.length - 1];
     return this.code.substring(firstParam.start, lastParam.end);
   }
+
+  ensureProperExport(code) {
+    const declarationCode = `const ${this.buildName()}`;
+    const defaultExportCode = `export default ${declarationCode}`;
+    let newCode = code;
+    if (newCode.includes(defaultExportCode)) {
+      newCode = newCode.replace(defaultExportCode, declarationCode);
+      newCode += settings.endOfLine;
+      newCode += `export default ${this.buildName()}${settings.semicolon}`;
+      newCode += settings.endOfLine;
+    }
+    return newCode;
+  }
+
 
   isSingleReturnStatement() {
     const body = this.node.body.body;
