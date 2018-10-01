@@ -30,6 +30,11 @@ class ComponentBuilder extends Builder {
     const bodyNodes = this.getDeclarationInit().body.body;
     const firstNode = bodyNodes[0];
     const lastNonReturnNode = [ ...bodyNodes ].reverse().find((node) => node.type !== 'ReturnStatement');
+
+    if (!lastNonReturnNode) {
+      return '';
+    }
+
     return this.code.substring(firstNode.start, lastNonReturnNode.end);
   }
 
