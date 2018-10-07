@@ -13,5 +13,6 @@ const Button = (props) => {
 
 Button.propTypes = {
   ...BaseButtonPropTypes,
-  children: PropTypes.any
+  children: PropTypes.node,
+  onClick: PropTypes.func
 };

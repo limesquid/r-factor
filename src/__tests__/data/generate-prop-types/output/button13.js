@@ -5,7 +5,8 @@ import ButtonPropTypes from './Button.props';
 
 class Button extends Component {
   static propTypes = {
-    ...ButtonPropTypes
+    ...ButtonPropTypes,
+    onClick: PropTypes.func
   };
 
   render() {

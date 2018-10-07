@@ -56,13 +56,7 @@ class GeneratePropTypes extends Refactoring {
   }
 
   generatePropTypes(code, ast) {
-    const unusedProps = getUnusedProps(code);
-    const newPropTypes = unusedProps.reduce((propTypes, prop) => ({
-      ...propTypes,
-      [prop]: getPropType(prop)
-    }), {});
-
-    return addPropTypes(code, ast, newPropTypes);
+    return addPropTypes(code, ast);
   }
 }
 

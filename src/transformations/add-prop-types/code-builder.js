@@ -3,6 +3,8 @@ const settings = require('../../settings');
 const { arePropTypesSorted, cleanUpCode, indentCode, sortPropTypes, squeezeCode } = require('../../utils');
 const { COMPONENT_TYPE } = require('../../constants');
 const { getNodeIndent } = require('../../utils/ast');
+const { getUnusedPropTypes } = require('../../utils/props');
+const parser = require('../../utils/parser');
 const insertCodeBelowNode = require('../insert-code-below-node');
 const addImportDeclaration = require('../add-import-declaration');
 
@@ -65,7 +67,8 @@ class ClassBuilder extends Builder {
   }
 
   buildCodeWithNewPropTypes() {
-    const propTypesContent = this.buildPropTypesContent(this.newPropTypes);
+    const newPropTypes = this.newPropTypes || getUnusedPropTypes(this.code);
+    const propTypesContent = this.buildPropTypesContent(newPropTypes);
     const indent = this.componentType === COMPONENT_TYPE.Class
       ? getNodeIndent(this.componentNode.id)
       : getNodeIndent(this.componentNode);
@@ -82,6 +85,10 @@ class ClassBuilder extends Builder {
   }
 
   getUndefinedPropTypes() {
+    if (!this.newPropTypes) {
+      return getUnusedPropTypes(this.code);
+    }
+
     const undefinedPropTypesKeys = Object.keys(this.newPropTypes).filter(
       (key) => !this.propTypesObjectNode.properties.find(
         (property) => property.key.name === key
@@ -96,6 +103,7 @@ class ClassBuilder extends Builder {
     );
     return undefinedPropTypes;
   }
+
 
   setComponentName(name) {
     this.componentName = name;
@@ -117,8 +125,8 @@ class ClassBuilder extends Builder {
     this.propTypesObjectNode = node;
   }
 
-  setNewPropTypes(propTypes) {
-    this.newPropTypes = propTypes;
+  setNewPropTypes(newPropTypes) {
+    this.newPropTypes = newPropTypes;
   }
 }
 

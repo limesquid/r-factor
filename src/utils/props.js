@@ -1,4 +1,8 @@
+const traverse = require('@babel/traverse').default;
+const { isSpreadElement } = require('@babel/types');
 const lint = require('./lint');
+const parser = require('./parser');
+const { isPropTypesDeclaration, isStaticPropTypesDeclaration } = require('./ast');
 
 const getUnusedProps = (code) => {
   const rules = { 'react/prop-types': 2 };
@@ -8,6 +12,44 @@ const getUnusedProps = (code) => {
     .map((linterError) => linterError.message.match(/\w+/)[0]);
 
   return unusedProps;
+};
+
+const getUnusedPropTypes = (code) => {
+  const codeWithoutSpreadInPropTypes = getCodeWithoutSpreadInPropTypes(code);
+  const unusedProps = getUnusedProps(codeWithoutSpreadInPropTypes);
+  const newPropTypes = unusedProps.reduce((propTypes, prop) => ({
+    ...propTypes,
+    [prop]: getPropType(prop)
+  }), {});
+  return newPropTypes;
+};
+
+const getCodeWithoutSpreadInPropTypes = (code) => {
+  const ast = parser.parse(code);
+  let propTypesPath = null;
+
+  traverse(ast, {
+    enter(path) {
+      if (isPropTypesDeclaration(path.node) || isStaticPropTypesDeclaration(path.node)) {
+        propTypesPath = path;
+        path.stop();
+      }
+    }
+  });
+
+  if (!propTypesPath) {
+    return code;
+  }
+
+  propTypesPath.traverse({
+    enter(path) {
+      if (isSpreadElement(path.node)) {
+        path.remove();
+      }
+    }
+  });
+
+  return parser.print(ast);
 };
 
 const getPropType = (name) => {
@@ -42,5 +84,6 @@ const isPrefixedWith = (name, prefix) => {
 
 module.exports = {
   getPropType,
+  getUnusedPropTypes,
   getUnusedProps
 };
