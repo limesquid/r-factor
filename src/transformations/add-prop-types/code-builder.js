@@ -27,16 +27,17 @@ class ClassBuilder extends Builder {
   }
 
   buildCodeWithExistingPropTypes() {
-    const definedPropsFirstPropNode = this.propTypesObjectNode.properties[0];
-    let indent = getNodeIndent(this.componentNode) + settings.indent;
-    if (definedPropsFirstPropNode) {
-      indent = getNodeIndent(definedPropsFirstPropNode);
-    } else {
-      indent = getNodeIndent(this.propTypesNode) + settings.indent;
-    }
-    const propTypesFirstLine = this.propTypesObjectNode.loc.start.line;
-    const propTypesLastLine = this.propTypesObjectNode.loc.end.line - 1;
+    const propTypesIndent = getNodeIndent(this.propTypesNode);
+    const indent = propTypesIndent + settings.indent;
+    const propTypesFirstLineIndex = this.propTypesObjectNode.loc.start.line - 1;
+    const propTypesLastLineIndex = this.propTypesObjectNode.loc.end.line - 1;
     const codeLines = this.code.split(settings.endOfLine);
+    codeLines.splice(
+      propTypesFirstLineIndex,
+      propTypesLastLineIndex - propTypesFirstLineIndex + 1,
+      codeLines[propTypesFirstLineIndex].match(/.*{/)[0],
+      squeezeCode(`}${settings.semicolon}`, propTypesIndent, 0)
+    );
     const definedPropTypesLines = this.propTypesObjectNode.properties
       .map((property) => this.code.slice(property.start, property.end))
       .map((line) => line.trim().replace(/,$/, ''))
@@ -53,12 +54,12 @@ class ClassBuilder extends Builder {
       .join(`,${settings.endOfLine}`);
 
     let code = '';
-    code += codeLines.slice(0, propTypesFirstLine).join(settings.endOfLine);
+    code += codeLines.slice(0, propTypesFirstLineIndex + 1).join(settings.endOfLine);
     code += settings.endOfLine;
     code += allPropTypesCode;
     code += settings.trailingComma;
     code += settings.endOfLine;
-    code += codeLines.slice(propTypesLastLine).join(settings.endOfLine);
+    code += codeLines.slice(propTypesFirstLineIndex + 1).join(settings.endOfLine);
 
     return code;
   }
