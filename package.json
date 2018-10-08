@@ -1,6 +1,6 @@
 {
   "name": "r-factor",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "React refactoring tools for Sublime 3",
   "main": "index.js",
   "author": {
