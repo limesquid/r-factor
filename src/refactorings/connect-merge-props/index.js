@@ -1,7 +1,7 @@
 const ReduxConnectBuilder = require('../../builders/redux-connect-builder');
-const { Refactoring } = require('../../model');
+const ConnectRefactoring = require('../../model/connect-refactoring');
 
-class ConnectMergeProps extends Refactoring {
+class ConnectMergeProps extends ConnectRefactoring {
   constructor() {
     super();
     this.transformations = [
