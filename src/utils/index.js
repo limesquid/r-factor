@@ -70,7 +70,11 @@ const getLines = (code, startLine, endLine) => {
   const lines = code.split(settings.endOfLine).slice(startLine, endLine);
   return lines.join(settings.endOfLine);
 };
-const getNodeLines = (code, node) => getLines(code, node.loc.start.line, node.loc.end.line);
+const getNodeLines = (code, node) => getLines(
+  code,
+  node.loc.start.line - 1,
+  node.loc.end.line
+);
 
 module.exports = {
   arePropTypesSorted,
