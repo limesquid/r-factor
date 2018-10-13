@@ -66,12 +66,19 @@ const hyphenToCamelCase = (string) => string.replace(
   /-(.)/g,
   (match, character) => character.toUpperCase()
 );
+const getLines = (code, startLine, endLine) => {
+  const lines = code.split(settings.endOfLine).slice(startLine, endLine);
+  return lines.join(settings.endOfLine);
+};
+const getNodeLines = (code, node) => getLines(code, node.loc.start.line, node.loc.end.line);
 
 module.exports = {
   arePropTypesSorted,
   cleanUpCode,
   generateIndent,
   getIndent,
+  getLines,
+  getNodeLines,
   hyphenToCamelCase,
   indentCode,
   indentLine,
