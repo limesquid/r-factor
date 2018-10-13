@@ -27,16 +27,7 @@ class ConnectRefactoring extends Refactoring {
     const reduxDetailsBuilder = new ReduxDetailsBuilder(ast);
     const details = reduxDetailsBuilder.getDetails();
     if (details.hasMapStateToPropsDefinition) {
-      const mapStateToPropsNode = details.mapStateToPropsDefinitionPath.node;
-      const mapStateToPropsCode = getNodeLines(code, mapStateToPropsNode);
-      const body = mapStateToPropsNode.declarations[0].init.body;
-      const properties = body.properties;
-      if (properties.length === 0) {
-        const indent = mapStateToPropsNode.loc.indent;
-        const newIndent = generateIndent(indent + settings.indent);
-        const updatedMapStateToPropsCode = mapStateToPropsCode.replace(/^$/m, newIndent)
-        return code.replace(mapStateToPropsCode, updatedMapStateToPropsCode);
-      }
+      return this.restoreWhitespaceInNode(code, details.mapStateToPropsDefinitionPath.node);
     }
     return code;
   }
@@ -45,18 +36,21 @@ class ConnectRefactoring extends Refactoring {
     const reduxDetailsBuilder = new ReduxDetailsBuilder(ast);
     const details = reduxDetailsBuilder.getDetails();
     if (details.hasMapDispatchToPropsDefinition) {
-      const mapDispatchToPropsNode = details.mapDispatchToPropsDefinitionPath.node;
-      const mapDispatchToPropsCode = getNodeLines(code, mapDispatchToPropsNode);
-      const body = mapDispatchToPropsNode.declarations[0].init.body || mapDispatchToPropsNode.declarations[0].init;
-      const properties = body.properties;
-      if (properties.length === 0) {
-        const indent = mapDispatchToPropsNode.loc.indent;
-        const newIndent = generateIndent(indent + settings.indent);
-        const updatedMapDispatchToPropsCode = mapDispatchToPropsCode.replace(/^$/m, newIndent)
-        return code.replace(mapDispatchToPropsCode, updatedMapDispatchToPropsCode);
-      }
+      return this.restoreWhitespaceInNode(code, details.mapDispatchToPropsDefinitionPath.node);
     }
     return code;
+  }
+
+  restoreWhitespaceInNode(code, node) {
+    const nodeCode = getNodeLines(code, node);
+    const body = node.declarations[0].init.body || node.declarations[0].init;
+    const properties = body.properties;
+    if (properties.length === 0) {
+      const indent = node.loc.indent;
+      const newIndent = generateIndent(indent + settings.indent);
+      const updatedNodeCode = nodeCode.replace(/^$/m, newIndent)
+      return code.replace(nodeCode, updatedNodeCode);
+    }
   }
 }
 
