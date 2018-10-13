@@ -1,5 +1,4 @@
-const StringReplacePlugin = require("string-replace-webpack-plugin");
-const fs = require('fs');
+const StringReplacePlugin = require('string-replace-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -74,7 +73,7 @@ const getWebpackConfig = (override) => override({
           replacements: [
             {
               pattern: /config\.parser = resolver\.resolve\(config\.parser, lookupPath\);/,
-              replacement: () => 'config\.parser = \'\''
+              replacement: () => 'config.parser = \'\''
             }
           ]
         })

@@ -4,7 +4,6 @@ const { arePropTypesSorted, cleanUpCode, indentCode, sortPropTypes, squeezeCode 
 const { COMPONENT_TYPE } = require('../../constants');
 const { getNodeIndent } = require('../../utils/ast');
 const { getUnusedPropTypes } = require('../../utils/props');
-const parser = require('../../utils/parser');
 const insertCodeBelowNode = require('../insert-code-below-node');
 const addImportDeclaration = require('../add-import-declaration');
 

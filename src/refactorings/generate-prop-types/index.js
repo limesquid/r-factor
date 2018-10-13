@@ -5,7 +5,6 @@ const {
   isArrowComponentDeclaration
 } = require('../../utils/ast');
 const { addPropTypes } = require('../../transformations');
-const { getPropType, getUnusedProps } = require('../../utils/props');
 const { Refactoring } = require('../../model');
 const ConvertFunctionToArrowComponent = require('../convert-function-to-arrow-component');
 const ConvertToFunctionComponent = require('../convert-to-function-component');

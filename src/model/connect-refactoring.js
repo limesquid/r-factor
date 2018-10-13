@@ -1,7 +1,6 @@
 const Refactoring = require('./refactoring');
 const ReduxDetailsBuilder = require('../builders/redux-connect-builder/redux-details-builder');
 const settings = require('../settings');
-const parser = require('../utils/parser');
 const { generateIndent, getNodeLines } = require('../utils');
 const ConvertFunctionToArrowComponent = require('../refactorings/convert-function-to-arrow-component');
 const ConvertToFunctionComponent = require('../refactorings/convert-to-function-component');
@@ -48,9 +47,10 @@ class ConnectRefactoring extends Refactoring {
     if (properties.length === 0) {
       const indent = node.loc.indent;
       const newIndent = generateIndent(indent + settings.indent);
-      const updatedNodeCode = nodeCode.replace(/^$/m, newIndent)
+      const updatedNodeCode = nodeCode.replace(/^$/m, newIndent);
       return code.replace(nodeCode, updatedNodeCode);
     }
+    return code;
   }
 }
 
