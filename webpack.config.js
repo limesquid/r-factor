@@ -1,3 +1,4 @@
+const StringReplacePlugin = require("string-replace-webpack-plugin");
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
@@ -33,17 +34,53 @@ const getWebpackConfig = (override) => override({
             ]
           }
         }
+      },
+      {
+        test: /load-rules\.js$/,
+        loader: StringReplacePlugin.replace({
+          replacements: [
+            {
+              pattern: /fs\.readdirSync\(rulesDir\)\.forEach\(file => {/,
+              replacement: () => 'return rules; fs.readdirSync(rulesDir).forEach(file => {'
+            }
+          ]
+        })
+      },
+      {
+        test: /lib\/config\/plugins\.js$/,
+        loader: StringReplacePlugin.replace({
+          replacements: [
+            {
+              pattern: /plugin = require\(longName\);/,
+              replacement: () => 'plugin = require(\'eslint-plugin-react\')'
+            }
+          ]
+        })
+      },
+      {
+        test: /lib\/linter\.js$/,
+        loader: StringReplacePlugin.replace({
+          replacements: [
+            {
+              pattern: /parser = parserMap\.get\(parserName\) \|\| require\(parserName\);/,
+              replacement: () => 'parser = require(\'babel-eslint\');'
+            }
+          ]
+        })
+      },
+      {
+        test: /lib\/config\/config-file\.js$/,
+        loader: StringReplacePlugin.replace({
+          replacements: [
+            {
+              pattern: /config\.parser = resolver\.resolve\(config\.parser, lookupPath\);/,
+              replacement: () => 'config\.parser = \'\''
+            }
+          ]
+        })
       }
     ]
   },
-  externals: fs.readdirSync('node_modules')
-    .filter((directory) => directory !== '.bin')
-    .reduce(
-      (externals, directory) => Object.assign(externals, {
-        [directory]: `commonjs ${directory}`
-      }),
-      {}
-    ),
   plugins: [
     new webpack.NormalModuleReplacementPlugin(/@babel-parser/, (resource) => {
       resource.request = '@babel-parser';
@@ -68,6 +105,10 @@ const libraryWebpackConfig = getWebpackConfig((webpackConfig) => ({
 
 const cliWebpackConfig = getWebpackConfig((webpackConfig) => ({
   ...webpackConfig,
+  output: {
+    ...webpackConfig.output,
+    libraryTarget: 'commonjs'
+  },
   entry: {
     cli: CLI_ENTRY_FILE
   }
