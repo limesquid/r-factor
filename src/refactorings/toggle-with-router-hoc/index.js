@@ -1,16 +1,23 @@
 const { isIdentifier } = require('@babel/types');
-const { Refactoring } = require('../../model');
+const FunctionComponentCompatibleRefactoring = require('../../model/function-component-compatible-refactoring');
 const parser = require('../../utils/parser');
 const ComponentExportDetails = require('../../utils/component-export-details');
 const wrapComponent = require('../../transformations/wrap-component');
 const unwrapComponent = require('../../transformations/unwrap-component');
 
-class ToggleWithRouterHoc extends Refactoring {
+class ToggleWithRouterHoc extends FunctionComponentCompatibleRefactoring {
+  constructor() {
+    super();
+    this.transformations = [
+      this.toggleWithRouterHoc.bind(this)
+    ];
+  }
+
   canApply() {
     return true;
   }
 
-  refactor(code, ast = parser.parse(code)) {
+  toggleWithRouterHoc(code, ast = parser.parse(code)) {
     const details = new ComponentExportDetails(ast).getDetails();
     const { outermostHocPath } = details;
     let isWrapped = false;

@@ -8,7 +8,7 @@ const ConvertToFunctionComponent = require('../refactorings/convert-to-function-
 const convertFunctionToArrowComponent = new ConvertFunctionToArrowComponent();
 const convertToFunctionComponent = new ConvertToFunctionComponent();
 
-class ConnectRefactoring extends Refactoring {
+class FunctionComponentCompatibleRefactoring extends Refactoring {
   getTransformations(initialCode) {
     if (convertFunctionToArrowComponent.canApply(initialCode)) {
       return [
@@ -54,4 +54,4 @@ class ConnectRefactoring extends Refactoring {
   }
 }
 
-module.exports = ConnectRefactoring;
+module.exports = FunctionComponentCompatibleRefactoring;
