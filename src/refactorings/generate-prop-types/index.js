@@ -1,10 +1,11 @@
 const parser = require('../../utils/parser');
 const traverse = require('@babel/traverse').default;
+const ComponentExportDetails = require('../../utils/component-export-details');
 const {
   isClassDeclaration,
   isArrowComponentDeclaration
 } = require('../../utils/ast');
-const { addPropTypes } = require('../../transformations');
+const { addPropTypes, nameComponentIfUnnamed } = require('../../transformations');
 const { Refactoring } = require('../../model');
 const ConvertFunctionToArrowComponent = require('../convert-function-to-arrow-component');
 const ConvertToFunctionComponent = require('../convert-to-function-component');
@@ -16,6 +17,7 @@ class GeneratePropTypes extends Refactoring {
   constructor() {
     super();
     this.transformations = [
+      (code, ast) => nameComponentIfUnnamed(code, ast),
       this.generatePropTypes
     ];
   }
@@ -24,23 +26,9 @@ class GeneratePropTypes extends Refactoring {
     if (convertFunctionToArrowComponent.canApply(code)) {
       return true;
     }
-
     const ast = parser.parse(code);
-    let isComponent = false;
-
-    traverse(ast, {
-      enter({ node }) {
-        if (isClassDeclaration(node)) {
-          isComponent = true;
-        }
-
-        if (isArrowComponentDeclaration(node)) {
-          isComponent = true;
-        }
-      }
-    });
-
-    return isComponent;
+    const details = new ComponentExportDetails(ast).getDetails();
+    return details.isComponent;
   }
 
   getTransformations(initialCode) {

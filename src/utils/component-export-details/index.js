@@ -141,6 +141,7 @@ class ComponentExportDetails {
       componentReturnPath: this.componentReturnPath,
       exportedComponentName: this.exportedComponentName || this.originalComponentName,
       outermostHocPath,
+      isComponent: Boolean(componentScope),
       isDefaultExport: this.isDefaultExport,
       isExported: Boolean(this.componentExportPath),
       isHoc: this.isHoc,

@@ -3,6 +3,7 @@ const addPropsUsage = require('./add-props-usage');
 const addPropTypes = require('./add-prop-types');
 const addRootJsxProps = require('./add-root-jsx-props');
 const insertCodeBelowNode = require('./insert-code-below-node');
+const nameComponentIfUnnamed = require('./name-component-if-unnamed');
 const printObjectAttributes = require('./print-object-attributes');
 const removeImportDeclaration = require('./remove-import-declaration');
 const sortImports = require('./sort-imports');
@@ -13,6 +14,7 @@ module.exports = {
   addPropTypes,
   addRootJsxProps,
   insertCodeBelowNode,
+  nameComponentIfUnnamed,
   printObjectAttributes,
   removeImportDeclaration,
   sortImports
