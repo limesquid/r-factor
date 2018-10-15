@@ -3,7 +3,7 @@ const settings = require('../settings');
 const GeneratePropTypes = require('../refactorings/generate-prop-types');
 
 const files = [
-  ...range(1, 15).map((n) => createFileDetails(`button${n}`)),
+  ...range(1, 16).map((n) => createFileDetails(`button${n}`)),
   ...range(1, 1).map((n) => createFileDetails(`filter${n}`)),
   ...range(1, 2).map((n) => createFileDetails(`header${n}`)),
   ...range(1, 1).map((n) => createFileDetails(`hoc${n}`, { indent: 4 })),
