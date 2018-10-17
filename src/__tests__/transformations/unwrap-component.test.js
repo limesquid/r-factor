@@ -158,6 +158,13 @@ const tests = [
         subImports: [ 'connect' ]
       }
     }
+  },
+  {
+    filename: 'button15',
+    unwrapOptions: {
+      name: 'connect',
+      removeInvoked: false
+    }
   }
 ].map((test) => ({
   ...test,
