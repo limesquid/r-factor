@@ -1,3 +1,4 @@
+const parser = require('../../utils/parser');
 const { readTransformationsFile } = require('../test-utils');
 const wrapComponent = require('../../transformations/wrap-component');
 const settings = require('../../settings');
@@ -208,5 +209,34 @@ describe('transformation:wrap-component', () => {
       }
     });
     expect(result).toBe(output);
+  });
+
+  it('should wrap in hoc and leave rest arguments untouched', () => {
+    const input = readInputFile('button15');
+    const output = readOutputFile('button15');
+    const result = wrapComponent(input, undefined, {
+      name: 'withNothing',
+      import: {
+        module: 'with-nothing',
+        subImports: [
+          { name: 'withNothing' }
+        ]
+      }
+    });
+    expect(result).toBe(output);
+  });
+
+  it('should wrap in hoc and invoke with function argument', () => {
+    const input = 'export default () => (<div>123</div>);';
+    const output = [
+      'const Component = () => (<div>123</div>);',
+      'export default hoc(test, (a, b) => a + b)(Component);'
+    ].join('\n\n');
+    const arrowAst = parser.parse('(a, b) => a + b;').program.body[0].expression;
+    const result = wrapComponent(input, undefined, {
+      name: 'hoc',
+      invoke: [ 'test', arrowAst ]
+    })
+    expect(result).toEqual(output);
   });
 });

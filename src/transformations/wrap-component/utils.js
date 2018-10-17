@@ -14,8 +14,8 @@ const parser = require('../../utils/parser');
 const settings = require('../../settings');
 const { getOutermostCallExpressionPath } = require('../../utils/ast');
 
-const findComponentScopePath = ({ arrowComponentDeclaration, classComponentPath, componentExportPath }) => {
-  const componentPath = arrowComponentDeclaration || classComponentPath || componentExportPath;
+const findComponentScopePath = ({ arrowComponentDeclaration, classComponentPath }) => {
+  const componentPath = arrowComponentDeclaration || classComponentPath;
   return componentPath.findParent(
     ({ node }) => isBlockStatement(node) || isProgram(node)
   ).node;
@@ -66,12 +66,11 @@ const getNewComponentName = (details, componentScope) => {
     return originalComponentName;
   }
 
-  const preferableComponentName = originalComponentName || defaultComponentName;
   return findNameFromPotential([
-    componentNameCollisionPattern.replace('${name}', preferableComponentName),
+    componentNameCollisionPattern.replace('${name}', originalComponentName),
     defaultComponentName,
     componentNameCollisionPattern.replace('${name}', defaultComponentName),
-    componentScope.generateUidIdentifier(originalComponentName || defaultComponentName)
+    componentScope.generateUidIdentifier(originalComponentName)
   ]);
 };
 
@@ -155,12 +154,12 @@ const createComponentWrappersAst = (ast, details, nodeToWrap, { invoke, name, ou
 };
 
 module.exports = {
-  findComponentScopePath,
   appendNode,
-  getNewComponentName,
-  createExportAst,
-  removeExport,
-  removeExportAndSetComponentName,
   createBodylessArrowFunctionBlock,
-  createComponentWrappersAst
+  createComponentWrappersAst,
+  createExportAst,
+  findComponentScopePath,
+  getNewComponentName,
+  removeExport,
+  removeExportAndSetComponentName
 };
