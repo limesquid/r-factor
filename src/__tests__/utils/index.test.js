@@ -1,4 +1,4 @@
-const { generateIndent, getIndent, indentCode, indentLines } = require('../utils');
+const { generateIndent, getIndent, indentCode, indentLines } = require('../../utils');
 
 describe('utils', () => {
   it('getIndent', () => {

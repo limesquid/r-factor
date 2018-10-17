@@ -75,19 +75,6 @@ const createMergePropsFunctionAst = (functionName) => {
   return parser.parse(code).program.body;
 };
 
-const insertNodeAfterOrBefore = (node, afterPaths, beforePaths) => {
-  const pathToInsertAfter = afterPaths.find(Boolean);
-  if (pathToInsertAfter) {
-    pathToInsertAfter.insertAfter(node);
-    return;
-  }
-
-  const pathToInsertBefore = beforePaths.find(Boolean);
-  if (pathToInsertBefore) {
-    pathToInsertBefore.insertBefore(node);
-  }
-};
-
 module.exports = {
   checkMapStateToProps,
   checkMapDispatchToProps,
@@ -95,6 +82,5 @@ module.exports = {
   checkIsConnected,
   createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
-  createMergePropsFunctionAst,
-  insertNodeAfterOrBefore
+  createMergePropsFunctionAst
 };

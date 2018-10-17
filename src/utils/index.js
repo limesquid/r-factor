@@ -75,6 +75,18 @@ const getNodeLines = (code, node) => getLines(
   node.loc.start.line - 1,
   node.loc.end.line
 );
+const insertNodeAfterOrBefore = (node, afterPaths, beforePaths) => {
+  const pathToInsertAfter = afterPaths.find(Boolean);
+  if (pathToInsertAfter) {
+    pathToInsertAfter.insertAfter(node);
+    return;
+  }
+
+  const pathToInsertBefore = beforePaths.find(Boolean);
+  if (pathToInsertBefore) {
+    pathToInsertBefore.insertBefore(node);
+  }
+};
 
 module.exports = {
   arePropTypesSorted,
@@ -87,6 +99,7 @@ module.exports = {
   indentCode,
   indentLine,
   indentLines,
+  insertNodeAfterOrBefore,
   isString,
   removeDoubleNewlines,
   removeTrailingWhitespace,

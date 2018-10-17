@@ -2,6 +2,7 @@ const { identifier, isNullLiteral, nullLiteral } = require('@babel/types');
 const parser = require('../../utils/parser');
 const { removeBinding } = require('../../utils/bindings');
 const { isUndefinedIdentifier } = require('../../utils/ast');
+const { insertNodeAfterOrBefore } = require('../../utils');
 const settings = require('../../settings');
 const wrapComponent = require('../../transformations/wrap-component');
 const unwrapComponent = require('../../transformations/unwrap-component');
@@ -9,8 +10,7 @@ const {
   checkIsConnected,
   createMapDispatchToPropsFunctionAst,
   createMapStateToPropsFunctionAst,
-  createMergePropsFunctionAst,
-  insertNodeAfterOrBefore
+  createMergePropsFunctionAst
 } = require('./utils');
 const ReduxDetailsBuilder = require('./redux-details-builder');
 
