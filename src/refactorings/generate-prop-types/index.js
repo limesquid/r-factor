@@ -1,10 +1,5 @@
 const parser = require('../../utils/parser');
-const traverse = require('@babel/traverse').default;
 const ComponentExportDetails = require('../../utils/component-export-details');
-const {
-  isClassDeclaration,
-  isArrowComponentDeclaration
-} = require('../../utils/ast');
 const { addPropTypes, nameComponentIfUnnamed } = require('../../transformations');
 const { Refactoring } = require('../../model');
 const ConvertFunctionToArrowComponent = require('../convert-function-to-arrow-component');

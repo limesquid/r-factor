@@ -236,7 +236,7 @@ describe('transformation:wrap-component', () => {
     const result = wrapComponent(input, undefined, {
       name: 'hoc',
       invoke: [ 'test', arrowAst ]
-    })
+    });
     expect(result).toEqual(output);
   });
 });

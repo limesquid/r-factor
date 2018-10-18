@@ -65,7 +65,7 @@ const getNewComponentName = (details, componentScope) => {
   if (exportedComponentName && exportedComponentName !== originalComponentName) {
     return originalComponentName;
   }
-
+  console.log(123);
   return findNameFromPotential([
     componentNameCollisionPattern.replace('${name}', originalComponentName),
     defaultComponentName,
