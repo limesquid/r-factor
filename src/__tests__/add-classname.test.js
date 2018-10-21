@@ -8,7 +8,8 @@ const files = [
   ...range(1, 1).map((n) => `function/file${n}`),
   'arrow/alerts',
   'arrow/deep-identifier',
-  'arrow/navigation'
+  'arrow/navigation',
+  'arrow/rest-props'
 ];
 
 describe('add-classname:canApply', () => {

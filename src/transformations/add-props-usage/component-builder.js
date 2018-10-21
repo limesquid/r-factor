@@ -66,36 +66,43 @@ class ComponentBuilder extends Builder {
   }
 
   getProps(destructuringNode) {
-    if (destructuringNode) {
-      const extendedNode = {
-        ...destructuringNode,
-        properties: [
-          ...destructuringNode.properties,
-          ...this.props
-            .filter((prop) => !destructuringNode.properties.find(
-              (property) => property.value && property.value.name === prop
-            ))
-            .map((prop) => ({ code: prop, name: prop }))
-        ]
-      };
-
-      const currentProperties = printObjectAttributes(this.code, destructuringNode, {
-        indentSize: destructuringNode.loc.indent,
-        sort: false
-      });
-      const sortedProperties = printObjectAttributes(this.code, destructuringNode, {
-        indentSize: destructuringNode.loc.indent,
-        sort: true
-      });
-      const areCurrentPropertiesSorted = currentProperties === sortedProperties;
-
-      return printObjectAttributes(this.code, extendedNode, {
-        indentSize: extendedNode.loc.indent,
-        sort: areCurrentPropertiesSorted
-      });
+    if (!destructuringNode) {
+      return this.props.join(', ');
     }
 
-    return this.props.join(', ');
+    const restElement = destructuringNode.properties.find(({ type }) => type === 'RestElement');
+    const currentProperties = destructuringNode.properties.filter(({ type }) => type !== 'RestElement');
+
+    const extendedNode = {
+      ...destructuringNode,
+      properties: [
+        ...currentProperties,
+        ...this.props
+          .filter((prop) => !currentProperties.find(
+            (property) => property.value && property.value.name === prop
+          ))
+          .map((prop) => ({ code: prop, name: prop }))
+      ]
+    };
+
+    if (restElement) {
+      extendedNode.properties.push(restElement);
+    }
+
+    const currentPropertiesString = printObjectAttributes(this.code, destructuringNode, {
+      indentSize: destructuringNode.loc.indent,
+      sort: false
+    });
+    const sortedPropertiesString = printObjectAttributes(this.code, destructuringNode, {
+      indentSize: destructuringNode.loc.indent,
+      sort: true
+    });
+    const areCurrentPropertiesSorted = currentPropertiesString === sortedPropertiesString;
+
+    return printObjectAttributes(this.code, extendedNode, {
+      indentSize: extendedNode.loc.indent,
+      sort: areCurrentPropertiesSorted
+    });
   }
 
   setProps(props) {
