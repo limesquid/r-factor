@@ -34,7 +34,7 @@ class Refactoring {
         nextCode = transformation(nextCode, ast);
       } catch (error) {
         return [
-          'Exception occured while performing a transformation.',
+          'Exception occurred while performing a transformation.',
           process.env.NODE_ENV !== 'production' && error.stack,
           process.env.NODE_ENV !== 'production' && `Code:${CODE_SEPARATOR}${nextCode}${CODE_SEPARATOR}`
         ].filter(Boolean).join('\n\n');
