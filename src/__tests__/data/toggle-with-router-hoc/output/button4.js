@@ -1,6 +1,6 @@
 import React from 'react';
 import { withAuth } from 'auth';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 const ButtonComponent = (props) => (
   <>

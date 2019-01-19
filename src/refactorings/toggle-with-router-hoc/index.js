@@ -42,7 +42,7 @@ class ToggleWithRouterHoc extends FunctionComponentCompatibleRefactoring {
     return unwrapComponent(code, ast, {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
       }
@@ -54,7 +54,7 @@ class ToggleWithRouterHoc extends FunctionComponentCompatibleRefactoring {
       name: 'withRouter',
       outermost: true,
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         subImports: [
           { name: 'withRouter' }
         ]

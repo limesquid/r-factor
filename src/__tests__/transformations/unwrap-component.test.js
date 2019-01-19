@@ -10,7 +10,7 @@ const tests = [
     unwrapOptions: {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
       }
@@ -21,7 +21,7 @@ const tests = [
     unwrapOptions: {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
       }
@@ -32,7 +32,7 @@ const tests = [
     unwrapOptions: {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
       }
@@ -43,7 +43,7 @@ const tests = [
     unwrapOptions: {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
       }
@@ -89,7 +89,7 @@ const tests = [
     unwrapOptions: {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
       },
@@ -101,7 +101,7 @@ const tests = [
     unwrapOptions: {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
       }
@@ -123,7 +123,7 @@ const tests = [
     unwrapOptions: {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         removeImportIfEmpty: true,
         subImports: [ 'withRouter' ]
       }

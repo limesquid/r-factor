@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 export const hoc = (Component) => {
   const InnerComponent = ({ name }) => (
