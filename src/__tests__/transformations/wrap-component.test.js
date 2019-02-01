@@ -32,7 +32,7 @@ describe('transformation:wrap-component', () => {
     const result = wrapComponent(input, undefined, {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         subImports: [
           { name: 'withRouter' }
         ]
@@ -95,7 +95,7 @@ describe('transformation:wrap-component', () => {
       name: 'withRouter',
       outermost: true,
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         subImports: [
           { name: 'withRouter' }
         ]
@@ -110,7 +110,7 @@ describe('transformation:wrap-component', () => {
     const result = wrapComponent(input, undefined, {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         subImports: [
           { name: 'withRouter' }
         ]
@@ -141,7 +141,7 @@ describe('transformation:wrap-component', () => {
     const result = wrapComponent(input, undefined, {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         subImports: [
           { name: 'withRouter' }
         ]
@@ -156,7 +156,7 @@ describe('transformation:wrap-component', () => {
     const result = wrapComponent(input, undefined, {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         subImports: [
           { name: 'withRouter' }
         ]
@@ -172,7 +172,7 @@ describe('transformation:wrap-component', () => {
     const result = wrapComponent(input, undefined, {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         subImports: [
           { name: 'withRouter' }
         ]
@@ -187,7 +187,7 @@ describe('transformation:wrap-component', () => {
     const result = wrapComponent(input, undefined, {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         subImports: [
           { name: 'withRouter' }
         ]
@@ -202,7 +202,7 @@ describe('transformation:wrap-component', () => {
     const result = wrapComponent(input, undefined, {
       name: 'withRouter',
       import: {
-        module: 'react-router',
+        module: 'react-router-dom',
         subImports: [
           { name: 'withRouter' }
         ]

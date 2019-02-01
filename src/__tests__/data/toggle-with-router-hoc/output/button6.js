@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip, Icon } from 'antd';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 const branchUrl = 'https://github.com/ant-design/ant-design/edit/master/';
 
