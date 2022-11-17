@@ -84,9 +84,6 @@ const getWebpackConfig = (override) => override({
     new webpack.NormalModuleReplacementPlugin(/@babel-parser/, (resource) => {
       resource.request = '@babel-parser';
     }),
-    new webpack.DefinePlugin({
-      'process.env.LICENSE_SECRET': JSON.stringify(process.env.LICENSE_SECRET)
-    })
   ]
 });
 
