@@ -107,7 +107,14 @@ const cliWebpackConfig = getWebpackConfig((webpackConfig) => ({
   },
   entry: {
     cli: CLI_ENTRY_FILE
-  }
+  },
+  plugins: [
+    ...webpackConfig.plugins,
+    new webpack.BannerPlugin({
+      banner: '#!/usr/bin/env node\n',
+      raw: true
+    })
+  ]
 }));
 
 if (process.env.ANALYZE_BUNDLE) {
