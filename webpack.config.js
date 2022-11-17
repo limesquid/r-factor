@@ -83,7 +83,7 @@ const getWebpackConfig = (override) => override({
   plugins: [
     new webpack.NormalModuleReplacementPlugin(/@babel-parser/, (resource) => {
       resource.request = '@babel-parser';
-    }),
+    })
   ]
 });
 
