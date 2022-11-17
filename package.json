@@ -8,7 +8,7 @@
     "email": "kamil.adam.mielnik@gmail.com",
     "url": "http://kamilmielnik.com/"
   },
-  "license": "Proprietary",
+  "license": "MIT",
   "engines": {
     "node": "^8.11.3",
     "npm": "^5.6.0"

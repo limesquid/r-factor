@@ -1,31 +1,21 @@
-1. LICENSES
-R-FACTOR is licensed as follows:
-a. Evaluation.
-    You can evaluate R-FACTOR in an online TRY IT tool. You need to purchase a license to use R-FACTOR in any other way.
-b. Installation and Usage.
-    Licenses are per user and valid for use on all supported operating systems. License keys may be used on multiple computers and operating systems, provided the license key holder is the primary user. Businesses must purchase at least as many licenses as the number of people using R-FACTOR. Educational Institutions may also buy as many licenses as number of computers where R-FACTOR will be installed, or number of students which will use R-FACTOR.
-c. Backup Copies.
-    You may make copies of the license key and/or R-FACTOR for backup and archival purposes.
+MIT License
 
-2. ILLEGAL USAGE
-Reverse engineering R-FACTOR's code, using unauthorized license keys, creating keygens and cracks for R-FACTOR is prohibited and will be subject for prosecution.
+Copyright (c) 2022 LimeSquid
 
-3. DESCRIPTION OF OTHER RIGHTS AND LIMITATIONS
-a. Maintenance of Copyright Notices.
-    You must not remove or alter any copyright notices on any copy of R-FACTOR.
-b. Distribution.
-    You may not distribute or sell license keys or R-FACTOR to third parties. Licenses will be revoked if distributed or sold to third parties.
-c. Rental.
-    You may not rent, lease, or lend the license key or R-FACTOR.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-4. COPYRIGHT
-All title, including but not limited to copyrights, in and to R-FACTOR and any copies thereof are owned by Kamil Mielnik (AUTHOR).
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-5. REFUND POLICY
-Refunds are not available. Because of this, before purchasing a license, you can evaluate R-FACTOR without any functionality limitations in an online TRY IT tool. You need to purchase a license to use R-FACTOR in any other way.
-
-6. NO WARRANTIES
-AUTHOR expressly disclaims any warranty for R-FACTOR, which is provided 'as is' without any express or implied warranty of any kind, including but not limited to any warranties of merchantability, non-infringement, or fitness of a particular purpose.
-
-7. LIMITATION OF LIABILITY
-In no event shall AUTHOR be liable for any damages due to use of R-FACTOR, to the maximum extent permitted by law. This includes without limitation, lost profits, business interruption, or lost information. In no event will AUTHOR be liable for loss of data or for indirect, special, incidental, consequential (including lost profit), or other damages. AUTHOR shall have no liability with respect to the content of R-FACTOR or any part thereof, including but not limited to errors or omissions contained therein, libel, trademark rights, business interruption, loss of privacy or the disclosure of confidential information.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
