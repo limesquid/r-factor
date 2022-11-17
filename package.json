@@ -1,6 +1,6 @@
 {
   "name": "r-factor",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "React & Redux Refactoring Tools",
   "license": "MIT",
   "main": "dist/index.js",
