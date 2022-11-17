@@ -11,6 +11,14 @@
     "node": ">=8",
     "npm": ">=5"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/limesquid/r-factor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/limesquid/r-factor/issues"
+  },
+  "homepage": "https://github.com/limesquid/r-factor#readme",
   "scripts": {
     "analyze-bundle": "better-npm-run analyze-bundle",
     "build": "better-npm-run build",
