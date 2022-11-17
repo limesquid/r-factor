@@ -6,7 +6,6 @@ getStdin().then((code) => {
   try {
     process.stdout.write(rFactor({
       code,
-      license: argv.license,
       refactoring: argv.refactoring,
       settings: JSON.parse(argv.settings)
     }));
