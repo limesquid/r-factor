@@ -1,14 +1,12 @@
 {
   "name": "r-factor",
   "version": "1.0.0",
-  "description": "React refactoring tools for Sublime 3",
-  "main": "index.js",
-  "author": {
-    "name": "Kamil Mielnik",
-    "email": "kamil.adam.mielnik@gmail.com",
-    "url": "http://kamilmielnik.com/"
-  },
+  "description": "React & Redux Refactoring Tools",
   "license": "MIT",
+  "main": "dist/index.js",
+  "bin": {
+    "r-factor": "dist/cli.js"
+  },
   "engines": {
     "node": "^8.11.3",
     "npm": "^5.6.0"
