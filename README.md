@@ -19,6 +19,7 @@
     <img src="https://img.shields.io/node/v/r-factor" alt="node version" />
     <img src="https://github.com/limesquid/r-factor/workflows/Build/badge.svg" alt="Build" />
     <img src="https://github.com/limesquid/r-factor/workflows/Test/badge.svg" alt="Test" />
+    <img src="https://img.shields.io/badge/coverage-100%25-brightgreen.svg" alt="Coverage: 100%" />
     <img src="https://github.com/limesquid/r-factor/workflows/Lint/badge.svg" alt="Lint" />
   </p>
 
