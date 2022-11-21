@@ -7,8 +7,6 @@
 
   <p>React & Redux Refactoring Tools</p>
 
-  <br/>
-
   <p>
     <a href="https://www.npmjs.com/package/r-factor">
       <img src="https://img.shields.io/npm/v/r-factor.svg" alt="npm package" />
