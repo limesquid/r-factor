@@ -5,11 +5,7 @@
 
   <h1>R-Factor</h1>
 
-  <p>
-    React & Redux Refactoring Tools
-    <br/>
-    <a href="https://r-factor.org">Website</a> • <a href="https://r-factor.org/documentation">Documentation</a>
-  </p>
+  <p>React & Redux Refactoring Tools</p>
 
   <p>
     <a href="https://www.npmjs.com/package/r-factor">
@@ -26,8 +22,16 @@
   </p>
 
   <p>
+    <a href="https://r-factor.org">Website</a> • <a href="https://r-factor.org/documentation">Documentation</a>
+  </p>
+
+  <hr />
+
+  <p>
     <a href="https://github.com/limesquid/r-factor">R-Factor</a> • <a href="https://github.com/limesquid/r-factor-website">r-factor.org</a>
     <br />
     <a href="https://github.com/limesquid/r-factor-atom">Atom</a> • <a href="https://github.com/limesquid/r-factor-sublime">Sublime Text</a> • <a href="https://github.com/limesquid/r-factor-vscode">Visual Studio Code</a>
   </p>
+
+  <hr />
 </div>
