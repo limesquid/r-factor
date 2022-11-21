@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/limesquid/r-factor/issues"
   },
-  "homepage": "https://github.com/limesquid/r-factor#readme",
+  "homepage": "https://r-factor.org",
   "scripts": {
     "analyze-bundle": "better-npm-run analyze-bundle",
     "build": "better-npm-run build",

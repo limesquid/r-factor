@@ -9,7 +9,7 @@
 
   <br/>
 
-  <sup>
+  <p>
     <a href="https://www.npmjs.com/package/r-factor">
       <img src="https://img.shields.io/npm/v/r-factor.svg" alt="npm package" />
     </a>
@@ -20,5 +20,13 @@
     <img src="https://github.com/limesquid/r-factor/workflows/Build/badge.svg" alt="Build" />
     <img src="https://github.com/limesquid/r-factor/workflows/Test/badge.svg" alt="Test" />
     <img src="https://github.com/limesquid/r-factor/workflows/Lint/badge.svg" alt="Lint" />
-  </sup>
+  </p>
+
+  <p>
+    <a href="https://r-factor.org">Website</a> | <a href="https://r-factor.org/documentation">Documentation</a>
+  </p>
+
+  <p>
+    <a href="https://github.com/limesquid/r-factor">R-Factor</a> | <a href="https://github.com/limesquid/r-factor-atom">Atom</a> | <a href="https://github.com/limesquid/r-factor-sublime">Sublime Text</a> | <a href="https://github.com/limesquid/r-factor-vscode">Visual Studio Code</a>
+  </p>
 </div>
